@@ -1,0 +1,34 @@
+import express from "express";
+import accountRouter from "./authRoutes";
+import userRouter from "./userRoutes";
+import healthRouter from "./health.routes";
+import categoryRouter from "./categoryRoutes";
+import productRouter from "./productRoutes";
+import productVariantRouter from "./productVariantRoutes";
+import attributeRouter from "./attributeRoutes";
+import productAttributeRouter from "./productAttributeRoutes";
+import staffAttendanceRouter from "./staffAttendanceRoutes";
+import orderRouter from "./orderRoutes";
+import orderItemRouter from "./orderItemRoutes";
+import paymentRouter from "./paymentRoutes";
+import staffSalaryRouter from "./staffSalaryRoutes";
+import dashboardRouter from "./dashboardRoutes";
+
+const routes = express.Router();
+
+routes.use("/auth", accountRouter);
+routes.use("/users", userRouter);
+routes.use("/health", healthRouter);
+routes.use("/categories", categoryRouter);
+routes.use("/products", productRouter);
+routes.use("/product-variants", productVariantRouter);
+routes.use("/attributes", attributeRouter);
+routes.use("/product-attributes", productAttributeRouter);
+routes.use("/staff-attendance", staffAttendanceRouter);
+routes.use("/orders", orderRouter);
+routes.use("/order-items", orderItemRouter);
+routes.use("/payments", paymentRouter);
+routes.use("/staff-salaries", staffSalaryRouter);
+routes.use("/dashboard", dashboardRouter);
+
+export default routes;

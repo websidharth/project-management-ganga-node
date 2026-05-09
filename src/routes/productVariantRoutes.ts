@@ -1,0 +1,179 @@
+import { Router } from "express";
+import { container } from "../config/ioc.config";
+import { TYPES } from "../config/ioc.types";
+import { ProductVariantController } from "../controllers/product-variant.controller";
+import asyncHandler from "../middleware/asyncHandler.middleware";
+import { authenticateToken } from "../middleware/auth";
+import { validate } from "../middleware/validate";
+import { createProductVariantSchema, updateProductVariantSchema } from "../schemas/productVariantSchema";
+
+const productVariantRouter = Router();
+const productVariantController = container.get<ProductVariantController>(TYPES.ProductVariantController);
+
+/**
+ * @swagger
+ * tags:
+ *   - name: ProductVariant
+ *     description: Product Variant Management
+ */
+
+/**
+ * @swagger
+ * /product-variants:
+ *   get:
+ *     summary: Get all product variants
+ *     tags: [ProductVariant]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Product variants fetched successfully
+ */
+productVariantRouter.get("/", authenticateToken, asyncHandler(productVariantController.getAll));
+
+/**
+ * @swagger
+ * /product-variants/product/{productId}:
+ *   get:
+ *     summary: Get variants by product ID
+ *     tags: [ProductVariant]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: productId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Product variants fetched successfully
+ */
+productVariantRouter.get("/product/:productId", authenticateToken, asyncHandler(productVariantController.getByProductId));
+
+/**
+ * @swagger
+ * /product-variants/{id}:
+ *   get:
+ *     summary: Get product variant by ID
+ *     tags: [ProductVariant]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Product variant fetched successfully
+ *       404:
+ *         description: Product variant not found
+ */
+productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantController.getById));
+
+/**
+ * @swagger
+ * /product-variants:
+ *   post:
+ *     summary: Create a new product variant
+ *     tags: [ProductVariant]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [productId]
+ *             properties:
+ *               productId:
+ *                 type: integer
+ *               size:
+ *                 type: string
+ *               material:
+ *                 type: string
+ *               voltage:
+ *                 type: string
+ *               color:
+ *                 type: string
+ *               extraSku:
+ *                 type: string
+ *               extraPrice:
+ *                 type: number
+ *               stock:
+ *                 type: integer
+ *               isDefault:
+ *                 type: boolean
+ *     responses:
+ *       201:
+ *         description: Product variant created successfully
+ */
+productVariantRouter.post("/", authenticateToken, validate(createProductVariantSchema), asyncHandler(productVariantController.create));
+
+/**
+ * @swagger
+ * /product-variants/{id}:
+ *   put:
+ *     summary: Update a product variant
+ *     tags: [ProductVariant]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               size:
+ *                 type: string
+ *               material:
+ *                 type: string
+ *               voltage:
+ *                 type: string
+ *               color:
+ *                 type: string
+ *               extraSku:
+ *                 type: string
+ *               extraPrice:
+ *                 type: number
+ *               stock:
+ *                 type: integer
+ *               isDefault:
+ *                 type: boolean
+ *     responses:
+ *       200:
+ *         description: Product variant updated successfully
+ */
+productVariantRouter.put("/:id", authenticateToken, validate(updateProductVariantSchema), asyncHandler(productVariantController.update));
+
+/**
+ * @swagger
+ * /product-variants/{id}:
+ *   delete:
+ *     summary: Delete a product variant
+ *     tags: [ProductVariant]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Product variant deleted successfully
+ */
+productVariantRouter.delete("/:id", authenticateToken, asyncHandler(productVariantController.delete));
+
+export default productVariantRouter;

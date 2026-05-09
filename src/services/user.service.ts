@@ -1,0 +1,143 @@
+import { inject, injectable } from "inversify";
+import type { IUserService } from "./interfaces/Iuser.service";
+import { TYPES } from "../config/ioc.types";
+import {
+  CreateUserDto,
+  UpdateOtpDto,
+  UpdateUserDto,
+  UserDto,
+} from "../dtos/user.dto";
+import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
+import { Role } from "../enum/user.enum";
+import { CreateUserModel } from "../models/user.model";
+import {
+  createUserName,
+  generateUserGUID,
+  nowISO,
+} from "../utils/authHelpers.service";
+import bcrypt from "bcryptjs";
+import { users } from "@prisma/client";
+import { generateOtp } from "../utils/otp.util";
+import type { IDateTimeService } from "./interfaces/idatetime.service";
+
+@injectable()
+export class UserService implements IUserService {
+  constructor(
+    @inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork,
+    @inject(TYPES.IDateTimeService)
+    private dateTime: IDateTimeService
+  ) {}
+
+  async create(data: CreateUserModel, role: Role) {
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    const { otp } = generateOtp();
+
+    return this.unitOfWork.transaction(async (transactionClient) => {
+      const user = await transactionClient.users.create({
+        data: {
+          userId: generateUserGUID().toString(),
+          name: `${data.firstName} ${data.lastName}`,
+          userName: createUserName(`${data.firstName}`, `${data.lastName}`),
+          phone: data.phone || "",
+          email: data.email,
+          password: hashedPassword,
+          emailVerificationToken: otp,
+          emailVerificationExpires: new Date(),
+          isActive: false,
+          isEmailVerified: false,
+          isPhoneVerified: false,
+          tokenUpdated: false,
+        },
+      });
+
+      return this.convertToDto(user);
+    });
+  }
+
+  async getAll(): Promise<UserDto[] | null> {
+    const userList = await this.unitOfWork.User.findAll();
+    if (!userList || userList.length === 0) {
+      throw new Error("No user found");
+    }
+    return userList;
+  }
+
+  async getUserById(userId: string): Promise<UserDto | null> {
+    const user = await this.unitOfWork.User.findById(userId);
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async getByEmail(email: string): Promise<UserDto | null> {
+    const user = await this.unitOfWork.User.findByEmail(email);
+
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async update(
+    userId: string,
+    updatedData: UpdateUserDto
+  ): Promise<UserDto | null> {
+    const user = await this.unitOfWork.User.update(userId, {
+      ...updatedData,
+    });
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async updateStatus(
+    userId: string,
+    updatedData: UpdateUserDto
+  ): Promise<UserDto | null> {
+    const user = await this.unitOfWork.User.updateStatus(userId, {
+      ...updatedData,
+    });
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
+  async delete(userId: string): Promise<UserDto | null> {
+    const user = await this.unitOfWork.User.delete(userId);
+    return user;
+  }
+
+convertToDto(user: users, includePassword: boolean = false, token: boolean = false, refreshToken: boolean = false, ): UserDto {
+    return {
+      id: user.id,
+      userId: user.userId,
+      name: user.name,
+      userName: user.userName,
+      email: user.email,
+      phone: user.phone,
+      password: includePassword ? user.password : null,
+      role: user.role,
+      isActive: user.isActive,
+      isEmailVerified: user.isEmailVerified,
+      isPhoneVerified: user.isPhoneVerified,
+      loginAttempts: user.loginAttempts,
+      lastLoginAt: user.lastLoginAt,
+      lastLoginIP: user.lastLoginIP,
+      emailVerificationToken: user.emailVerificationToken,
+      emailVerificationExpires: user.emailVerificationExpires,
+      profileImageUrl: user.profileImageUrl,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      status: user.status, 
+      token: token ? user.token : null,
+      tokenUpdated: user.tokenUpdated,
+      refreshToken: token ? user.refreshToken : null,
+    };
+  }
+}
+
+export default UserService;

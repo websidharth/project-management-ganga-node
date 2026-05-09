@@ -1,0 +1,179 @@
+import { Router } from "express";
+import { container } from "../config/ioc.config";
+import { TYPES } from "../config/ioc.types";
+import { OrderController } from "../controllers/order.controller";
+import asyncHandler from "../middleware/asyncHandler.middleware";
+import { authenticateToken } from "../middleware/auth";
+import { validate } from "../middleware/validate";
+import { createOrderSchema, updateOrderSchema } from "../schemas/orderSchema";
+
+const orderRouter = Router();
+const orderController = container.get<OrderController>(TYPES.OrderController);
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Order
+ *     description: Order Management
+ */
+
+/**
+ * @swagger
+ * /orders:
+ *   get:
+ *     summary: Get all orders
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Orders fetched successfully
+ */
+orderRouter.get("/", authenticateToken, asyncHandler(orderController.getAll));
+
+/**
+ * @swagger
+ * /orders/customer/{customerId}:
+ *   get:
+ *     summary: Get orders by customer ID
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: customerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Orders fetched successfully
+ */
+orderRouter.get("/customer/:customerId", authenticateToken, asyncHandler(orderController.getByCustomerId));
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   get:
+ *     summary: Get order by ID
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Order fetched successfully
+ *       404:
+ *         description: Order not found
+ */
+orderRouter.get("/:id", authenticateToken, asyncHandler(orderController.getById));
+
+/**
+ * @swagger
+ * /orders:
+ *   post:
+ *     summary: Create a new order
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [orderNumber, customerId]
+ *             properties:
+ *               orderNumber:
+ *                 type: string
+ *               customerId:
+ *                 type: integer
+ *               totalAmount:
+ *                 type: number
+ *               discount:
+ *                 type: number
+ *               tax:
+ *                 type: number
+ *               shippingCost:
+ *                 type: number
+ *               grandTotal:
+ *                 type: number
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED, RETURNED]
+ *               notes:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Order created successfully
+ */
+orderRouter.post("/", authenticateToken, validate(createOrderSchema), asyncHandler(orderController.create));
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   put:
+ *     summary: Update an order
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               totalAmount:
+ *                 type: number
+ *               discount:
+ *                 type: number
+ *               tax:
+ *                 type: number
+ *               shippingCost:
+ *                 type: number
+ *               grandTotal:
+ *                 type: number
+ *               status:
+ *                 type: string
+ *                 enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED, RETURNED]
+ *               notes:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Order updated successfully
+ */
+orderRouter.put("/:id", authenticateToken, validate(updateOrderSchema), asyncHandler(orderController.update));
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   delete:
+ *     summary: Delete an order
+ *     tags: [Order]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Order deleted successfully
+ */
+orderRouter.delete("/:id", authenticateToken, asyncHandler(orderController.delete));
+
+export default orderRouter;
