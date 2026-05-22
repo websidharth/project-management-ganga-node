@@ -23,6 +23,13 @@ const dashboardController = container.get<DashboardController>(TYPES.DashboardCo
  *     tags: [Dashboard]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Dashboard summary fetched successfully

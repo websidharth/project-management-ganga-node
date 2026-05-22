@@ -4,4 +4,6 @@ export interface CreateUserModel {
   email: string;
   phone?: string;
   password: string;
+  googleId?: string;
+  profileImage?: string;
 }

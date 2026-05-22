@@ -22,9 +22,6 @@ export class ProductRepository implements IProductRepository {
       if (filters.search) {
         where.OR = [
           { name: { contains: filters.search, mode: 'insensitive' } },
-          { slug: { contains: filters.search, mode: 'insensitive' } },
-          { description: { contains: filters.search, mode: 'insensitive' } },
-          { sku: { contains: filters.search, mode: 'insensitive' } },
         ];
       }
 
@@ -73,6 +70,6 @@ export class ProductRepository implements IProductRepository {
   }
 
   async delete(id: number): Promise<ProductDto> {
-    return prisma.product.delete({ where: { id } });
+    return prisma.product.update({ where: { id }, data: { status: false } });
   }
 }

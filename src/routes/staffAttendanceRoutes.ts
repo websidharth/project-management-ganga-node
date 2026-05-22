@@ -25,6 +25,13 @@ const staffAttendanceController = container.get<StaffAttendanceController>(TYPES
  *     tags: [StaffAttendance]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Staff attendance records fetched successfully
@@ -40,6 +47,12 @@ staffAttendanceRouter.get("/", authenticateToken, asyncHandler(staffAttendanceCo
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: staffId
  *         required: true
@@ -60,6 +73,12 @@ staffAttendanceRouter.get("/staff/:staffId", authenticateToken, asyncHandler(sta
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -81,6 +100,13 @@ staffAttendanceRouter.get("/:id", authenticateToken, asyncHandler(staffAttendanc
  *     tags: [StaffAttendance]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -122,6 +148,12 @@ staffAttendanceRouter.post("/", authenticateToken, validate(createStaffAttendanc
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -160,6 +192,12 @@ staffAttendanceRouter.put("/:id", authenticateToken, validate(updateStaffAttenda
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

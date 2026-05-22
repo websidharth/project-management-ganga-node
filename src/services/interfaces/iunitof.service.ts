@@ -11,6 +11,7 @@ import { IOrderItemService } from "./Iorder-item.service";
 import { IPaymentService } from "./Ipayment.service";
 import { IStaffSalaryService } from "./Istaff-salary.service";
 import { IDashboardService } from "./Idashboard.service";
+import { IBrandNameService } from "./Ibrand-name.service";
 
 export default interface IUnitOfService {
   User: IUserService;
@@ -26,4 +27,5 @@ export default interface IUnitOfService {
   Payment: IPaymentService;
   StaffSalary: IStaffSalaryService;
   Dashboard: IDashboardService;
+  BrandName: IBrandNameService;
 }

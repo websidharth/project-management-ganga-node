@@ -44,6 +44,12 @@ enum PaymentMethod {
   ONLINE
 }
 
+enum Status {
+  Published
+  Draft
+  Trash
+}
+
 enum OrderStatus {
   PENDING
   CONFIRMED
@@ -68,6 +74,7 @@ model users {
   emailVerificationExpires DateTime?
   isPhoneVerified          Boolean           @default(false)
   profileImageUrl          String?
+  googleId                 String?
   loginAttempts            Int               @default(0)
   lastLoginAt              DateTime?
   lastLoginIP              String?
@@ -144,37 +151,42 @@ model Category {
 }
 
 model Product {
-  id                Int                @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   name              String
-  slug              String             @unique
+  brandNameId       Int?
+  slug              String   @unique
   description       String?
-  sku               String             @unique
-  price             Float              @default(0)
+  sku               String   @unique
+  price             Float    @default(0)
   cost              Float?
-  stock             Int                @default(0)
-  lowStockThreshold Int?               @default(5)
+  stock             Int      @default(0)
+  lowStockThreshold Int?     @default(5)
   categoryId        Int
   images            String[]
   storeId           Int?
-  status            Boolean            @default(true)
-  displayOrder      Int?               @default(0)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  status            Boolean  @default(true)
+  displayOrder      Int?     @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   createdById       Int
   updatedById       Int?
-  store             Store?             @relation(fields: [storeId], references: [id])
-  createdBy         users              @relation("CreatedBy", fields: [createdById], references: [id])
-  updatedBy         users?             @relation("UpdatedBy", fields: [updatedById], references: [id])
-  orderItems        OrderItem[]
-  category          Category           @relation(fields: [categoryId], references: [id])
-  variants          ProductVariant[]
-  attributes        ProductAttribute[]
+
+  brandName  BrandName?         @relation(fields: [brandNameId], references: [id])
+  store      Store?             @relation(fields: [storeId], references: [id])
+  createdBy  users              @relation("CreatedBy", fields: [createdById], references: [id])
+  updatedBy  users?             @relation("UpdatedBy", fields: [updatedById], references: [id])
+  orderItems OrderItem[]
+  category   Category           @relation(fields: [categoryId], references: [id])
+  variants   ProductVariant[]
+  attributes ProductAttribute[]
 }
 
 model ProductVariant {
   id           Int         @id @default(autoincrement())
   productId    Int
   product      Product     @relation(fields: [productId], references: [id])
+  brandName    String?
+  varient      String?
   size         String?
   material     String?
   voltage      String?
@@ -188,11 +200,19 @@ model ProductVariant {
   orderItems   OrderItem[]
 }
 
+model BrandName {
+  id           Int       @id @default(autoincrement())
+  brandName    String?
+  status       Boolean   @default(true)
+  displayOrder Int?      @default(0)
+  Product      Product[]
+}
+
 model Attribute {
   id                Int                @id @default(autoincrement())
   name              String             @unique
   unit              String?
-  status            Boolean            @default(true)
+  status            Status             @default(Published)
   displayOrder      Int?               @default(0)
   productAttributes ProductAttribute[]
   createdAt         DateTime           @default(now())

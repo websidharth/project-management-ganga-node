@@ -25,6 +25,13 @@ const categoryController = container.get<CategoryController>(TYPES.CategoryContr
  *     tags: [Category]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Categories fetched successfully
@@ -40,6 +47,12 @@ categoryRouter.get("/", authenticateToken, asyncHandler(categoryController.getAl
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -61,6 +74,13 @@ categoryRouter.get("/:id", authenticateToken, asyncHandler(categoryController.ge
  *     tags: [Category]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -90,6 +110,12 @@ categoryRouter.post("/", validate(createCategorySchema), asyncHandler(categoryCo
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -123,6 +149,12 @@ categoryRouter.put("/:id", authenticateToken, validate(updateCategorySchema), as
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

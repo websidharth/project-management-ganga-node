@@ -25,6 +25,13 @@ const staffSalaryController = container.get<StaffSalaryController>(TYPES.StaffSa
  *     tags: [StaffSalary]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Staff salaries fetched successfully
@@ -40,6 +47,12 @@ staffSalaryRouter.get("/", authenticateToken, asyncHandler(staffSalaryController
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: staffId
  *         required: true
@@ -60,6 +73,12 @@ staffSalaryRouter.get("/staff/:staffId", authenticateToken, asyncHandler(staffSa
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -81,6 +100,13 @@ staffSalaryRouter.get("/:id", authenticateToken, asyncHandler(staffSalaryControl
  *     tags: [StaffSalary]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -127,6 +153,12 @@ staffSalaryRouter.post("/", authenticateToken, validate(createStaffSalarySchema)
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -171,6 +203,12 @@ staffSalaryRouter.put("/:id", authenticateToken, validate(updateStaffSalarySchem
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

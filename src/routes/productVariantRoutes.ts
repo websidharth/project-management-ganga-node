@@ -25,6 +25,13 @@ const productVariantController = container.get<ProductVariantController>(TYPES.P
  *     tags: [ProductVariant]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Product variants fetched successfully
@@ -40,6 +47,12 @@ productVariantRouter.get("/", authenticateToken, asyncHandler(productVariantCont
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: productId
  *         required: true
@@ -60,6 +73,12 @@ productVariantRouter.get("/product/:productId", authenticateToken, asyncHandler(
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -81,6 +100,13 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *     tags: [ProductVariant]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -122,6 +148,12 @@ productVariantRouter.post("/", authenticateToken, validate(createProductVariantS
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -165,6 +197,12 @@ productVariantRouter.put("/:id", authenticateToken, validate(updateProductVarian
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

@@ -14,6 +14,7 @@ import { IOrderItemService } from "./interfaces/Iorder-item.service";
 import { IPaymentService } from "./interfaces/Ipayment.service";
 import { IStaffSalaryService } from "./interfaces/Istaff-salary.service";
 import { IDashboardService } from "./interfaces/Idashboard.service";
+import { IBrandNameService } from "./interfaces/Ibrand-name.service";
 
 export default class UnitOfService implements IUnitOfService {
   public User: IUserService;
@@ -29,6 +30,7 @@ export default class UnitOfService implements IUnitOfService {
   public Payment: IPaymentService;
   public StaffSalary: IStaffSalaryService;
   public Dashboard: IDashboardService;
+  public BrandName: IBrandNameService;
 
   constructor(
     user = container.get<IUserService>(TYPES.IUserService),
@@ -44,6 +46,7 @@ export default class UnitOfService implements IUnitOfService {
     payment = container.get<IPaymentService>(TYPES.IPaymentService),
     staffSalary = container.get<IStaffSalaryService>(TYPES.IStaffSalaryService),
     dashboard = container.get<IDashboardService>(TYPES.IDashboardService),
+    brandName = container.get<IBrandNameService>(TYPES.IBrandNameService),
   ) {
     this.User = user;
     this.Account = account;
@@ -58,5 +61,6 @@ export default class UnitOfService implements IUnitOfService {
     this.Payment = payment;
     this.StaffSalary = staffSalary;
     this.Dashboard = dashboard;
+    this.BrandName = brandName;
   }
 }

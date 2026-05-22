@@ -20,7 +20,7 @@ app.use(cors()); // <--- Add this line BEFORE your routes
 /*
 app.use(cors({
   origin: "*", // Allow all origins (good for development)
-  // origin: ["http://192.168.1.67:4000", "http://localhost:3000","http://localhost:4000"], // Allow specific IPs
+  // origin: ["https://gmr-teal.vercel.app","http://192.168.1.67:4000", "http://localhost:3000","http://localhost:4000"], // Allow specific IPs
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));

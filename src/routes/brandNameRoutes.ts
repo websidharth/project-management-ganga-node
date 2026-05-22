@@ -1,28 +1,28 @@
 import { Router } from "express";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
-import { OrderItemController } from "../controllers/order-item.controller";
+import { BrandNameController } from "../controllers/brand-name.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
 import { authenticateToken } from "../middleware/auth";
 import { validate } from "../middleware/validate";
-import { createOrderItemSchema, updateOrderItemSchema } from "../schemas/orderItemSchema";
+import { createBrandNameSchema, updateBrandNameSchema } from "../schemas/brandNameSchema";
 
-const orderItemRouter = Router();
-const orderItemController = container.get<OrderItemController>(TYPES.OrderItemController);
+const brandNameRouter = Router();
+const brandNameController = container.get<BrandNameController>(TYPES.BrandNameController);
 
 /**
  * @swagger
  * tags:
- *   - name: OrderItem
- *     description: Order Item Management
+ *   - name: BrandName
+ *     description: Brand Name Management
  */
 
 /**
  * @swagger
- * /order-items/order/{orderId}:
+ * /brand-names:
  *   get:
- *     summary: Get items by order ID
- *     tags: [OrderItem]
+ *     summary: Get all brand names
+ *     tags: [BrandName]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -32,23 +32,18 @@ const orderItemController = container.get<OrderItemController>(TYPES.OrderItemCo
  *           type: string
  *         required: true
  *         description: Enter Client Id
- *       - in: path
- *         name: orderId
- *         required: true
- *         schema:
- *           type: integer
  *     responses:
  *       200:
- *         description: Order items fetched successfully
+ *         description: Brand names fetched successfully
  */
-orderItemRouter.get("/order/:orderId", authenticateToken, asyncHandler(orderItemController.getByOrderId));
+brandNameRouter.get("/", authenticateToken, asyncHandler(brandNameController.getAll));
 
 /**
  * @swagger
- * /order-items/{id}:
+ * /brand-names/{id}:
  *   get:
- *     summary: Get order item by ID
- *     tags: [OrderItem]
+ *     summary: Get brand name by ID
+ *     tags: [BrandName]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -65,18 +60,18 @@ orderItemRouter.get("/order/:orderId", authenticateToken, asyncHandler(orderItem
  *           type: integer
  *     responses:
  *       200:
- *         description: Order item fetched successfully
+ *         description: Brand name fetched successfully
  *       404:
- *         description: Order item not found
+ *         description: Brand name not found
  */
-orderItemRouter.get("/:id", authenticateToken, asyncHandler(orderItemController.getById));
+brandNameRouter.get("/:id", authenticateToken, asyncHandler(brandNameController.getById));
 
 /**
  * @swagger
- * /order-items:
+ * /brand-names:
  *   post:
- *     summary: Create an order item
- *     tags: [OrderItem]
+ *     summary: Create a new brand name
+ *     tags: [BrandName]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -92,32 +87,26 @@ orderItemRouter.get("/:id", authenticateToken, asyncHandler(orderItemController.
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderId, productId, quantity, unitPrice, totalPrice]
+ *             required: [brandName]
  *             properties:
- *               orderId:
+ *               brandName:
+ *                 type: string
+ *               status:
+ *                 type: boolean
+ *               displayOrder:
  *                 type: integer
- *               productId:
- *                 type: integer
- *               variantId:
- *                 type: integer
- *               quantity:
- *                 type: integer
- *               unitPrice:
- *                 type: number
- *               totalPrice:
- *                 type: number
  *     responses:
  *       201:
- *         description: Order item created successfully
+ *         description: Brand name created successfully
  */
-orderItemRouter.post("/", authenticateToken, validate(createOrderItemSchema), asyncHandler(orderItemController.create));
+brandNameRouter.post("/", authenticateToken, validate(createBrandNameSchema), asyncHandler(brandNameController.create));
 
 /**
  * @swagger
- * /order-items/{id}:
+ * /brand-names/{id}:
  *   put:
- *     summary: Update an order item
- *     tags: [OrderItem]
+ *     summary: Update a brand name
+ *     tags: [BrandName]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -139,24 +128,24 @@ orderItemRouter.post("/", authenticateToken, validate(createOrderItemSchema), as
  *           schema:
  *             type: object
  *             properties:
- *               quantity:
+ *               brandName:
+ *                 type: string
+ *               status:
+ *                 type: boolean
+ *               displayOrder:
  *                 type: integer
- *               unitPrice:
- *                 type: number
- *               totalPrice:
- *                 type: number
  *     responses:
  *       200:
- *         description: Order item updated successfully
+ *         description: Brand name updated successfully
  */
-orderItemRouter.put("/:id", authenticateToken, validate(updateOrderItemSchema), asyncHandler(orderItemController.update));
+brandNameRouter.put("/:id", authenticateToken, validate(updateBrandNameSchema), asyncHandler(brandNameController.update));
 
 /**
  * @swagger
- * /order-items/{id}:
+ * /brand-names/{id}:
  *   delete:
- *     summary: Delete an order item
- *     tags: [OrderItem]
+ *     summary: Delete a brand name (soft delete)
+ *     tags: [BrandName]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -173,8 +162,8 @@ orderItemRouter.put("/:id", authenticateToken, validate(updateOrderItemSchema), 
  *           type: integer
  *     responses:
  *       200:
- *         description: Order item deleted successfully
+ *         description: Brand name deleted successfully
  */
-orderItemRouter.delete("/:id", authenticateToken, asyncHandler(orderItemController.delete));
+brandNameRouter.delete("/:id", authenticateToken, asyncHandler(brandNameController.delete));
 
-export default orderItemRouter;
+export default brandNameRouter;

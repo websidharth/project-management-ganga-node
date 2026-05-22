@@ -26,6 +26,12 @@ const paymentController = container.get<PaymentController>(TYPES.PaymentControll
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: orderId
  *         required: true
@@ -46,6 +52,12 @@ paymentRouter.get("/order/:orderId", authenticateToken, asyncHandler(paymentCont
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -67,6 +79,13 @@ paymentRouter.get("/:id", authenticateToken, asyncHandler(paymentController.getB
  *     tags: [Payment]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -106,6 +125,12 @@ paymentRouter.post("/", authenticateToken, validate(createPaymentSchema), asyncH
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -145,6 +170,12 @@ paymentRouter.put("/:id", authenticateToken, validate(updatePaymentSchema), asyn
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

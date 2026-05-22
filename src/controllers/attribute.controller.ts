@@ -5,15 +5,28 @@ import IUnitOfService from "../services/interfaces/iunitof.service";
 import CustomResponse from "../dtos/custom-response";
 import { AttributeDto, CreateAttributeDto, UpdateAttributeDto } from "../dtos/attribute.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
+import { AttributeFilterParams } from "../params/attribute.params";
+import { Status } from "@prisma/client";
 
 export class AttributeController {
   constructor(
     private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)
-  ) {}
+  ) { }
 
   getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<AttributeDto>>>> => {
-    const attributes = await this.unitOfService.Attribute.getAll();
-    return res.status(200).json({ success: true, message: "Attributes fetched successfully", data: { totalRecord: attributes.length, data: attributes } });
+    const filters: AttributeFilterParams = Object.fromEntries(
+      Object.entries({
+        page: req.query['page'] ? parseInt(req.query['page'] as string) : undefined,
+        recordPerPage: req.query['recordPerPage'] ? parseInt(req.query['recordPerPage'] as string) : undefined,
+        search: req.query['search'] as string | undefined,
+        status: req.query['status'] !== undefined && req.query['status'] !== '' && Object.values(Status).includes(req.query['status'] as Status) ? req.query['status'] as Status : undefined,
+        showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
+        startDate: req.query['startDate'] ? new Date(req.query['startDate'] as string) : undefined,
+        endDate: req.query['endDate'] ? new Date(req.query['endDate'] as string) : undefined,
+      }).filter(([, v]) => v !== undefined)
+    );
+    const result = await this.unitOfService.Attribute.getAll(filters);
+    return res.status(200).json({ success: true, message: "Attributes fetched successfully", data: { totalRecord: result.totalRecord, data: result.data } });
   };
 
   getById = async (req: Request, res: Response): Promise<Response<CustomResponse<AttributeDto>>> => {

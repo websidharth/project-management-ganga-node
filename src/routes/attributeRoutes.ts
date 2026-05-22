@@ -25,6 +25,13 @@ const attributeController = container.get<AttributeController>(TYPES.AttributeCo
  *     tags: [Attribute]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Attributes fetched successfully
@@ -40,6 +47,12 @@ attributeRouter.get("/", authenticateToken, asyncHandler(attributeController.get
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -61,6 +74,13 @@ attributeRouter.get("/:id", authenticateToken, asyncHandler(attributeController.
  *     tags: [Attribute]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -88,6 +108,12 @@ attributeRouter.post("/", authenticateToken, validate(createAttributeSchema), as
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -119,6 +145,12 @@ attributeRouter.put("/:id", authenticateToken, validate(updateAttributeSchema), 
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

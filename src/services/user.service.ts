@@ -48,6 +48,8 @@ export class UserService implements IUserService {
           isEmailVerified: false,
           isPhoneVerified: false,
           tokenUpdated: false,
+          googleId: data.googleId || null,
+          profileImageUrl: data.profileImage || null,
         },
       });
 

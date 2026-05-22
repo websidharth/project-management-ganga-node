@@ -28,7 +28,9 @@ import { IPaymentRepository } from "./interfaces/ipayment.repository";
 import { StaffSalaryRepository } from "./staff-salary.repository";
 import { IStaffSalaryRepository } from "./interfaces/istaff-salary.repository";
 import { DashboardRepository } from "./dashboard.repository";
+import { BrandNameRepository } from "./brand-name.repository";
 import { IDashboardRepository } from "./interfaces/idashboard.repository";
+import { IBrandNameRepository } from "./interfaces/ibrand-name.repository";
 
 export default class UnitOfWork implements IUnitOfWork {
   public User: UserRepository;
@@ -44,6 +46,7 @@ export default class UnitOfWork implements IUnitOfWork {
   public Payment: PaymentRepository;
   public StaffSalary: StaffSalaryRepository;
   public Dashboard: DashboardRepository;
+  public BrandName: BrandNameRepository;
 
   constructor(
     user = container.get<IUserRepository>(TYPES.IUserRepository),
@@ -59,6 +62,7 @@ export default class UnitOfWork implements IUnitOfWork {
     payment = container.get<IPaymentRepository>(TYPES.IPaymentRepository),
     staffSalary = container.get<IStaffSalaryRepository>(TYPES.IStaffSalaryRepository),
     dashboard = container.get<IDashboardRepository>(TYPES.IDashboardRepository),
+    brandName = container.get<IBrandNameRepository>(TYPES.IBrandNameRepository),
   ) {
     this.User = user;
     this.Account = account;
@@ -73,6 +77,7 @@ export default class UnitOfWork implements IUnitOfWork {
     this.Payment = payment;
     this.StaffSalary = staffSalary;
     this.Dashboard = dashboard;
+    this.BrandName = brandName;
   }
 
   async transaction<T>(

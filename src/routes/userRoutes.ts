@@ -21,6 +21,13 @@ const usersController = container.get<UserController>(TYPES.UserController);
  *   get:
  *     summary: Get all users
  *     tags: [User]
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: List of all users
@@ -37,6 +44,12 @@ userRouter.get('/', authenticateToken, asyncHandler(usersController.getAllUsers)
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: email
  *         schema:
@@ -61,6 +74,12 @@ userRouter.get('/email/:email', authenticateToken, usersController.getUserByEmai
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: userId
  *         schema:
@@ -84,6 +103,12 @@ userRouter.get('/:userId', authenticateToken, asyncHandler(usersController.getUs
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: userId
  *         schema:
@@ -118,6 +143,12 @@ userRouter.put('/status/:userId', authenticateToken, asyncHandler(usersControlle
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: userId
  *         schema:
@@ -161,6 +192,12 @@ userRouter.put('/:userId', authenticateToken, asyncHandler(usersController.updat
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: userId
  *         schema:

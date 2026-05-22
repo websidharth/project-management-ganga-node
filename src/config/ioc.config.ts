@@ -22,6 +22,7 @@ import { OrderItemController } from '../controllers/order-item.controller';
 import { PaymentController } from '../controllers/payment.controller';
 import { StaffSalaryController } from '../controllers/staff-salary.controller';
 import { DashboardController } from '../controllers/dashboard.controller';
+import { BrandNameController } from '../controllers/brand-name.controller';
 
 import { IAccountService } from '../services/interfaces/Iaccount.service';
 import { IUserService } from '../services/interfaces/Iuser.service';
@@ -37,6 +38,7 @@ import { IOrderItemService } from '../services/interfaces/Iorder-item.service';
 import { IPaymentService } from '../services/interfaces/Ipayment.service';
 import { IStaffSalaryService } from '../services/interfaces/Istaff-salary.service';
 import { IDashboardService } from '../services/interfaces/Idashboard.service';
+import { IBrandNameService } from '../services/interfaces/Ibrand-name.service';
 
 import AccountService from '../services/account.service';
 import { UserService } from '../services/user.service';
@@ -51,6 +53,7 @@ import { OrderItemService } from '../services/order-item.service';
 import { PaymentService } from '../services/payment.service';
 import { StaffSalaryService } from '../services/staff-salary.service';
 import { DashboardService } from '../services/dashboard.service';
+import { BrandNameService } from '../services/brand-name.service';
 
 import { AccountRepository } from '../repository/account.repository';
 import { UserRepository } from '../repository/user.repository';
@@ -65,6 +68,7 @@ import { OrderItemRepository } from '../repository/order-item.repository';
 import { PaymentRepository } from '../repository/payment.repository';
 import { StaffSalaryRepository } from '../repository/staff-salary.repository';
 import { DashboardRepository } from '../repository/dashboard.repository';
+import { BrandNameRepository } from '../repository/brand-name.repository';
 
 import { IAccountRepository } from '../repository/interfaces/iaccount.repository';
 import { IUserRepository } from '../repository/interfaces/iuser.repository';
@@ -79,6 +83,7 @@ import { IOrderItemRepository } from '../repository/interfaces/iorder-item.repos
 import { IPaymentRepository } from '../repository/interfaces/ipayment.repository';
 import { IStaffSalaryRepository } from '../repository/interfaces/istaff-salary.repository';
 import { IDashboardRepository } from '../repository/interfaces/idashboard.repository';
+import { IBrandNameRepository } from '../repository/interfaces/ibrand-name.repository';
 
 export const container = new Container();
 
@@ -96,6 +101,7 @@ container.bind<OrderItemController>(TYPES.OrderItemController).to(OrderItemContr
 container.bind<PaymentController>(TYPES.PaymentController).to(PaymentController);
 container.bind<StaffSalaryController>(TYPES.StaffSalaryController).to(StaffSalaryController);
 container.bind<DashboardController>(TYPES.DashboardController).to(DashboardController);
+container.bind<BrandNameController>(TYPES.BrandNameController).to(BrandNameController);
 
 container.bind<IAccountService>(TYPES.IAccountService).to(AccountService);
 container.bind<IUserService>(TYPES.IUserService).to(UserService);
@@ -110,6 +116,7 @@ container.bind<IOrderItemService>(TYPES.IOrderItemService).to(OrderItemService);
 container.bind<IPaymentService>(TYPES.IPaymentService).to(PaymentService);
 container.bind<IStaffSalaryService>(TYPES.IStaffSalaryService).to(StaffSalaryService);
 container.bind<IDashboardService>(TYPES.IDashboardService).to(DashboardService);
+container.bind<IBrandNameService>(TYPES.IBrandNameService).to(BrandNameService);
 
 container.bind<IAccountRepository>(TYPES.IAccountRepository).to(AccountRepository);
 container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
@@ -124,6 +131,7 @@ container.bind<IOrderItemRepository>(TYPES.IOrderItemRepository).to(OrderItemRep
 container.bind<IPaymentRepository>(TYPES.IPaymentRepository).to(PaymentRepository);
 container.bind<IStaffSalaryRepository>(TYPES.IStaffSalaryRepository).to(StaffSalaryRepository);
 container.bind<IDashboardRepository>(TYPES.IDashboardRepository).to(DashboardRepository);
+container.bind<IBrandNameRepository>(TYPES.IBrandNameRepository).to(BrandNameRepository);
 
 container.bind<IUnitOfService>(TYPES.IUnitOfService).to(UnitOfService);
 container.bind<IUnitOfWork>(TYPES.IUnitOfWork).to(UnitOfWork);

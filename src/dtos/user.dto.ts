@@ -8,6 +8,7 @@ export interface UserDto {
   phone?: string | null;
   email: string;
   password?: string | null;
+  googleId?: string | null;
   role: Role;
   isActive: boolean;
   isEmailVerified: boolean;
@@ -35,6 +36,8 @@ export interface CreateUserDto {
   role: Role;
   isActive: boolean;
   createdAt: Date;
+  googleId?: string | null;
+  profileImageUrl?: string | null;
 }
 export interface UpdateUserDto {
   name: string;

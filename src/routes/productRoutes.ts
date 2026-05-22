@@ -26,6 +26,12 @@ const productController = container.get<ProductController>(TYPES.ProductControll
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: query
  *         name: page
  *         schema:
@@ -85,6 +91,12 @@ productRouter.get('/', authenticateToken, asyncHandler(productController.getAll)
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: slug
  *         required: true
@@ -107,6 +119,12 @@ productRouter.get('/slug/:slug', authenticateToken, asyncHandler(productControll
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -128,6 +146,13 @@ productRouter.get('/:id', authenticateToken, asyncHandler(productController.getB
  *     tags: [Product]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -175,6 +200,12 @@ productRouter.post('/', authenticateToken, validate(createProductSchema), asyncH
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -226,6 +257,12 @@ productRouter.put('/:id', authenticateToken, validate(updateProductSchema), asyn
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

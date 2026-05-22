@@ -25,6 +25,13 @@ const orderController = container.get<OrderController>(TYPES.OrderController);
  *     tags: [Order]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     responses:
  *       200:
  *         description: Orders fetched successfully
@@ -40,6 +47,12 @@ orderRouter.get("/", authenticateToken, asyncHandler(orderController.getAll));
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: customerId
  *         required: true
@@ -60,6 +73,12 @@ orderRouter.get("/customer/:customerId", authenticateToken, asyncHandler(orderCo
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -81,6 +100,13 @@ orderRouter.get("/:id", authenticateToken, asyncHandler(orderController.getById)
  *     tags: [Order]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -123,6 +149,12 @@ orderRouter.post("/", authenticateToken, validate(createOrderSchema), asyncHandl
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -165,6 +197,12 @@ orderRouter.put("/:id", authenticateToken, validate(updateOrderSchema), asyncHan
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

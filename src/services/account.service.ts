@@ -1,11 +1,11 @@
 
 import type { users } from "@prisma/client";
 import { TYPES } from "../config/ioc.types";
-import  IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
+import IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import { IDateTimeService } from "./interfaces/idatetime.service";
 import { IAccountService } from "./interfaces/Iaccount.service";
-import { inject, injectable } from "inversify"; 
-import { UserDto } from "../dtos/user.dto"; 
+import { inject, injectable } from "inversify";
+import { UserDto } from "../dtos/user.dto";
 import { Role } from "../enum/user.enum";
 import { CreateUserModel } from "../models/user.model";
 import { createUserName, generateUserGUID } from "../utils/authHelpers.service";
@@ -13,7 +13,7 @@ import { generateOtp } from "../utils/otp.util";
 import { ResetPasswordModel } from "../models/forgot-password.model";
 import { LoginModel } from "../models/login.model";
 
-import bcrypt from "bcryptjs"; 
+import bcrypt from "bcryptjs";
 
 @injectable()
 export class AccountService implements IAccountService {
@@ -32,8 +32,8 @@ export class AccountService implements IAccountService {
     return user;
   }
 
-  
-    async logout(userId: string): Promise<UserDto | null> {
+
+  async logout(userId: string): Promise<UserDto | null> {
     const user = await this.unitOfWork.Account.logout(userId);
     if (!user) {
       return null;
@@ -41,7 +41,7 @@ export class AccountService implements IAccountService {
     return user;
   }
 
-    async updateToken(userId: string, token: string): Promise<UserDto | null> {
+  async updateToken(userId: string, token: string): Promise<UserDto | null> {
     const user = await this.unitOfWork.Account.updateToken(userId, token);
     if (!user) {
       return null;
@@ -49,7 +49,7 @@ export class AccountService implements IAccountService {
     return user;
   }
 
- 
+
   async create(data: CreateUserModel, role: Role) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -68,7 +68,9 @@ export class AccountService implements IAccountService {
           emailVerificationExpires: this.dateTime.now(),
           isActive: false,
           isEmailVerified: false,
-          isPhoneVerified: false, 
+          isPhoneVerified: false,
+          googleId: data.googleId || null,
+          profileImageUrl: data.profileImage || null,
         },
       });
 
@@ -76,7 +78,7 @@ export class AccountService implements IAccountService {
     });
   }
 
-  convertToDto(user: users, includePassword: boolean = false, token: boolean = false, refreshToken: boolean = false, ): UserDto {
+  convertToDto(user: users, includePassword: boolean = false, token: boolean = false, refreshToken: boolean = false,): UserDto {
     return {
       id: user.id,
       userId: user.userId,
@@ -97,7 +99,7 @@ export class AccountService implements IAccountService {
       profileImageUrl: user.profileImageUrl,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      status: user.status, 
+      status: user.status,
       token: token ? user.token : null,
       tokenUpdated: user.tokenUpdated,
       refreshToken: token ? user.refreshToken : null,

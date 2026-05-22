@@ -19,6 +19,54 @@ const productAttributeController = container.get<ProductAttributeController>(TYP
 
 /**
  * @swagger
+ * /product-attributes:
+ *   get:
+ *     summary: Get all product attributes with filters
+ *     tags: [ProductAttribute]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
+ *       - in: query
+ *         name: productId
+ *         schema:
+ *           type: integer
+ *         description: Filter by product ID
+ *       - in: query
+ *         name: attributeId
+ *         schema:
+ *           type: integer
+ *         description: Filter by attribute ID
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: boolean
+ *         description: Filter by status
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: recordPerPage
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: showAllRecords
+ *         schema:
+ *           type: boolean
+ *     responses:
+ *       200:
+ *         description: Product attributes fetched successfully
+ */
+productAttributeRouter.get("/", authenticateToken, asyncHandler(productAttributeController.getAll));
+
+/**
+ * @swagger
  * /product-attributes/product/{productId}:
  *   get:
  *     summary: Get attributes by product ID
@@ -26,6 +74,12 @@ const productAttributeController = container.get<ProductAttributeController>(TYP
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: productId
  *         required: true
@@ -46,6 +100,12 @@ productAttributeRouter.get("/product/:productId", authenticateToken, asyncHandle
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -67,6 +127,13 @@ productAttributeRouter.get("/:id", authenticateToken, asyncHandler(productAttrib
  *     tags: [ProductAttribute]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       required: true
  *       content:
@@ -96,6 +163,12 @@ productAttributeRouter.post("/", authenticateToken, validate(createProductAttrib
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true
@@ -126,6 +199,12 @@ productAttributeRouter.put("/:id", authenticateToken, validate(updateProductAttr
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *       - in: path
  *         name: id
  *         required: true

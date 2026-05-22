@@ -23,6 +23,13 @@ const healthController = container.get<HealthController>(
  *   get:
  *     summary: Health Check
  *     tags: [HealthCheck]
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
  *     requestBody:
  *       content:
  *         application/json:

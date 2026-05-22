@@ -1,13 +1,19 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
 import { CreateProductAttributeDto, ProductAttributeDto, UpdateProductAttributeDto } from "../dtos/product-attribute.dto";
+import { ListResponseDto } from "../dtos/list-response.dto";
+import { ProductAttributeFilterParams } from "../params/product-attribute.params";
 import { IProductAttributeService } from "./interfaces/Iproduct-attribute.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
 
 @injectable()
 export class ProductAttributeService implements IProductAttributeService {
-  constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) {}
+  constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) { }
+
+  async getAll(filters?: ProductAttributeFilterParams): Promise<ListResponseDto<ProductAttributeDto>> {
+    return this.unitOfWork.ProductAttribute.findAll(filters);
+  }
 
   async getByProductId(productId: number): Promise<ProductAttributeDto[]> {
     return this.unitOfWork.ProductAttribute.findByProductId(productId);
