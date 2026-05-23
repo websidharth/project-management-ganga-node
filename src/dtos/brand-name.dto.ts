@@ -1,13 +1,17 @@
+import { Status } from "@prisma/client";
+
 export interface BrandNameDto {
     id: number;
-    brandName?: string | null;
-    status: boolean;
+    brandName: string;
+    status: Status;
+    categoryIds: number[];
     displayOrder?: number | null;
 }
 
 export interface CreateBrandNameDto {
-    brandName?: string | null;
-    status?: boolean;
+    categoryIds: number[];
+    brandName: string;
+    status: Status;
     displayOrder?: number | null;
 }
 

@@ -1,6 +1,8 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from "../dtos/category.dto";
+import { ListResponseDto } from "../dtos/list-response.dto";
+import { CategoryFilterParams } from "../params/category.params";
 import { ICategoryService } from "./interfaces/Icategory.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
@@ -9,11 +11,10 @@ import NotFoundError from "../exceptions/not-found-error";
 export class CategoryService implements ICategoryService {
   constructor(
     @inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork
-  ) {}
+  ) { }
 
-  async getAll(): Promise<CategoryDto[]> {
-    const categories = await this.unitOfWork.Category.findAll();
-    return categories;
+  async getAll(filters?: CategoryFilterParams): Promise<ListResponseDto<CategoryDto>> {
+    return this.unitOfWork.Category.findAll(filters);
   }
 
   async getById(id: number): Promise<CategoryDto | null> {

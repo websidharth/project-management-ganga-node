@@ -5,16 +5,28 @@ import IUnitOfService from '../services/interfaces/iunitof.service';
 import CustomResponse from '../dtos/custom-response';
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
 import { ListResponseDto } from '../dtos/list-response.dto';
+import { CategoryFilterParams } from '../params/category.params';
+import { Status } from '@prisma/client';
 
 export class CategoryController {
   constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) { }
 
   getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<CategoryDto>>>> => {
-    const categories = await this.unitOfService.Category.getAll();
+    const filters: CategoryFilterParams = Object.fromEntries(
+      Object.entries({
+        page: req.query['page'] ? parseInt(req.query['page'] as string) : undefined,
+        recordPerPage: req.query['recordPerPage'] ? parseInt(req.query['recordPerPage'] as string) : undefined,
+        search: req.query['search'] as string | undefined,
+        parentId: req.query['parentId'] ? parseInt(req.query['parentId'] as string) : undefined,
+        status: req.query['status'] ? req.query['status'] as Status : undefined,
+        showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
+      }).filter(([, v]) => v !== undefined)
+    );
+    const categories = await this.unitOfService.Category.getAll(filters);
     return res.status(200).json({
       success: true,
       message: 'Categories fetched successfully',
-      data: { totalRecord: categories.length, data: categories },
+      data: categories,
     });
   };
 

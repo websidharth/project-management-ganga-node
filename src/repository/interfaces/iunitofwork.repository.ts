@@ -13,6 +13,7 @@ import { IPaymentRepository } from "./ipayment.repository";
 import { IStaffSalaryRepository } from "./istaff-salary.repository";
 import { IDashboardRepository } from "./idashboard.repository";
 import { IBrandNameRepository } from "./ibrand-name.repository";
+import { IStaffRepository } from "./istaff.repository";
 
 export default interface IUnitOfWork {
   User: IUserRepository;
@@ -29,6 +30,7 @@ export default interface IUnitOfWork {
   StaffSalary: IStaffSalaryRepository;
   Dashboard: IDashboardRepository;
   BrandName: IBrandNameRepository;
+  Staff: IStaffRepository;
 
   /**
    * Executes a set of operations within a database transaction.

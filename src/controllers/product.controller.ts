@@ -3,26 +3,29 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import IUnitOfService from "../services/interfaces/iunitof.service";
 import CustomResponse from "../dtos/custom-response";
-import { CreateProductDto, ProductDto, UpdateProductDto } from "../dtos/product.dto";
+import { CreateProductDto, ProductResponseDto } from "../dtos/product.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { ProductFilterParams } from "../params/product.params";
+import { Status } from "@prisma/client";
 
 export class ProductController {
   constructor(
     private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)
   ) { }
 
+
+
   getAll = async (
     req: Request,
     res: Response
-  ): Promise<Response> => {
+  ): Promise<Response<ListResponseDto<ProductResponseDto>>> => {
     const filters: ProductFilterParams = Object.fromEntries(
       Object.entries({
         page: req.query['page'] ? parseInt(req.query['page'] as string) : undefined,
         recordPerPage: req.query['recordPerPage'] ? parseInt(req.query['recordPerPage'] as string) : undefined,
         search: req.query['search'] as string | undefined,
         categoryId: req.query['categoryId'] ? parseInt(req.query['categoryId'] as string) : undefined,
-        status: req.query['status'] !== undefined ? req.query['status'] === 'true' : undefined,
+        status: req.query['status'] ? req.query['status'] as Status : undefined,
         showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
         startDate: req.query['startDate'] ? new Date(req.query['startDate'] as string) : undefined,
         endDate: req.query['endDate'] ? new Date(req.query['endDate'] as string) : undefined,
@@ -36,10 +39,11 @@ export class ProductController {
     });
   };
 
+
   getById = async (
     req: Request,
     res: Response
-  ): Promise<Response<CustomResponse<ProductDto>>> => {
+  ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const id = parseInt(req.params["id"] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
     const product = await this.unitOfService.Product.getById(id);
@@ -49,7 +53,7 @@ export class ProductController {
   getBySlug = async (
     req: Request,
     res: Response
-  ): Promise<Response<CustomResponse<ProductDto>>> => {
+  ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const { slug } = req.params;
     if (!slug) return res.status(400).json({ success: false, message: "Slug is required" });
     const product = await this.unitOfService.Product.getBySlug(slug as string);
@@ -59,7 +63,7 @@ export class ProductController {
   create = async (
     req: Request,
     res: Response
-  ): Promise<Response<CustomResponse<ProductDto>>> => {
+  ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const userId = req.user?.userId as string;
     const body = req.body as CreateProductDto;
     const product = await this.unitOfService.Product.create(body, userId);
@@ -69,11 +73,11 @@ export class ProductController {
   update = async (
     req: Request,
     res: Response
-  ): Promise<Response<CustomResponse<ProductDto>>> => {
+  ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const id = parseInt(req.params["id"] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
     const userId = req.user?.userId as string;
-    const body = req.body as UpdateProductDto;
+    const body = req.body as CreateProductDto;
     const product = await this.unitOfService.Product.update(id, body, userId);
     return res.status(200).json({ success: true, message: "Product updated successfully", data: product });
   };
@@ -81,7 +85,7 @@ export class ProductController {
   delete = async (
     req: Request,
     res: Response
-  ): Promise<Response<CustomResponse<ProductDto>>> => {
+  ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const id = parseInt(req.params["id"] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
     const product = await this.unitOfService.Product.delete(id);

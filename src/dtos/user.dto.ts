@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+import { Role, Status } from "@prisma/client";
 
 export interface UserDto {
   id: number;
@@ -21,7 +21,7 @@ export interface UserDto {
   lastLoginIP?: string | null;
   createdAt: Date;
   updatedAt?: Date | null;
-  status: boolean;
+  status: Status;
   token?: string | null;
   tokenUpdated: boolean;
   refreshToken?: string | null;
@@ -45,7 +45,7 @@ export interface UpdateUserDto {
   phone?: string | null;
   updatedAt?: Date | null;
   profileImageUrl?: string | null;
-  status?: boolean;
+  status?: Status;
 }
 
 export interface UpdateOtpDto {

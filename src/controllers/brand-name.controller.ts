@@ -4,12 +4,31 @@ import { TYPES } from '../config/ioc.types';
 import IUnitOfService from '../services/interfaces/iunitof.service';
 import CustomResponse from '../dtos/custom-response';
 import { BrandNameDto, CreateBrandNameDto } from '../dtos/brand-name.dto';
+import { ListResponseDto } from '../dtos/list-response.dto';
+import { BrandNameFilterParams } from '../params/brand-name.params';
+import { Status } from '@prisma/client';
 
 export class BrandNameController {
     constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) { }
 
-    getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<BrandNameDto[]>>> => {
-        const data = await this.unitOfService.BrandName.getAll();
+    getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<BrandNameDto>>>> => {
+        const rawCategoryIds = req.query['categoryIds'];
+        const categoryIds = rawCategoryIds
+            ? (Array.isArray(rawCategoryIds) ? rawCategoryIds : (rawCategoryIds as string).split(','))
+                .map(Number).filter(n => !isNaN(n))
+            : undefined;
+
+        const filters: BrandNameFilterParams = Object.fromEntries(
+            Object.entries({
+                page: req.query['page'] ? parseInt(req.query['page'] as string) : undefined,
+                recordPerPage: req.query['recordPerPage'] ? parseInt(req.query['recordPerPage'] as string) : undefined,
+                search: req.query['search'] as string | undefined,
+                status: req.query['status'] ? req.query['status'] as Status : undefined,
+                showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
+                categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
+            }).filter(([, v]) => v !== undefined)
+        );
+        const data = await this.unitOfService.BrandName.getAll(filters);
         return res.status(200).json({ success: true, message: 'Brand names fetched successfully', data });
     };
 

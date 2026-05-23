@@ -1,16 +1,24 @@
+import { Status } from "@prisma/client";
+
 export interface ProductAttributeDto {
   id: number;
   productId: number;
   attributeId: number;
   value: string;
+  status: Status;
+  displayOrder?: number | null;
 }
 
 export interface CreateProductAttributeDto {
   productId: number;
   attributeId: number;
   value: string;
+  status?: Status;
+  displayOrder?: number | null;
 }
 
 export interface UpdateProductAttributeDto {
-  value: string;
+  value?: string;
+  status?: Status;
+  displayOrder?: number | null;
 }

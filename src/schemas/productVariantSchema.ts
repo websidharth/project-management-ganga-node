@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Status } from "@prisma/client";
 
 export const createProductVariantSchema = z.object({
   body: z.object({
@@ -11,6 +12,8 @@ export const createProductVariantSchema = z.object({
     extraPrice: z.number().nonnegative().optional(),
     stock: z.number().int().nonnegative().optional(),
     isDefault: z.boolean().optional(),
+    status: z.nativeEnum(Status).optional(),
+    displayOrder: z.number().int().optional(),
   }),
 });
 
@@ -24,5 +27,7 @@ export const updateProductVariantSchema = z.object({
     extraPrice: z.number().nonnegative().optional(),
     stock: z.number().int().nonnegative().optional(),
     isDefault: z.boolean().optional(),
+    status: z.nativeEnum(Status).optional(),
+    displayOrder: z.number().int().optional(),
   }),
 });

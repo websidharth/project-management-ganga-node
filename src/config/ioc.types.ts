@@ -15,6 +15,7 @@ export const TYPES = {
   IStaffSalaryService: Symbol.for("StaffSalaryService"),
   IDashboardService: Symbol.for("DashboardService"),
   IBrandNameService: Symbol.for("BrandNameService"),
+  IStaffService: Symbol.for("StaffService"),
 
   //Controllers
   HealthController: Symbol.for("HealthController"),
@@ -32,6 +33,7 @@ export const TYPES = {
   StaffSalaryController: Symbol.for("StaffSalaryController"),
   DashboardController: Symbol.for("DashboardController"),
   BrandNameController: Symbol.for("BrandNameController"),
+  StaffController: Symbol.for("StaffController"),
 
   //Repositories
   IUnitOfWork: Symbol.for("UnitOfWork"),
@@ -49,4 +51,5 @@ export const TYPES = {
   IStaffSalaryRepository: Symbol.for("StaffSalaryRepository"),
   IDashboardRepository: Symbol.for("DashboardRepository"),
   IBrandNameRepository: Symbol.for("BrandNameRepository"),
+  IStaffRepository: Symbol.for("StaffRepository"),
 };

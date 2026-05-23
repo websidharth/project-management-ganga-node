@@ -1,6 +1,9 @@
-export interface ProductDto {
+import { Status } from "@prisma/client";
+
+export interface ProductResponseDto {
   id: number;
   name: string;
+  brandNameId?: number | null;
   slug: string;
   description?: string | null;
   sku: string;
@@ -10,7 +13,9 @@ export interface ProductDto {
   lowStockThreshold?: number | null;
   categoryId: number;
   images: string[];
-  status: boolean;
+  storeId?: number | null;
+  status: Status;
+  displayOrder?: number | null;
   createdById: number;
   updatedById?: number | null;
   createdAt: Date;
@@ -19,6 +24,7 @@ export interface ProductDto {
 
 export interface CreateProductDto {
   name: string;
+  brandNameId?: number | null;
   slug: string;
   description?: string | null;
   sku: string;
@@ -28,22 +34,11 @@ export interface CreateProductDto {
   lowStockThreshold?: number | null;
   categoryId: number;
   images?: string[];
-  status?: boolean;
+  storeId?: number | null;
+  status?: Status;
+  displayOrder?: number | null;
   createdById: number;
+  updatedAt?: Date;
+  updatedById?: number | null;
 }
 
-export interface UpdateProductDto {
-  name?: string;
-  slug?: string;
-  description?: string | null;
-  sku?: string;
-  price?: number;
-  cost?: number | null;
-  stock?: number;
-  lowStockThreshold?: number | null;
-  categoryId?: number;
-  images?: string[];
-  status?: boolean;
-  updatedById?: number | null;
-  updatedAt?: Date;
-}

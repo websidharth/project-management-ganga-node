@@ -31,22 +31,25 @@ import { DashboardRepository } from "./dashboard.repository";
 import { BrandNameRepository } from "./brand-name.repository";
 import { IDashboardRepository } from "./interfaces/idashboard.repository";
 import { IBrandNameRepository } from "./interfaces/ibrand-name.repository";
+import { StaffRepository } from "./staff.repository";
+import { IStaffRepository } from "./interfaces/istaff.repository";
 
 export default class UnitOfWork implements IUnitOfWork {
-  public User: UserRepository;
-  public Account: AccountRepository;
-  public Category: CategoryRepository;
-  public Product: ProductRepository;
-  public ProductVariant: ProductVariantRepository;
-  public Attribute: AttributeRepository;
-  public ProductAttribute: ProductAttributeRepository;
-  public StaffAttendance: StaffAttendanceRepository;
-  public Order: OrderRepository;
-  public OrderItem: OrderItemRepository;
-  public Payment: PaymentRepository;
-  public StaffSalary: StaffSalaryRepository;
-  public Dashboard: DashboardRepository;
-  public BrandName: BrandNameRepository;
+  public User: IUserRepository;
+  public Account: IAccountRepository;
+  public Category: ICategoryRepository;
+  public Product: IProductRepository;
+  public ProductVariant: IProductVariantRepository;
+  public Attribute: IAttributeRepository;
+  public ProductAttribute: IProductAttributeRepository;
+  public StaffAttendance: IStaffAttendanceRepository;
+  public Order: IOrderRepository;
+  public OrderItem: IOrderItemRepository;
+  public Payment: IPaymentRepository;
+  public StaffSalary: IStaffSalaryRepository;
+  public Dashboard: IDashboardRepository;
+  public BrandName: IBrandNameRepository;
+  public Staff: IStaffRepository;
 
   constructor(
     user = container.get<IUserRepository>(TYPES.IUserRepository),
@@ -63,6 +66,7 @@ export default class UnitOfWork implements IUnitOfWork {
     staffSalary = container.get<IStaffSalaryRepository>(TYPES.IStaffSalaryRepository),
     dashboard = container.get<IDashboardRepository>(TYPES.IDashboardRepository),
     brandName = container.get<IBrandNameRepository>(TYPES.IBrandNameRepository),
+    staff = container.get<IStaffRepository>(TYPES.IStaffRepository),
   ) {
     this.User = user;
     this.Account = account;
@@ -78,6 +82,7 @@ export default class UnitOfWork implements IUnitOfWork {
     this.StaffSalary = staffSalary;
     this.Dashboard = dashboard;
     this.BrandName = brandName;
+    this.Staff = staff;
   }
 
   async transaction<T>(

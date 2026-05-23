@@ -1,6 +1,8 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
 import { BrandNameDto, CreateBrandNameDto } from "../dtos/brand-name.dto";
+import { ListResponseDto } from "../dtos/list-response.dto";
+import { BrandNameFilterParams } from "../params/brand-name.params";
 import { IBrandNameService } from "./interfaces/Ibrand-name.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
@@ -11,8 +13,8 @@ export class BrandNameService implements IBrandNameService {
         @inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork
     ) { }
 
-    async getAll(): Promise<BrandNameDto[]> {
-        return this.unitOfWork.BrandName.findAll();
+    async getAll(filters?: BrandNameFilterParams): Promise<ListResponseDto<BrandNameDto>> {
+        return this.unitOfWork.BrandName.findAll(filters);
     }
 
     async getById(id: number): Promise<BrandNameDto | null> {

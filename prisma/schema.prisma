@@ -80,7 +80,7 @@ model users {
   lastLoginIP              String?
   createdAt                DateTime          @default(now())
   updatedAt                DateTime?         @updatedAt
-  status                   Boolean           @default(true)
+  status                   Status            @default(Published)
   token                    String?
   tokenUpdated             Boolean           @default(false)
   refreshToken             String?
@@ -95,6 +95,7 @@ model users {
   staffSalaries            StaffSalary[]     @relation("salary_staff")
   processedSalaries        StaffSalary[]     @relation("salary_processor")
   Store                    Store?            @relation(fields: [storeId], references: [id])
+  Staff                    Staff?
 
   @@index([userId])
   @@index([email])
@@ -126,28 +127,30 @@ model Store {
   isActive         Boolean           @default(true)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  status           Boolean           @default(true)
+  status           Status            @default(Published)
   // Relations
   Product          Product[]
   orders           Order[]
   staff            users[] // employees of this store
   staffAttendances StaffAttendance[]
   StaffSalary      StaffSalary[]
+  staffDetails     Staff[]
 }
 
 // ========== PRODUCT MANAGEMENT ==========
 model Category {
-  id           Int        @id @default(autoincrement())
-  name         String     @unique
+  id           Int         @id @default(autoincrement())
+  name         String      @unique
   description  String?
   parentId     Int?
-  parent       Category?  @relation("CategoryToParent", fields: [parentId], references: [id])
-  children     Category[] @relation("CategoryToParent")
+  status       Status      @default(Published)
+  displayOrder Int?        @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  parent       Category?   @relation("CategoryToParent", fields: [parentId], references: [id])
+  children     Category[]  @relation("CategoryToParent")
   products     Product[]
-  status       Boolean    @default(true)
-  displayOrder Int?       @default(0)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  brandNames   BrandName[]
 }
 
 model Product {
@@ -164,7 +167,7 @@ model Product {
   categoryId        Int
   images            String[]
   storeId           Int?
-  status            Boolean  @default(true)
+  status            Status   @default(Published)
   displayOrder      Int?     @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -181,31 +184,16 @@ model Product {
   attributes ProductAttribute[]
 }
 
-model ProductVariant {
-  id           Int         @id @default(autoincrement())
-  productId    Int
-  product      Product     @relation(fields: [productId], references: [id])
-  brandName    String?
-  varient      String?
-  size         String?
-  material     String?
-  voltage      String?
-  color        String?
-  extraSku     String?     @unique
-  extraPrice   Float?
-  stock        Int         @default(0)
-  isDefault    Boolean     @default(false)
-  status       Boolean     @default(true)
-  displayOrder Int?        @default(0)
-  orderItems   OrderItem[]
-}
-
 model BrandName {
-  id           Int       @id @default(autoincrement())
-  brandName    String?
-  status       Boolean   @default(true)
-  displayOrder Int?      @default(0)
-  Product      Product[]
+  id             Int              @id @default(autoincrement())
+  brandName      String
+  status         Status           @default(Published)
+  displayOrder   Int?             @default(0)
+  Product        Product[]
+  categories     Category[]
+  ProductVariant ProductVariant[]
+
+  @@index([id])
 }
 
 model Attribute {
@@ -217,17 +205,73 @@ model Attribute {
   productAttributes ProductAttribute[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+  ProductVariant    ProductVariant[]
+
+  @@index([id])
 }
 
 model ProductAttribute {
-  id           Int       @id @default(autoincrement())
-  productId    Int
-  product      Product   @relation(fields: [productId], references: [id])
-  attributeId  Int
-  attribute    Attribute @relation(fields: [attributeId], references: [id])
-  value        String
-  status       Boolean   @default(true)
-  displayOrder Int?      @default(0)
+  id             Int              @id @default(autoincrement())
+  productId      Int
+  product        Product          @relation(fields: [productId], references: [id])
+  attributeId    Int
+  attribute      Attribute        @relation(fields: [attributeId], references: [id])
+  value          String
+  status         Status           @default(Published)
+  displayOrder   Int?             @default(0)
+  ProductVariant ProductVariant[]
+}
+
+model ProductVariant {
+  id                 Int               @id @default(autoincrement())
+  name               String
+  slug               String?           @unique
+  productId          Int
+  brandNameId        Int?
+  productAttributeId Int?
+  cost               Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
+  Price              Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
+  stock              Int               @default(0)
+  lowStockThreshold  Int?              @default(5)
+  images             String[]
+  status             Status            @default(Published)
+  displayOrder       Int?              @default(0)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime?         @updatedAt
+  isDefault          Boolean           @default(false)
+  extraPrice         Float?
+  varient            String?
+  size               String?
+  material           String?
+  voltage            String?
+  color              String?
+  extraSku           String?           @unique
+  product            Product           @relation(fields: [productId], references: [id])
+  brandName          BrandName?        @relation(fields: [brandNameId], references: [id])
+  productAttribute   ProductAttribute? @relation(fields: [productAttributeId], references: [id])
+  orderItems         OrderItem[]
+  Attribute          Attribute?        @relation(fields: [attributeId], references: [id])
+  attributeId        Int?
+}
+
+model Staff {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  storeId    Int
+  position   String? // Job title/position
+  department String?
+  hireDate   DateTime @default(now())
+  salary     Float?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user  users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [storeId], references: [id])
+
+  @@index([userId])
+  @@index([storeId])
+  @@index([isActive])
 }
 
 // ========== STAFF ATTENDANCE ==========

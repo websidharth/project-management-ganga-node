@@ -14,6 +14,7 @@ import paymentRouter from "./paymentRoutes";
 import staffSalaryRouter from "./staffSalaryRoutes";
 import dashboardRouter from "./dashboardRoutes";
 import brandNameRouter from "./brandNameRoutes";
+import staffRouter from "./staffRoutes";
 
 const routes = express.Router();
 
@@ -32,5 +33,6 @@ routes.use("/payments", paymentRouter);
 routes.use("/staff-salaries", staffSalaryRouter);
 routes.use("/dashboard", dashboardRouter);
 routes.use("/brand-names", brandNameRouter);
+routes.use("/staff", staffRouter);
 
 export default routes;

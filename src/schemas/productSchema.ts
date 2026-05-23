@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Status } from "@prisma/client";
 
 export const createProductSchema = z.object({
   body: z.object({
@@ -12,7 +13,7 @@ export const createProductSchema = z.object({
     lowStockThreshold: z.number().int().nonnegative().optional(),
     categoryId: z.number().int().positive("Category is required"),
     images: z.array(z.string()).optional(),
-    status: z.boolean().optional(),
+    status: z.nativeEnum(Status).optional(),
   }),
 });
 
@@ -28,6 +29,6 @@ export const updateProductSchema = z.object({
     lowStockThreshold: z.number().int().nonnegative().optional(),
     categoryId: z.number().int().positive().optional(),
     images: z.array(z.string()).optional(),
-    status: z.boolean().optional(),
+    status: z.nativeEnum(Status).optional(),
   }),
 });

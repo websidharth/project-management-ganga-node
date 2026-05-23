@@ -1,11 +1,8 @@
-export interface CreateBrandNameModel {
-    brandName?: string;
-    status?: boolean;
-    displayOrder?: number;
-}
+import { Status } from "@prisma/client";
 
-export interface UpdateBrandNameModel {
-    brandName?: string;
-    status?: boolean;
+export interface CreateBrandNameModel {
+    brandName: string;
+    status: Status;
     displayOrder?: number;
+    categoryIds: number[];
 }

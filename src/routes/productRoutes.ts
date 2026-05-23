@@ -36,49 +36,67 @@ const productController = container.get<ProductController>(TYPES.ProductControll
  *         name: page
  *         schema:
  *           type: integer
- *           default:
- *         description:
  *       - in: query
  *         name: recordPerPage
  *         schema:
  *           type: integer
- *           default:
- *         description:
  *       - in: query
  *         name: search
  *         schema:
  *           type: string
- *         description:
+ *         description: Search by name or SKU
  *       - in: query
  *         name: categoryId
  *         schema:
  *           type: integer
- *         description:
+ *       - in: query
+ *         name: brandNameId
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: storeId
+ *         schema:
+ *           type: integer
  *       - in: query
  *         name: status
  *         schema:
- *           type: boolean
- *         description:
+ *           type: string
+ *           enum: [Published, Draft, Trash]
  *       - in: query
  *         name: showAllRecords
  *         schema:
  *           type: boolean
- *         description:
  *       - in: query
  *         name: startDate
  *         schema:
  *           type: string
  *           format: date-time
- *         description:
  *       - in: query
  *         name: endDate
  *         schema:
  *           type: string
  *           format: date-time
- *         description:
  *     responses:
  *       200:
  *         description: Products fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     totalRecord:
+ *                       type: integer
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/Product'
  */
 productRouter.get('/', authenticateToken, asyncHandler(productController.getAll));
 
@@ -133,6 +151,17 @@ productRouter.get('/slug/:slug', authenticateToken, asyncHandler(productControll
  *     responses:
  *       200:
  *         description: Product fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/Product'
  *       404:
  *         description: Product not found
  */
@@ -158,36 +187,21 @@ productRouter.get('/:id', authenticateToken, asyncHandler(productController.getB
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required: [name, slug, sku, price, categoryId]
- *             properties:
- *               name:
- *                 type: string
- *               slug:
- *                 type: string
- *               description:
- *                 type: string
- *               sku:
- *                 type: string
- *               price:
- *                 type: number
- *               cost:
- *                 type: number
- *               stock:
- *                 type: integer
- *               lowStockThreshold:
- *                 type: integer
- *               categoryId:
- *                 type: integer
- *               images:
- *                 type: array
- *                 items:
- *                   type: string
- *               status:
- *                 type: boolean
+ *             $ref: '#/components/schemas/CreateProductRequest'
  *     responses:
  *       201:
  *         description: Product created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/Product'
  */
 productRouter.post('/', authenticateToken, validate(createProductSchema), asyncHandler(productController.create));
 
@@ -216,35 +230,23 @@ productRouter.post('/', authenticateToken, validate(createProductSchema), asyncH
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               slug:
- *                 type: string
- *               description:
- *                 type: string
- *               sku:
- *                 type: string
- *               price:
- *                 type: number
- *               cost:
- *                 type: number
- *               stock:
- *                 type: integer
- *               lowStockThreshold:
- *                 type: integer
- *               categoryId:
- *                 type: integer
- *               images:
- *                 type: array
- *                 items:
- *                   type: string
- *               status:
- *                 type: boolean
+ *             $ref: '#/components/schemas/UpdateProductRequest'
  *     responses:
  *       200:
  *         description: Product updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/Product'
+ *       404:
+ *         description: Product not found
  */
 productRouter.put('/:id', authenticateToken, validate(updateProductSchema), asyncHandler(productController.update));
 
@@ -252,7 +254,7 @@ productRouter.put('/:id', authenticateToken, validate(updateProductSchema), asyn
  * @swagger
  * /products/{id}:
  *   delete:
- *     summary: Delete a product
+ *     summary: Delete a product (soft delete — sets status to Trash)
  *     tags: [Product]
  *     security:
  *       - bearerAuth: []
@@ -271,6 +273,8 @@ productRouter.put('/:id', authenticateToken, validate(updateProductSchema), asyn
  *     responses:
  *       200:
  *         description: Product deleted successfully
+ *       404:
+ *         description: Product not found
  */
 productRouter.delete('/:id', authenticateToken, asyncHandler(productController.delete));
 

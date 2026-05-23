@@ -1,16 +1,18 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
 import { CreateProductVariantDto, ProductVariantDto, UpdateProductVariantDto } from "../dtos/product-variant.dto";
+import { ListResponseDto } from "../dtos/list-response.dto";
+import { ProductVariantFilterParams } from "../params/product-variant.params";
 import { IProductVariantService } from "./interfaces/Iproduct-variant.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
 
 @injectable()
 export class ProductVariantService implements IProductVariantService {
-  constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) {}
+  constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) { }
 
-  async getAll(): Promise<ProductVariantDto[]> {
-    return this.unitOfWork.ProductVariant.findAll();
+  async getAll(filters?: ProductVariantFilterParams): Promise<ListResponseDto<ProductVariantDto>> {
+    return this.unitOfWork.ProductVariant.findAll(filters);
   }
 
   async getByProductId(productId: number): Promise<ProductVariantDto[]> {
