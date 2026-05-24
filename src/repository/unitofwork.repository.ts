@@ -33,6 +33,8 @@ import { IDashboardRepository } from "./interfaces/idashboard.repository";
 import { IBrandNameRepository } from "./interfaces/ibrand-name.repository";
 import { StaffRepository } from "./staff.repository";
 import { IStaffRepository } from "./interfaces/istaff.repository";
+import { StoreRepository } from "./store.repository";
+import { IStoreRepository } from "./interfaces/istore.repository";
 
 export default class UnitOfWork implements IUnitOfWork {
   public User: IUserRepository;
@@ -50,6 +52,7 @@ export default class UnitOfWork implements IUnitOfWork {
   public Dashboard: IDashboardRepository;
   public BrandName: IBrandNameRepository;
   public Staff: IStaffRepository;
+  public Store: IStoreRepository;
 
   constructor(
     user = container.get<IUserRepository>(TYPES.IUserRepository),
@@ -67,6 +70,7 @@ export default class UnitOfWork implements IUnitOfWork {
     dashboard = container.get<IDashboardRepository>(TYPES.IDashboardRepository),
     brandName = container.get<IBrandNameRepository>(TYPES.IBrandNameRepository),
     staff = container.get<IStaffRepository>(TYPES.IStaffRepository),
+    store = container.get<IStoreRepository>(TYPES.IStoreRepository),
   ) {
     this.User = user;
     this.Account = account;
@@ -83,6 +87,7 @@ export default class UnitOfWork implements IUnitOfWork {
     this.Dashboard = dashboard;
     this.BrandName = brandName;
     this.Staff = staff;
+    this.Store = store;
   }
 
   async transaction<T>(
