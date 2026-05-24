@@ -69,8 +69,6 @@ export class AccountService implements IAccountService {
           isActive: false,
           isEmailVerified: false,
           isPhoneVerified: false,
-          googleId: data.googleId || null,
-          profileImageUrl: data.profileImage || null,
         },
       });
 
@@ -86,7 +84,7 @@ export class AccountService implements IAccountService {
       userName: user.userName,
       email: user.email,
       phone: user.phone,
-      password: includePassword ? user.password : null,
+      password: includePassword ? user.password : '',
       role: user.role,
       isActive: user.isActive,
       isEmailVerified: user.isEmailVerified,

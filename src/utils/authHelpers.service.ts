@@ -1,13 +1,14 @@
-import { v4 as uuidv4 } from "uuid";
-import crypto from "crypto";
+
+import crypto from "crypto"; 
+import uuid from 'uuid-random';
 
 export const generateUserGUID = (): string => {
-  return uuidv4(); // Generates unique UUID v4
+  return uuid(); // Generates unique UUID v4
 };
 
 // Optional: Generate GUID with prefix
 export const generateUserGUIDWithPrefix = (): string => {
-  return `${uuidv4()}`;
+  return `${uuid()}`;
 };
 
 export const generateCustomId = (): number => {

@@ -11,8 +11,6 @@ export const signupSchema = z.object({
       .string()
       .min(10, "Phone number must be at least 10 digits")
       .optional(),
-    googleId: z.string().optional(),
-    profileImage: z.string().url("Invalid URL").optional(),
   }),
 });
 

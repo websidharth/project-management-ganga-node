@@ -102,8 +102,6 @@ accountRouter.post("/logout", authenticateToken, asyncHandler(accountController.
  *               email: { type: string }
  *               password: { type: string }
  *               phone: { type: string }
- *               googleId: { type: string }
- *               profileImage: { type: string }
  *     responses:
  *       201: { description: Created }
  */

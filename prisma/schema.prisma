@@ -189,10 +189,11 @@ model BrandName {
   brandName      String
   status         Status           @default(Published)
   displayOrder   Int?             @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
   Product        Product[]
   categories     Category[]
   ProductVariant ProductVariant[]
-
   @@index([id])
 }
 

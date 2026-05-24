@@ -47,9 +47,7 @@ export class UserService implements IUserService {
           isActive: false,
           isEmailVerified: false,
           isPhoneVerified: false,
-          tokenUpdated: false,
-          googleId: data.googleId || null,
-          profileImageUrl: data.profileImage || null,
+          tokenUpdated: false, 
         },
       });
 
@@ -121,7 +119,7 @@ convertToDto(user: users, includePassword: boolean = false, token: boolean = fal
       userName: user.userName,
       email: user.email,
       phone: user.phone,
-      password: includePassword ? user.password : null,
+      password: includePassword ? user.password : '',
       role: user.role,
       isActive: user.isActive,
       isEmailVerified: user.isEmailVerified,
