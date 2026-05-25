@@ -13,7 +13,7 @@ export class AttributeRepository implements IAttributeRepository {
     sortBy = "createdAt",
     sortOrder: "asc" | "desc" = "desc"
   ): Promise<ListResponseDto<AttributeDto>> {
-    const where: Prisma.AttributeWhereInput = { NOT: { status: Status.Trash } };
+    const where: Prisma.attributeWhereInput = { NOT: { status: Status.Trash } };
 
     if (filters) {
       page = filters.page ?? page;

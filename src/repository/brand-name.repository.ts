@@ -5,7 +5,7 @@ import { ListResponseDto } from "../dtos/list-response.dto";
 import { BrandNameFilterParams } from "../params/brand-name.params";
 import { IBrandNameRepository } from "./interfaces/ibrand-name.repository";
 
-type BrandNameWithCategories = Prisma.BrandNameGetPayload<{
+type BrandNameWithCategories = Prisma.brandNameGetPayload<{
     include: { categories: { select: { id: true } } };
 }>;
 
@@ -13,9 +13,9 @@ function toDto(b: BrandNameWithCategories): BrandNameDto {
     return {
         id: b.id,
         brandName: b.brandName,
+        storeId: b.storeId,
         status: b.status,
         displayOrder: b.displayOrder,
-        categoryIds: b.categories.map(c => c.id),
     };
 }
 
@@ -27,7 +27,7 @@ export class BrandNameRepository implements IBrandNameRepository {
         sortBy = 'displayOrder',
         sortOrder: 'asc' | 'desc' = 'asc'
     ): Promise<ListResponseDto<BrandNameDto>> {
-        const where: Prisma.BrandNameWhereInput = { NOT: { status: Status.Trash } };
+        const where: Prisma.brandNameWhereInput = { NOT: { status: Status.Trash } };
 
         if (filters) {
             page = filters.page ?? page;
@@ -76,37 +76,8 @@ export class BrandNameRepository implements IBrandNameRepository {
         return result ? toDto(result) : null;
     }
 
-    async create(data: CreateBrandNameDto): Promise<BrandNameDto> {
-        const { categoryIds, ...rest } = data;
-        const result = await prisma.brandName.create({
-            data: {
-                ...rest,
-                categories: { connect: categoryIds.map(id => ({ id })) },
-            },
-            include: { categories: { select: { id: true } } },
-        });
-        return toDto(result);
-    }
-
-    async update(id: number, data: CreateBrandNameDto): Promise<BrandNameDto> {
-        const { categoryIds, ...rest } = data;
-        const result = await prisma.brandName.update({
-            where: { id },
-            data: {
-                ...rest,
-                categories: { set: categoryIds.map(id => ({ id })) },
-            },
-            include: { categories: { select: { id: true } } },
-        });
-        return toDto(result);
-    }
-
     async delete(id: number): Promise<BrandNameDto> {
-        const result = await prisma.brandName.update({
-            where: { id },
-            data: { status: Status.Trash },
-            include: { categories: { select: { id: true } } },
-        });
-        return toDto(result);
+        const result = await prisma.brandName.update({ where: { id }, data: { status: Status.Trash } });
+        return result;
     }
 }

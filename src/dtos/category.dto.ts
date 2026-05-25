@@ -5,6 +5,7 @@ export interface CategoryDto {
   name: string;
   description?: string | null;
   parentId?: number | null;
+  storeId: number;
   status: Status;
   displayOrder?: number | null;
   createdAt: Date;
@@ -15,6 +16,7 @@ export interface CreateCategoryDto {
   name: string;
   description?: string | null;
   parentId?: number | null;
+  storeId: number;
   status?: Status;
   displayOrder?: number | null;
   createdAt: Date;

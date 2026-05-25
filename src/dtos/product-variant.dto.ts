@@ -7,6 +7,7 @@ export interface ProductVariantDto {
   productId: number;
   brandNameId?: number | null;
   productAttributeId?: number | null;
+  storeId: number;
   attributeId?: number | null;
   cost: number;
   Price: number;
@@ -33,6 +34,7 @@ export interface CreateProductVariantDto {
   productId: number;
   brandNameId?: number | null;
   productAttributeId?: number | null;
+  storeId: number;
   attributeId?: number | null;
   cost?: number;
   Price?: number;

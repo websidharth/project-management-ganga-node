@@ -4,6 +4,7 @@ export interface AttributeDto {
   id: number;
   name: string;
   unit?: string | null;
+  storeId: number;
   status: Status;
   displayOrder?: number | null;
   createdAt: Date;
@@ -13,6 +14,7 @@ export interface AttributeDto {
 export interface CreateAttributeDto {
   name: string;
   unit?: string | null;
+  storeId: number;
   status?: Status;
   displayOrder?: number | null;
 }

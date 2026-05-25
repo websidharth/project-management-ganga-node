@@ -3,7 +3,7 @@ import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
 import { DashboardController } from '../controllers/dashboard.controller';
 import asyncHandler from '../middleware/asyncHandler.middleware';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken } from '../middleware/authentication.middleware';
 
 const dashboardRouter = Router();
 const dashboardController = container.get<DashboardController>(TYPES.DashboardController);

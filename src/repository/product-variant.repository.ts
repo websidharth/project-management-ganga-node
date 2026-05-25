@@ -13,7 +13,7 @@ export class ProductVariantRepository implements IProductVariantRepository {
     sortBy = 'displayOrder',
     sortOrder: 'asc' | 'desc' = 'asc'
   ) {
-    const where: Prisma.ProductVariantWhereInput = { NOT: { status: Status.Trash } };
+    const where: Prisma.productVariantWhereInput = { NOT: { status: Status.Trash } };
 
     if (filters) {
       page = filters.page ?? page;

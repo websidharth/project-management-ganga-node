@@ -3,7 +3,7 @@ import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
 import { ProductController } from '../controllers/product.controller';
 import asyncHandler from '../middleware/asyncHandler.middleware';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken } from '../middleware/authentication.middleware';
 import { validate } from '../middleware/validate';
 import { createProductSchema, updateProductSchema } from '../schemas/productSchema';
 

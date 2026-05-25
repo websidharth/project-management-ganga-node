@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { ProductVariantController } from "../controllers/product-variant.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createProductVariantSchema, updateProductVariantSchema } from "../schemas/productVariantSchema";
 
@@ -113,10 +113,14 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *         application/json:
  *           schema:
  *             type: object
- *             required: [productId]
+ *             required: [productId, storeId]
  *             properties:
  *               productId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this product variant belongs to
  *               size:
  *                 type: string
  *               material:

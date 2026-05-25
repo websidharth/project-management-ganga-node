@@ -9,7 +9,7 @@ import { StoreFilterParams } from "../params/store.params";
 import { Status } from "@prisma/client";
 
 export class StoreController {
-  constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) {}
+  constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) { }
 
   getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<StoreDto>>>> => {
     const filters: StoreFilterParams = Object.fromEntries(
@@ -54,7 +54,7 @@ export class StoreController {
     const id = parseInt(req.params["id"] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
 
-    const body = req.body as UpdateStoreDto;
+    const body = req.body as CreateStoreDto;
     const store = await this.unitOfService.Store.update(id, body);
     return res.status(200).json({ success: true, message: "Store updated successfully", data: store });
   };

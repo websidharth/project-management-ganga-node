@@ -3,6 +3,7 @@ import { AttendanceStatus } from "@prisma/client";
 export interface StaffAttendanceDto {
   id: number;
   staffId: number;
+  storeId: number;
   date: Date;
   status: AttendanceStatus;
   checkInTime?: Date | null;
@@ -16,6 +17,7 @@ export interface StaffAttendanceDto {
 
 export interface CreateStaffAttendanceDto {
   staffId: number;
+  storeId: number;
   date: Date;
   status?: AttendanceStatus;
   checkInTime?: Date | null;

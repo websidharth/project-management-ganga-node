@@ -13,7 +13,7 @@ const productInclude = {
     include: { attribute: true },
     where: { status: { not: Status.Trash } },
   },
-} satisfies Prisma.ProductInclude;
+} satisfies Prisma.productInclude;
 
 export class ProductRepository implements IProductRepository {
   async findAll(
@@ -23,7 +23,7 @@ export class ProductRepository implements IProductRepository {
     sortBy = 'createdAt',
     sortOrder: 'asc' | 'desc' = 'desc'
   ): Promise<ListResponseDto<ProductResponseDto>> {
-    const where: Prisma.ProductWhereInput = { NOT: { status: Status.Trash } };
+    const where: Prisma.productWhereInput = { NOT: { status: Status.Trash } };
 
     if (filters) {
       page = filters.page ?? page;

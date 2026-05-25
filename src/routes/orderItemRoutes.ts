@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { OrderItemController } from "../controllers/order-item.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createOrderItemSchema, updateOrderItemSchema } from "../schemas/orderItemSchema";
 
@@ -92,7 +92,7 @@ orderItemRouter.get("/:id", authenticateToken, asyncHandler(orderItemController.
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderId, productId, quantity, unitPrice, totalPrice]
+ *             required: [orderId, productId, storeId, quantity, unitPrice, totalPrice]
  *             properties:
  *               orderId:
  *                 type: integer
@@ -100,6 +100,10 @@ orderItemRouter.get("/:id", authenticateToken, asyncHandler(orderItemController.
  *                 type: integer
  *               variantId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this order item belongs to
  *               quantity:
  *                 type: integer
  *               unitPrice:

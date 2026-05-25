@@ -3,6 +3,7 @@ import { PaymentMethod, PaymentStatus } from "@prisma/client";
 export interface PaymentDto {
   id: number;
   orderId: number;
+  storeId: number;
   amount: number;
   method: PaymentMethod;
   status: PaymentStatus;
@@ -15,6 +16,7 @@ export interface PaymentDto {
 
 export interface CreatePaymentDto {
   orderId: number;
+  storeId: number;
   amount: number;
   method: PaymentMethod;
   status?: PaymentStatus;

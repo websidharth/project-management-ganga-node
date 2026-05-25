@@ -23,15 +23,43 @@ export class BrandNameService implements IBrandNameService {
         return brandName;
     }
 
+
     async create(data: CreateBrandNameDto): Promise<BrandNameDto> {
-        return this.unitOfWork.BrandName.create(data);
+        return this.unitOfWork.transaction(async (transactionClient) => {
+            const storeData = await transactionClient.brandName.create({
+                data: {
+                    brandName: data.brandName,
+                    storeId: data.storeId,
+                    status: data.status,
+                    displayOrder: data.displayOrder || null,
+                },
+            });
+            return storeData;
+        });
     }
+
+
 
     async update(id: number, data: CreateBrandNameDto): Promise<BrandNameDto> {
         const existing = await this.unitOfWork.BrandName.findById(id);
         if (!existing) throw new NotFoundError("BrandName not found");
-        return this.unitOfWork.BrandName.update(id, data);
+
+
+        return this.unitOfWork.transaction(async (transactionClient) => {
+
+            const storeData = await transactionClient.brandName.update({
+                where: { id },
+                data: {
+                    brandName: data.brandName,
+                    storeId: data.storeId,
+                    status: data.status,
+                    displayOrder: data.displayOrder || null,
+                },
+            });
+            return storeData;
+        });
     }
+
 
     async delete(id: number): Promise<BrandNameDto> {
         const existing = await this.unitOfWork.BrandName.findById(id);

@@ -4,6 +4,7 @@ export interface OrderDto {
   id: number;
   orderNumber: string;
   customerId: number;
+  storeId: number;
   orderDate: Date;
   totalAmount: number;
   discount: number;
@@ -19,6 +20,7 @@ export interface OrderDto {
 export interface CreateOrderDto {
   orderNumber: string;
   customerId: number;
+  storeId: number;
   orderDate?: Date;
   totalAmount?: number;
   discount?: number;

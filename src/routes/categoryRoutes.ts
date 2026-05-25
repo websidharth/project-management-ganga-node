@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { CategoryController } from "../controllers/category.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createCategorySchema, updateCategorySchema } from "../schemas/categorySchema";
 
@@ -87,7 +87,7 @@ categoryRouter.get("/:id", authenticateToken, asyncHandler(categoryController.ge
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name]
+ *             required: [name, storeId]
  *             properties:
  *               name:
  *                 type: string
@@ -95,6 +95,10 @@ categoryRouter.get("/:id", authenticateToken, asyncHandler(categoryController.ge
  *                 type: string
  *               parentId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this category belongs to
  *     responses:
  *       201:
  *         description: Category created successfully

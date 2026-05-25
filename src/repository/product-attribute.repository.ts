@@ -13,7 +13,7 @@ export class ProductAttributeRepository implements IProductAttributeRepository {
     sortBy = 'id',
     sortOrder: 'asc' | 'desc' = 'asc'
   ): Promise<ListResponseDto<ProductAttributeDto>> {
-    const where: Prisma.ProductAttributeWhereInput = { NOT: { status: Status.Trash } };
+    const where: Prisma.productAttributeWhereInput = { NOT: { status: Status.Trash } };
 
     if (filters) {
       page = filters.page ?? page;

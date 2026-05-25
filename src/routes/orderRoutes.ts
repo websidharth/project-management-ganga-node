@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { OrderController } from "../controllers/order.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createOrderSchema, updateOrderSchema } from "../schemas/orderSchema";
 
@@ -113,12 +113,16 @@ orderRouter.get("/:id", authenticateToken, asyncHandler(orderController.getById)
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderNumber, customerId]
+ *             required: [orderNumber, customerId, storeId]
  *             properties:
  *               orderNumber:
  *                 type: string
  *               customerId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this order belongs to
  *               totalAmount:
  *                 type: number
  *               discount:

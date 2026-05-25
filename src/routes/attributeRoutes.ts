@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { AttributeController } from "../controllers/attribute.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createAttributeSchema, updateAttributeSchema } from "../schemas/attributeSchema";
 
@@ -87,12 +87,21 @@ attributeRouter.get("/:id", authenticateToken, asyncHandler(attributeController.
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name]
+ *             required: [name, storeId]
  *             properties:
  *               name:
  *                 type: string
  *               unit:
  *                 type: string
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this attribute belongs to
+ *               status:
+ *                 type: string
+ *                 enum: [Published, Draft, Trash]
+ *               displayOrder:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Attribute created successfully

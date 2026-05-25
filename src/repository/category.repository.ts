@@ -13,7 +13,7 @@ export class CategoryRepository implements ICategoryRepository {
     sortBy = 'displayOrder',
     sortOrder: 'asc' | 'desc' = 'asc'
   ): Promise<ListResponseDto<CategoryDto>> {
-    const where: Prisma.CategoryWhereInput = { NOT: { status: Status.Trash } };
+    const where: Prisma.categoryWhereInput = { NOT: { status: Status.Trash } };
 
     if (filters) {
       page = filters.page ?? page;

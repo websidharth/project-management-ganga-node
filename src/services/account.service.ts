@@ -52,9 +52,7 @@ export class AccountService implements IAccountService {
 
   async create(data: CreateUserModel, role: Role) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
-
     const { otp } = generateOtp();
-
     return this.unitOfWork.transaction(async (transactionClient) => {
       const user = await transactionClient.users.create({
         data: {
@@ -101,6 +99,7 @@ export class AccountService implements IAccountService {
       token: token ? user.token : null,
       tokenUpdated: user.tokenUpdated,
       refreshToken: token ? user.refreshToken : null,
+      storeId: user.storeId,
     };
   }
 

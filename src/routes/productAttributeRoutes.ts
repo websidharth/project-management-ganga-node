@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { ProductAttributeController } from "../controllers/product-attribute.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createProductAttributeSchema, updateProductAttributeSchema } from "../schemas/productAttributeSchema";
 
@@ -140,7 +140,7 @@ productAttributeRouter.get("/:id", authenticateToken, asyncHandler(productAttrib
  *         application/json:
  *           schema:
  *             type: object
- *             required: [productId, attributeId, value]
+ *             required: [productId, attributeId, value, storeId]
  *             properties:
  *               productId:
  *                 type: integer
@@ -148,6 +148,10 @@ productAttributeRouter.get("/:id", authenticateToken, asyncHandler(productAttrib
  *                 type: integer
  *               value:
  *                 type: string
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this product attribute belongs to
  *     responses:
  *       201:
  *         description: Product attribute created successfully

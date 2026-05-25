@@ -8,9 +8,7 @@ declare global {
         email: string;
         name?: string;
         role?: string;
-        schoolId?: number;
-        classId?: number;
-        sectionId?: number;
+        storeId?: number | null;
       };
     }
   }

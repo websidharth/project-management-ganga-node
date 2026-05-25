@@ -74,7 +74,8 @@ export class StoreRepository {
     return this.mapToDto(store);
   }
 
-  async update(id: number, data: UpdateStoreDto): Promise<StoreDto> {
+
+  async delete(id: number): Promise<StoreDto> {
     const store = await prisma.store.findUnique({
       where: { id },
     });
@@ -83,41 +84,12 @@ export class StoreRepository {
       throw new NotFoundError(`Store with id ${id} not found`);
     }
 
-    // Build partial update payload (only set fields that were provided)
-    const updateData: Prisma.StoreUpdateInput = {
-      ...(data.name !== undefined ? { name: data.name } : {}),
-      ...(data.code !== undefined ? { code: data.code } : {}),
-      ...(data.address !== undefined ? { address: data.address } : {}),
-      ...(data.phone !== undefined ? { phone: data.phone } : {}),
-      ...(data.email !== undefined ? { email: data.email } : {}),
-      ...(data.isActive !== undefined ? { isActive: data.isActive } : {}),
-      ...(data.status !== undefined ? { status: data.status as Status } : {}),
-      updatedAt: new Date(),
-    };
-
-    const updated = await prisma.store.update({
+    return prisma.store.update({
       where: { id },
-      data: updateData,
+      data: { status: Status.Trash }
     });
 
-    return this.mapToDto(updated);
   }
-
- async delete(id: number): Promise<StoreDto> {
-  const store = await prisma.store.findUnique({
-    where: { id },
-  });
-
-  if (!store) {
-    throw new NotFoundError(`Store with id ${id} not found`);
-  }
- 
-    return prisma.store.update({ 
-      where: { id }, 
-      data: { status: Status.Trash } 
-    });
- 
-}
 
   async checkExists(field: "name" | "code", value: string, excludeId?: number): Promise<boolean> {
     const whereClause: any = { [field]: value };

@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { StaffSalaryController } from "../controllers/staff-salary.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createStaffSalarySchema, updateStaffSalarySchema } from "../schemas/staffSalarySchema";
 
@@ -113,10 +113,14 @@ staffSalaryRouter.get("/:id", authenticateToken, asyncHandler(staffSalaryControl
  *         application/json:
  *           schema:
  *             type: object
- *             required: [staffId, month, year, baseSalary, netPayable]
+ *             required: [staffId, storeId, month, year, baseSalary, netPayable]
  *             properties:
  *               staffId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this salary record belongs to
  *               month:
  *                 type: integer
  *               year:

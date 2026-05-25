@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { StaffAttendanceController } from "../controllers/staff-attendance.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createStaffAttendanceSchema, updateStaffAttendanceSchema } from "../schemas/staffAttendanceSchema";
 
@@ -113,10 +113,14 @@ staffAttendanceRouter.get("/:id", authenticateToken, asyncHandler(staffAttendanc
  *         application/json:
  *           schema:
  *             type: object
- *             required: [staffId, date]
+ *             required: [staffId, storeId, date]
  *             properties:
  *               staffId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this attendance record belongs to
  *               date:
  *                 type: string
  *                 format: date

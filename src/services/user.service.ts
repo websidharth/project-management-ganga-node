@@ -26,7 +26,7 @@ export class UserService implements IUserService {
     @inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork,
     @inject(TYPES.IDateTimeService)
     private dateTime: IDateTimeService
-  ) {}
+  ) { }
 
   async create(data: CreateUserModel, role: Role) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -47,7 +47,7 @@ export class UserService implements IUserService {
           isActive: false,
           isEmailVerified: false,
           isPhoneVerified: false,
-          tokenUpdated: false, 
+          tokenUpdated: false,
         },
       });
 
@@ -111,7 +111,7 @@ export class UserService implements IUserService {
     return user;
   }
 
-convertToDto(user: users, includePassword: boolean = false, token: boolean = false, refreshToken: boolean = false, ): UserDto {
+  convertToDto(user: users, includePassword: boolean = false, token: boolean = false, refreshToken: boolean = false,): UserDto {
     return {
       id: user.id,
       userId: user.userId,
@@ -132,10 +132,11 @@ convertToDto(user: users, includePassword: boolean = false, token: boolean = fal
       profileImageUrl: user.profileImageUrl,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-      status: user.status, 
+      status: user.status,
       token: token ? user.token : null,
       tokenUpdated: user.tokenUpdated,
       refreshToken: token ? user.refreshToken : null,
+      storeId: user.storeId,
     };
   }
 }

@@ -3,14 +3,14 @@ import { Status } from "@prisma/client";
 export interface BrandNameDto {
     id: number;
     brandName: string;
+    storeId: number;
     status: Status;
-    categoryIds: number[];
     displayOrder?: number | null;
 }
 
 export interface CreateBrandNameDto {
-    categoryIds: number[];
     brandName: string;
+    storeId: number;
     status: Status;
     displayOrder?: number | null;
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticateToken } from '../middleware/auth';
+import { authenticateToken } from '../middleware/authentication.middleware';
 import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
 import { UserController } from '../controllers/user.controller';
@@ -212,5 +212,45 @@ userRouter.put('/:userId', authenticateToken, asyncHandler(usersController.updat
  */
 
 userRouter.delete('/:userId', authenticateToken, asyncHandler(usersController.deleteUserById));
+
+/**
+ * @swagger
+ * /users/assign-store:
+ *   patch:
+ *     summary: Assign a store to the authenticated user
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - storeId
+ *             properties:
+ *               storeId:
+ *                 type: number
+ *                 example: 1
+ *                 description: The ID of the store to assign
+ *     responses:
+ *       200:
+ *         description: Store assigned successfully
+ *       400:
+ *         description: Bad request - missing storeId
+ *       404:
+ *         description: Store not found
+ *       401:
+ *         description: Unauthorized
+ */
+userRouter.patch('/assign-store', authenticateToken, asyncHandler(usersController.assignStore));
 
 export default userRouter;

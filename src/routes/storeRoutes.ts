@@ -5,7 +5,7 @@ import asyncHandler from "../middleware/asyncHandler.middleware";
 import { StoreController } from "../controllers/store.controller";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 
 const storeRouter = Router();
 
@@ -20,7 +20,7 @@ const storeController = container.get<StoreController>(TYPES.StoreController);
 
 /**
  * @swagger
- * /api/stores:
+ * /stores:
  *   get:
  *     summary: Get all stores
  *     tags: [Store]
@@ -77,7 +77,7 @@ storeRouter.get("/", asyncHandler(storeController.getAll));
 
 /**
  * @swagger
- * /api/stores/{id}:
+ * /stores/{id}:
  *   get:
  *     summary: Get store by id
  *     tags: [Store]
@@ -104,7 +104,7 @@ storeRouter.get("/:id", asyncHandler(storeController.getById));
 
 /**
  * @swagger
- * /api/stores:
+ * /stores:
  *   post:
  *     summary: Create a new store
  *     tags: [Store]
@@ -147,11 +147,11 @@ storeRouter.get("/:id", asyncHandler(storeController.getById));
  *       400: { description: Bad Request }
  *       500: { description: Server error }
  */
-storeRouter.post("/", authenticateToken, [validate(createStoreSchema)], asyncHandler(storeController.create));
+storeRouter.post("/", [validate(createStoreSchema)], asyncHandler(storeController.create));
 
 /**
  * @swagger
- * /api/stores/{id}:
+ * /stores/{id}:
  *   put:
  *     summary: Update store
  *     tags: [Store]
@@ -194,7 +194,7 @@ storeRouter.put("/:id", authenticateToken, [validate(updateStoreSchema)], asyncH
 
 /**
  * @swagger
- * /api/stores/{id}:
+ * /stores/{id}:
  *   delete:
  *     summary: Delete store
  *     tags: [Store]

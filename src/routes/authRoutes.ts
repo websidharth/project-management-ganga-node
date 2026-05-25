@@ -7,7 +7,7 @@ import asyncHandler from "../middleware/asyncHandler.middleware";
 import { AccountController } from "../controllers/auth.controller";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 
 const accountRouter = Router();
 

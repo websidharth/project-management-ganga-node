@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { BrandNameController } from "../controllers/brand-name.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createBrandNameSchema, updateBrandNameSchema } from "../schemas/brandNameSchema";
 
@@ -87,14 +87,24 @@ brandNameRouter.get("/:id", authenticateToken, asyncHandler(brandNameController.
  *         application/json:
  *           schema:
  *             type: object
- *             required: [brandName]
+ *             required: [brandName, storeId]
  *             properties:
  *               brandName:
  *                 type: string
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this brand belongs to
  *               status:
- *                 type: boolean
+ *                 type: string
+ *                 enum: [Published, Draft, Trash]
  *               displayOrder:
  *                 type: integer
+ *               categoryIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 description: Array of category IDs
  *     responses:
  *       201:
  *         description: Brand name created successfully

@@ -3,7 +3,7 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import { PaymentController } from "../controllers/payment.controller";
 import asyncHandler from "../middleware/asyncHandler.middleware";
-import { authenticateToken } from "../middleware/auth";
+import { authenticateToken } from "../middleware/authentication.middleware";
 import { validate } from "../middleware/validate";
 import { createPaymentSchema, updatePaymentSchema } from "../schemas/paymentSchema";
 
@@ -92,10 +92,14 @@ paymentRouter.get("/:id", authenticateToken, asyncHandler(paymentController.getB
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderId, amount, method]
+ *             required: [orderId, storeId, amount, method]
  *             properties:
  *               orderId:
  *                 type: integer
+ *               storeId:
+ *                 type: integer
+ *                 example: 1
+ *                 description: ID of the store this payment belongs to
  *               amount:
  *                 type: number
  *               method:
