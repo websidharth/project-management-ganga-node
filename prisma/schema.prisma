@@ -7,364 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  id                       Int               @id @default(autoincrement())
-  userId                   String            @unique
-  name                     String
-  userName                 String            @unique
-  phone                    String?
-  email                    String            @unique
-  password                 String
-  role                     Role              @default(USER)
-  isActive                 Boolean           @default(false)
-  isEmailVerified          Boolean           @default(false)
-  emailVerificationToken   String?           @unique
-  emailVerificationExpires DateTime?
-  isPhoneVerified          Boolean           @default(false)
-  profileImageUrl          String?
-  loginAttempts            Int               @default(0)
-  lastLoginAt              DateTime?
-  lastLoginIP              String?
-  createdAt                DateTime          @default(now())
-  updatedAt                DateTime?         @updatedAt
-  status                   Status            @default(Published)
-  token                    String?
-  tokenUpdated             Boolean           @default(false)
-  refreshToken             String?
-  metadata                 Json?
-  storeId                  Int?
-  orders                   order[]
-  productsCreated          product[]         @relation("CreatedBy")
-  productsUpdated          product[]         @relation("UpdatedBy")
-  staff                    staff?
-  recordedAttendances      staffAttendance[] @relation("staff_attendance_recorder")
-  staffAttendances         staffAttendance[] @relation("staff_member")
-  processedSalaries        staffSalary[]     @relation("salary_processor")
-  staffSalaries            staffSalary[]     @relation("salary_staff")
-  profile                  userProfile?
-  store                    store?            @relation(fields: [storeId], references: [id])
-
-  @@index([userId])
-  @@index([email])
-  @@index([phone])
-  @@index([role])
-}
-
-model store {
-  id                Int                @id @default(autoincrement())
-  name              String             @unique
-  code              String             @unique
-  address           String?
-  phone             String?
-  email             String?
-  isActive          Boolean            @default(true)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  status            Status             @default(Published)
-  gstnumber         String?            @unique @db.VarChar(50)
-  pannumber         String?            @unique @db.VarChar(50)
-  attributes        attribute[]
-  brandNames        brandName[]
-  categories        category[]
-  orders            order[]
-  orderItems        orderItem[]
-  payments          payment[]
-  Product           product[]
-  productAttributes productAttribute[]
-  productVariants   productVariant[]
-  staffDetails      staff[]
-  staffAttendances  staffAttendance[]
-  staffSalary       staffSalary[]
-  staff             users[]
-}
-
-model userProfile {
-  id          Int       @id @default(autoincrement())
-  userId      Int       @unique
-  dateOfBirth DateTime?
-  address     String?
-  city        String?
-  state       String?
-  pincode     String?
-  bio         String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model category {
-  id           Int         @id @default(autoincrement())
-  name         String
-  description  String?
-  parentId     Int?
-  storeId      Int
-  status       Status      @default(Published)
-  displayOrder Int?        @default(0)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  parent       category?   @relation("CategoryToParent", fields: [parentId], references: [id])
-  children     category[]  @relation("CategoryToParent")
-  store        store       @relation(fields: [storeId], references: [id])
-  products     product[]
-  brandNames   brandName[] @relation("brandNameTocategory")
-
-  @@unique([name, storeId])
-  @@index([storeId])
-}
-
-model product {
-  id                Int                @id @default(autoincrement())
-  name              String
-  brandNameId       Int?
-  slug              String             @unique
-  description       String?
-  sku               String             @unique
-  price             Float              @default(0)
-  cost              Float?
-  stock             Int                @default(0)
-  lowStockThreshold Int?               @default(5)
-  categoryId        Int
-  images            String[]
-  storeId           Int
-  status            Status             @default(Published)
-  displayOrder      Int?               @default(0)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  createdById       Int
-  updatedById       Int?
-  orderItems        orderItem[]
-  brandName         brandName?         @relation(fields: [brandNameId], references: [id])
-  category          category           @relation(fields: [categoryId], references: [id])
-  createdBy         users              @relation("CreatedBy", fields: [createdById], references: [id])
-  store             store              @relation(fields: [storeId], references: [id])
-  updatedBy         users?             @relation("UpdatedBy", fields: [updatedById], references: [id])
-  attributes        productAttribute[]
-  variants          productVariant[]
-}
-
-model brandName {
-  id             Int              @id @default(autoincrement())
-  brandName      String
-  storeId        Int
-  status         Status           @default(Published)
-  displayOrder   Int?             @default(0)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  store          store            @relation(fields: [storeId], references: [id])
-  product        product[]
-  productVariant productVariant[]
-  categories     category[]       @relation("brandNameTocategory")
-
-  @@unique([brandName, storeId])
-  @@index([id])
-  @@index([storeId])
-}
-
-model attribute {
-  id                Int                @id @default(autoincrement())
-  name              String
-  unit              String?
-  storeId           Int
-  status            Status             @default(Published)
-  displayOrder      Int?               @default(0)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  store             store              @relation(fields: [storeId], references: [id])
-  productAttributes productAttribute[]
-  productVariants   productVariant[]
-
-  @@unique([name, storeId])
-  @@index([id])
-  @@index([storeId])
-}
-
-model productAttribute {
-  id              Int              @id @default(autoincrement())
-  productId       Int
-  attributeId     Int
-  value           String
-  storeId         Int
-  status          Status           @default(Published)
-  displayOrder    Int?             @default(0)
-  attribute       attribute        @relation(fields: [attributeId], references: [id])
-  product         product          @relation(fields: [productId], references: [id])
-  store           store            @relation(fields: [storeId], references: [id])
-  productVariants productVariant[]
-
-  @@index([storeId])
-}
-
-model productVariant {
-  id                 Int               @id @default(autoincrement())
-  name               String
-  slug               String?           @unique
-  productId          Int
-  brandNameId        Int?
-  productAttributeId Int?
-  storeId            Int
-  cost               Int               @default(0)
-  Price              Int               @default(0)
-  stock              Int               @default(0)
-  lowStockThreshold  Int?              @default(5)
-  images             String[]
-  status             Status            @default(Published)
-  displayOrder       Int?              @default(0)
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime?         @updatedAt
-  isDefault          Boolean           @default(false)
-  extraPrice         Float?
-  varient            String?
-  size               String?
-  material           String?
-  voltage            String?
-  color              String?
-  extraSku           String?           @unique
-  attributeId        Int?
-  orderItems         orderItem[]
-  attribute          attribute?        @relation(fields: [attributeId], references: [id])
-  brandName          brandName?        @relation(fields: [brandNameId], references: [id])
-  productAttribute   productAttribute? @relation(fields: [productAttributeId], references: [id])
-  product            product           @relation(fields: [productId], references: [id])
-  store              store             @relation(fields: [storeId], references: [id])
-
-  @@index([storeId])
-}
-
-model staff {
-  id         Int      @id @default(autoincrement())
-  userId     Int      @unique
-  storeId    Int
-  position   String?
-  department String?
-  hireDate   DateTime @default(now())
-  salary     Float?
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  store      store    @relation(fields: [storeId], references: [id])
-  user       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([storeId])
-  @@index([isActive])
-}
-
-model staffAttendance {
-  id            Int              @id @default(autoincrement())
-  staffId       Int
-  date          DateTime         @map("date")
-  status        AttendanceStatus @default(PRESENT)
-  checkInTime   DateTime?
-  checkOutTime  DateTime?
-  overtimeHours Float?
-  remarks       String?
-  recordedBy    Int?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  storeId       Int
-  recorder      users?           @relation("staff_attendance_recorder", fields: [recordedBy], references: [id])
-  staff         users            @relation("staff_member", fields: [staffId], references: [id], onDelete: Cascade)
-  store         store            @relation(fields: [storeId], references: [id])
-
-  @@unique([staffId, date])
-  @@index([staffId])
-  @@index([date])
-}
-
-model order {
-  id           Int         @id @default(autoincrement())
-  orderNumber  String      @unique
-  customerId   Int
-  orderDate    DateTime    @default(now())
-  totalAmount  Float       @default(0)
-  discount     Float       @default(0)
-  tax          Float       @default(0)
-  shippingCost Float       @default(0)
-  grandTotal   Float       @default(0)
-  status       OrderStatus @default(PENDING)
-  notes        String?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  storeId      Int
-  customer     users       @relation(fields: [customerId], references: [id])
-  store        store       @relation(fields: [storeId], references: [id])
-  items        orderItem[]
-  payments     payment[]
-
-  @@index([customerId])
-  @@index([orderNumber])
-  @@index([status])
-}
-
-model orderItem {
-  id         Int             @id @default(autoincrement())
-  orderId    Int
-  productId  Int
-  variantId  Int?
-  storeId    Int
-  quantity   Int
-  unitPrice  Float
-  totalPrice Float
-  createdAt  DateTime        @default(now())
-  order      order           @relation(fields: [orderId], references: [id])
-  product    product         @relation(fields: [productId], references: [id])
-  store      store           @relation(fields: [storeId], references: [id])
-  variant    productVariant? @relation(fields: [variantId], references: [id])
-
-  @@index([orderId])
-  @@index([productId])
-  @@index([storeId])
-}
-
-model payment {
-  id            Int           @id @default(autoincrement())
-  orderId       Int
-  amount        Float
-  method        PaymentMethod
-  status        PaymentStatus @default(PENDING)
-  transactionId String?       @unique
-  paymentDate   DateTime      @default(now())
-  remarks       String?
-  storeId       Int
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  order         order         @relation(fields: [orderId], references: [id])
-  store         store         @relation(fields: [storeId], references: [id])
-
-  @@index([orderId])
-  @@index([transactionId])
-  @@index([paymentDate])
-  @@index([storeId])
-}
-
-model staffSalary {
-  id               Int           @id @default(autoincrement())
-  staffId          Int
-  month            Int
-  year             Int
-  baseSalary       Float
-  attendanceBonus  Float?
-  deductions       Float?
-  advanceDeduction Float?
-  netPayable       Float
-  paidAmount       Float         @default(0)
-  status           PaymentStatus @default(PENDING)
-  paymentDate      DateTime?
-  remarks          String?
-  processedBy      Int?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  storeId          Int
-  processor        users?        @relation("salary_processor", fields: [processedBy], references: [id])
-  staff            users         @relation("salary_staff", fields: [staffId], references: [id])
-  store            store         @relation(fields: [storeId], references: [id])
-
-  @@unique([staffId, month, year])
-  @@index([staffId])
-  @@index([status])
-  @@index([month, year])
-}
-
 enum Role {
   SUPER_ADMIN
   ADMIN
@@ -415,4 +57,373 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
   RETURNED
+}
+
+model users {
+  id                       Int               @id @default(autoincrement())
+  userId                   String            @unique // public/business id
+  name                     String
+  userName                 String            @unique
+  phone                    String?
+  email                    String            @unique
+  password                 String
+  role                     Role              @default(USER)
+  isActive                 Boolean           @default(false)
+  isRegisterbyShop         Boolean           @default(false)
+  isEmailVerified          Boolean           @default(false)
+  emailVerificationToken   String?           @unique
+  emailVerificationExpires DateTime?
+  isPhoneVerified          Boolean           @default(false)
+  profileImageUrl          String?
+  loginAttempts            Int               @default(0)
+  lastLoginAt              DateTime?
+  lastLoginIP              String?
+  createdAt                DateTime          @default(now())
+  updatedAt                DateTime?         @updatedAt
+  status                   Status            @default(Published)
+  token                    String?
+  tokenUpdated             Boolean           @default(false)
+  refreshToken             String?
+  metadata                 Json?
+  storeCode                String?
+  profile                  userProfile?
+  productsCreated          product[]         @relation("CreatedBy")
+  productsUpdated          product[]         @relation("UpdatedBy")
+  orders                   order[] // customer orders placed by this user  
+  staffAttendances         staffAttendance[] @relation("staff_member")
+  recordedAttendances      staffAttendance[] @relation("staff_attendance_recorder")
+  staffSalaries            staffSalary[]     @relation("salary_staff")
+  processedSalaries        staffSalary[]     @relation("salary_processor")
+  store                    store?            @relation(fields: [storeCode], references: [code])
+  staff                    staff?
+
+  @@index([userId])
+  @@index([email])
+  @@index([phone])
+  @@index([role])
+}
+
+model userProfile {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @unique
+  phone       String?
+  email       String    @unique
+  user        users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateOfBirth DateTime?
+  address     String?
+  city        String?
+  state       String?
+  pincode     String?
+  bio         String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model store {
+  id                Int                @id @default(autoincrement())
+  name              String             @unique
+  code              String             @unique
+  address           String?
+  phone             String?
+  email             String?
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  status            Status             @default(Published)
+  // Relations
+  categories        category[]
+  brandNames        brandName[]
+  attributes        attribute[]
+  Product           product[]
+  productAttributes productAttribute[]
+  productVariants   productVariant[]
+  orders            order[]
+  orderItems        orderItem[]
+  payments          payment[]
+  staff             users[] // employees of this store
+  staffAttendances  staffAttendance[]
+  staffSalary       staffSalary[]
+  staffDetails      staff[]
+}
+
+// ========== PRODUCT MANAGEMENT ==========
+model category {
+  id           Int         @id @default(autoincrement())
+  name         String
+  description  String?
+  parentId     Int?
+  storeCode    String
+  status       Status      @default(Published)
+  displayOrder Int?        @default(0)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  parent       category?   @relation("CategoryToParent", fields: [parentId], references: [id])
+  children     category[]  @relation("CategoryToParent")
+  products     product[]
+  brandNames   brandName[]
+  store        store?      @relation(fields: [storeCode], references: [code])
+
+  @@unique([name, storeCode])
+  @@index([storeCode])
+}
+
+model product {
+  id                Int      @id @default(autoincrement())
+  name              String
+  brandNameId       Int?
+  slug              String   @unique
+  description       String?
+  sku               String   @unique
+  price             Float    @default(0)
+  cost              Float?
+  stock             Int      @default(0)
+  lowStockThreshold Int?     @default(5)
+  categoryId        Int
+  images            String[]
+  storeCode         String
+  status            Status   @default(Published)
+  displayOrder      Int?     @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  createdById       String
+  updatedById       String?
+
+  brandName  brandName?         @relation(fields: [brandNameId], references: [id])
+  store      store?             @relation(fields: [storeCode], references: [code])
+  createdBy  users              @relation("CreatedBy", fields: [createdById], references: [userId])
+  updatedBy  users?             @relation("UpdatedBy", fields: [updatedById], references: [userId])
+  orderItems orderItem[]
+  category   category           @relation(fields: [categoryId], references: [id])
+  variants   productVariant[]
+  attributes productAttribute[]
+}
+
+model brandName {
+  id             Int              @id @default(autoincrement())
+  brandName      String
+  storeCode      String
+  status         Status           @default(Published)
+  displayOrder   Int?             @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  product        product[]
+  categories     category[]
+  productVariant productVariant[]
+  store          store?           @relation(fields: [storeCode], references: [code])
+
+  @@unique([brandName, storeCode])
+  @@index([id])
+  @@index([storeCode])
+}
+
+model attribute {
+  id                Int                @id @default(autoincrement())
+  name              String
+  unit              String?
+  storeCode         String
+  status            Status             @default(Published)
+  displayOrder      Int?               @default(0)
+  productAttributes productAttribute[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  productVariants   productVariant[]
+  store             store?             @relation(fields: [storeCode], references: [code])
+
+  @@unique([name, storeCode])
+  @@index([id])
+  @@index([storeCode])
+}
+
+model productAttribute {
+  id              Int              @id @default(autoincrement())
+  productId       Int
+  attributeId     Int
+  value           String
+  storeCode       String
+  status          Status           @default(Published)
+  displayOrder    Int?             @default(0)
+  productVariants productVariant[]
+  store           store?           @relation(fields: [storeCode], references: [code])
+  attribute       attribute        @relation(fields: [attributeId], references: [id])
+  product         product          @relation(fields: [productId], references: [id])
+
+  @@index([storeCode])
+}
+
+model productVariant {
+  id                 Int               @id @default(autoincrement())
+  name               String
+  slug               String?           @unique
+  productId          Int
+  brandNameId        Int?
+  productAttributeId Int?
+  storeCode          String
+  cost               Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
+  Price              Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
+  stock              Int               @default(0)
+  lowStockThreshold  Int?              @default(5)
+  images             String[]
+  status             Status            @default(Published)
+  displayOrder       Int?              @default(0)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime?         @updatedAt
+  isDefault          Boolean           @default(false)
+  extraPrice         Float?
+  varient            String?
+  size               String?
+  material           String?
+  voltage            String?
+  color              String?
+  extraSku           String?           @unique
+  product            product           @relation(fields: [productId], references: [id])
+  brandName          brandName?        @relation(fields: [brandNameId], references: [id])
+  productAttribute   productAttribute? @relation(fields: [productAttributeId], references: [id])
+  orderItems         orderItem[]
+  attribute          attribute?        @relation(fields: [attributeId], references: [id])
+  attributeId        Int?
+  store              store?            @relation(fields: [storeCode], references: [code])
+
+  @@index([storeCode])
+}
+
+model staff {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  storeCode  String
+  position   String? // Job title/position
+  department String?
+  hireDate   DateTime @default(now())
+  salary     Float?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user  users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store store @relation(fields: [storeCode], references: [code])
+
+  @@index([userId])
+  @@index([storeCode])
+  @@index([isActive])
+}
+
+// ========== STAFF ATTENDANCE ==========
+model staffAttendance {
+  id            Int              @id @default(autoincrement())
+  staffId       Int
+  date          DateTime         @map("date") // attendance date (date only, time truncated)
+  status        AttendanceStatus @default(PRESENT)
+  checkInTime   DateTime?
+  checkOutTime  DateTime?
+  overtimeHours Float? // in hours
+  remarks       String?
+  recordedBy    Int? // staff ID who marked attendance (optional)
+  storeCode     String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  staff    users  @relation("staff_member", fields: [staffId], references: [id], onDelete: Cascade)
+  recorder users? @relation("staff_attendance_recorder", fields: [recordedBy], references: [id])
+  store    store  @relation(fields: [storeCode], references: [code])
+
+  @@unique([staffId, date])
+  @@index([staffId])
+  @@index([date])
+}
+
+// ========== ORDER & PAYMENT (Product Sales) ==========
+model order {
+  id           Int         @id @default(autoincrement())
+  orderNumber  String      @unique
+  customerId   Int // user who placed order
+  orderDate    DateTime    @default(now())
+  totalAmount  Float       @default(0)
+  discount     Float       @default(0)
+  tax          Float       @default(0)
+  shippingCost Float       @default(0)
+  grandTotal   Float       @default(0)
+  status       OrderStatus @default(PENDING)
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  customer     users       @relation(fields: [customerId], references: [id])
+  items        orderItem[]
+  payments     payment[]
+  store        store       @relation(fields: [storeCode], references: [code])
+  storeCode    String
+
+  @@index([customerId])
+  @@index([orderNumber])
+  @@index([status])
+}
+
+model orderItem {
+  id         Int      @id @default(autoincrement())
+  orderId    Int
+  productId  Int
+  variantId  Int? // optional, if a specific variant was chosen
+  storeCode  String
+  quantity   Int
+  unitPrice  Float // price at time of purchase
+  totalPrice Float
+  createdAt  DateTime @default(now())
+
+  order   order           @relation(fields: [orderId], references: [id])
+  product product         @relation(fields: [productId], references: [id])
+  variant productVariant? @relation(fields: [variantId], references: [id])
+  store   store           @relation(fields: [storeCode], references: [code])
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([storeCode])
+}
+
+model payment {
+  id            Int           @id @default(autoincrement())
+  orderId       Int
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionId String?       @unique
+  paymentDate   DateTime      @default(now())
+  remarks       String?
+  storeCode     String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  order order @relation(fields: [orderId], references: [id])
+  store store @relation(fields: [storeCode], references: [code])
+
+  @@index([orderId])
+  @@index([transactionId])
+  @@index([paymentDate])
+  @@index([storeCode])
+}
+
+// ========== STAFF SALARY ==========
+model staffSalary {
+  id               Int           @id @default(autoincrement())
+  staffId          Int
+  month            Int // 1-12
+  year             Int
+  baseSalary       Float // fixed monthly salary
+  attendanceBonus  Float? // extra based on attendance
+  deductions       Float? // for leaves, late arrivals, etc.
+  advanceDeduction Float? // any salary advance given
+  netPayable       Float
+  paidAmount       Float         @default(0)
+  status           PaymentStatus @default(PENDING)
+  paymentDate      DateTime?
+  remarks          String?
+  processedBy      Int? // admin/staff who processed salary
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  storeCode        String
+  store            store         @relation(fields: [storeCode], references: [code])
+  staff            users         @relation("salary_staff", fields: [staffId], references: [id])
+  processor        users?        @relation("salary_processor", fields: [processedBy], references: [id])
+
+  @@unique([staffId, month, year])
+  @@index([staffId])
+  @@index([status])
+  @@index([month, year])
 }

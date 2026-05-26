@@ -9,7 +9,7 @@ export class StaffRepository implements IStaffRepository {
     async findAll(filters?: StaffFilterParams): Promise<StaffDto[]> {
         const where: any = {};
 
-        if (filters?.storeId) where.storeId = filters.storeId;
+        if (filters?.storeCode) where.storeCode = filters.storeCode;
         if (filters?.isActive !== undefined) where.isActive = filters.isActive;
         if (filters?.department) where.department = filters.department;
         if (filters?.position) where.position = filters.position;
@@ -86,9 +86,9 @@ export class StaffRepository implements IStaffRepository {
         });
     }
 
-    async findByStoreId(storeId: number): Promise<StaffDto[]> {
+    async findByStoreCode(storeCode: string): Promise<StaffDto[]> {
         return prisma.staff.findMany({
-            where: { storeId },
+            where: { storeCode },
             include: {
                 user: {
                     select: {

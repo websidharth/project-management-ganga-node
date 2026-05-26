@@ -1,4 +1,4 @@
-import { BrandNameDto, CreateBrandNameDto } from "../../dtos/brand-name.dto";
+import { BrandNameDto } from "../../dtos/brand-name.dto";
 import { ListResponseDto } from "../../dtos/list-response.dto";
 import { BrandNameFilterParams } from "../../params/brand-name.params";
 

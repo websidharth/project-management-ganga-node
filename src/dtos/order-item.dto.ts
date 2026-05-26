@@ -3,7 +3,7 @@ export interface OrderItemDto {
   orderId: number;
   productId: number;
   variantId?: number | null;
-  storeId: number;
+  storeCode: string
   quantity: number;
   unitPrice: number;
   totalPrice: number;
@@ -14,7 +14,7 @@ export interface CreateOrderItemDto {
   orderId: number;
   productId: number;
   variantId?: number | null;
-  storeId: number;
+  storeCode: string
   quantity: number;
   unitPrice: number;
   totalPrice: number;

@@ -7,6 +7,7 @@ import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../dtos/categ
 import { ListResponseDto } from '../dtos/list-response.dto';
 import { CategoryFilterParams } from '../params/category.params';
 import { Status } from '@prisma/client';
+import { CategoryModel } from '../models/category.model';
 
 export class CategoryController {
   constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) { }
@@ -38,18 +39,23 @@ export class CategoryController {
   };
 
   create = async (req: Request, res: Response): Promise<Response<CustomResponse<CategoryDto>>> => {
-    const body = req.body as CreateCategoryDto;
-    const category = await this.unitOfService.Category.create({
-      ...body,
-      createdAt: new Date(),
-    });
+    const body = req.body as CategoryModel;
+    const storeCode = req.user?.storeCode; // Get from logged-in user
+
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found. User must be associated with a store.'
+      });
+    }
+    const category = await this.unitOfService.Category.create(body, storeCode);
     return res.status(201).json({ success: true, message: 'Category created successfully', data: category });
   };
 
   update = async (req: Request, res: Response): Promise<Response<CustomResponse<CategoryDto>>> => {
     const id = parseInt(req.params['id'] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: 'Invalid id' });
-    const body = req.body as UpdateCategoryDto;
+    const body = req.body as CategoryModel;
     const category = await this.unitOfService.Category.update(id, body);
     return res.status(200).json({ success: true, message: 'Category updated successfully', data: category });
   };

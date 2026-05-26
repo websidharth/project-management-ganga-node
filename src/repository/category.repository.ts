@@ -1,6 +1,6 @@
 import { Prisma, Status } from "@prisma/client";
 import prisma from "../config/prisma";
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from "../dtos/category.dto";
+import { CategoryDto } from "../dtos/category.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { CategoryFilterParams } from "../params/category.params";
 import { ICategoryRepository } from "./interfaces/icategory.repository";
@@ -51,14 +51,6 @@ export class CategoryRepository implements ICategoryRepository {
 
   async findById(id: number): Promise<CategoryDto | null> {
     return prisma.category.findUnique({ where: { id } });
-  }
-
-  async create(data: CreateCategoryDto): Promise<CategoryDto> {
-    return prisma.category.create({ data });
-  }
-
-  async update(id: number, data: UpdateCategoryDto): Promise<CategoryDto> {
-    return prisma.category.update({ where: { id }, data });
   }
 
   async delete(id: number): Promise<CategoryDto> {

@@ -41,7 +41,7 @@ export class AccountController {
       name: loggedInUser.name,
       email: loggedInUser.email,
       role: loggedInUser.role,
-      storeId: loggedInUser.storeId,
+      storeCode: loggedInUser.storeCode || null,
     };
 
     const token = jwt.sign(tokenPayload, config.jwt.secret, {

@@ -14,9 +14,9 @@ export const storeRequiredMiddleware = (
     res: Response,
     next: NextFunction
 ) => {
-    const storeId = req.user?.storeId;
+    const storeCode = req.user?.storeCode;
 
-    if (!storeId) {
+    if (!storeCode) {
         const response: CustomResponse<PlainDto> = {
             success: false,
             message: "You must be assigned to a store to perform this action. Please contact your administrator.",

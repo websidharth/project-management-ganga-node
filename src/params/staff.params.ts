@@ -5,4 +5,5 @@ export interface StaffFilterParams extends PageFilterParams {
     isActive?: boolean;
     department?: string;
     position?: string;
+    storeCode?: string;
 }

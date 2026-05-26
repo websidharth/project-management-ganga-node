@@ -1,6 +1,6 @@
 import { Prisma, Status } from "@prisma/client";
 import prisma from "../config/prisma";
-import { BrandNameDto, CreateBrandNameDto } from "../dtos/brand-name.dto";
+import { BrandNameDto } from "../dtos/brand-name.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { BrandNameFilterParams } from "../params/brand-name.params";
 import { IBrandNameRepository } from "./interfaces/ibrand-name.repository";
@@ -13,7 +13,7 @@ function toDto(b: BrandNameWithCategories): BrandNameDto {
     return {
         id: b.id,
         brandName: b.brandName,
-        storeId: b.storeId,
+        storeCode: b.storeCode,
         status: b.status,
         displayOrder: b.displayOrder,
     };

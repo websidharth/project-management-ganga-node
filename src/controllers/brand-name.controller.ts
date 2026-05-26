@@ -41,7 +41,15 @@ export class BrandNameController {
 
     create = async (req: Request, res: Response): Promise<Response<CustomResponse<BrandNameDto>>> => {
         const body = req.body as CreateBrandNameDto;
-        const data = await this.unitOfService.BrandName.create(body);
+        const storeCode = req.user?.storeCode; // Get from logged-in user
+
+        if (!storeCode) {
+            return res.status(400).json({
+                success: false,
+                message: 'Store code not found. User must be associated with a store.'
+            });
+        }
+        const data = await this.unitOfService.BrandName.create(body, storeCode);
         return res.status(201).json({ success: true, message: 'Brand name created successfully', data });
     };
 

@@ -67,48 +67,58 @@ brandNameRouter.get("/", authenticateToken, asyncHandler(brandNameController.get
 brandNameRouter.get("/:id", authenticateToken, asyncHandler(brandNameController.getById));
 
 /**
- * @swagger
- * /brand-names:
- *   post:
- *     summary: Create a new brand name
- *     tags: [BrandName]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: header
- *         name: clientId
- *         schema:
- *           type: string
- *         required: true
- *         description: Enter Client Id
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required: [brandName, storeId]
- *             properties:
- *               brandName:
- *                 type: string
- *               storeId:
- *                 type: integer
- *                 example: 1
- *                 description: ID of the store this brand belongs to
- *               status:
- *                 type: string
- *                 enum: [Published, Draft, Trash]
- *               displayOrder:
- *                 type: integer
- *               categoryIds:
- *                 type: array
- *                 items:
- *                   type: integer
- *                 description: Array of category IDs
- *     responses:
- *       201:
- *         description: Brand name created successfully
- */
+* @swagger
+* /brand-names:
+*   post:
+*     summary: Create a new brand name
+*     tags: [BrandName]
+*     security:
+*       - bearerAuth: []
+*     parameters:
+*       - in: header
+*         name: clientId
+*         schema:
+*           type: string
+*         required: true
+*         description: Enter Client Id
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             required:
+*               - brandName
+*             properties:
+*               brandName:
+*                 type: string
+*                 minLength: 1
+*                 example: "Nike"
+*                 description: Brand name (required)
+*               status:
+*                 type: string
+*                 enum: [Published, Draft, Trash]
+*                 example: "Published"
+*                 description: Brand status (optional, defaults to Draft)
+*               displayOrder:
+*                 type: integer
+*                 example: 1
+*                 description: Display order for sorting (optional)
+*           example:
+*             brandName: "Nike"
+*             status: "Published"
+*             displayOrder: 1
+*     responses:
+*       201:
+*         description: Brand name created successfully
+*       400:
+*         description: Validation error or store code not found
+*       401:
+*         description: Unauthorized - Invalid or missing token
+*       409:
+*         description: Conflict - Brand name already exists
+*     description: Creates a new brand name. The storeCode is automatically taken from the authenticated user's token.
+*/
 brandNameRouter.post("/", authenticateToken, validate(createBrandNameSchema), asyncHandler(brandNameController.create));
 
 /**

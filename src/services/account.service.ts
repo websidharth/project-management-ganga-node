@@ -8,12 +8,12 @@ import { inject, injectable } from "inversify";
 import { UserDto } from "../dtos/user.dto";
 import { Role } from "../enum/user.enum";
 import { CreateUserModel } from "../models/user.model";
-import { createUserName, generateUserGUID } from "../utils/authHelpers.service";
+import { createUserName, generateStoreCode, generateUserGUID } from "../utils/authHelpers.service";
 import { generateOtp } from "../utils/otp.util";
 import { ResetPasswordModel } from "../models/forgot-password.model";
 import { LoginModel } from "../models/login.model";
-
 import bcrypt from "bcryptjs";
+import { Status } from "../enum/status.enum";
 
 @injectable()
 export class AccountService implements IAccountService {
@@ -53,7 +53,19 @@ export class AccountService implements IAccountService {
   async create(data: CreateUserModel, role: Role) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const { otp } = generateOtp();
+    const storeCode = generateStoreCode(data.firstName);
+
     return this.unitOfWork.transaction(async (transactionClient) => {
+      // Create store entry first
+      await transactionClient.store.create({
+        data: {
+          name: `${data.firstName} ${data.lastName}'s Store`,
+          code: storeCode,
+          status: Status.Published,
+        },
+      });
+
+      // Create user with the same storeCode
       const user = await transactionClient.users.create({
         data: {
           userId: generateUserGUID().toString(),
@@ -67,6 +79,7 @@ export class AccountService implements IAccountService {
           isActive: false,
           isEmailVerified: false,
           isPhoneVerified: false,
+          storeCode: storeCode,
         },
       });
 
@@ -99,7 +112,7 @@ export class AccountService implements IAccountService {
       token: token ? user.token : null,
       tokenUpdated: user.tokenUpdated,
       refreshToken: token ? user.refreshToken : null,
-      storeId: user.storeId,
+      storeCode: user.storeCode || null,
     };
   }
 

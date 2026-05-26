@@ -3,7 +3,7 @@ import { Status } from "@prisma/client";
 export interface StaffDto {
     id: number;
     userId: number;
-    storeId: number;
+    storeCode: string
     position?: string | null;
     department?: string | null;
     hireDate: Date;
@@ -27,7 +27,7 @@ export interface StaffDto {
 
 export interface CreateStaffDto {
     userId: number;
-    storeId: number;
+    storeCode: string
     position?: string | null;
     department?: string | null;
     hireDate?: Date;

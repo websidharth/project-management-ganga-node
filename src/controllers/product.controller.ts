@@ -3,17 +3,17 @@ import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import IUnitOfService from "../services/interfaces/iunitof.service";
 import CustomResponse from "../dtos/custom-response";
-import { CreateProductDto, ProductResponseDto } from "../dtos/product.dto";
+import { ProductResponseDto } from "../dtos/product.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { ProductFilterParams } from "../params/product.params";
 import { Status } from "@prisma/client";
+import { CreateProductModel } from "../models/product.model";
+import NotFoundError from "../exceptions/not-found-error";
 
 export class ProductController {
   constructor(
     private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)
   ) { }
-
-
 
   getAll = async (
     req: Request,
@@ -65,8 +65,16 @@ export class ProductController {
     res: Response
   ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const userId = req.user?.userId as string;
-    const body = req.body as CreateProductDto;
-    const product = await this.unitOfService.Product.create(body, userId);
+    const storeCode = req.user?.storeCode; // Get from logged-in user
+
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found. User must be associated with a store.'
+      });
+    }
+    const body = req.body as CreateProductModel;
+    const product = await this.unitOfService.Product.create(body, userId, storeCode);
     return res.status(201).json({ success: true, message: "Product created successfully", data: product });
   };
 
@@ -75,12 +83,20 @@ export class ProductController {
     res: Response
   ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
     const id = parseInt(req.params["id"] as string);
-    if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
     const userId = req.user?.userId as string;
-    const body = req.body as CreateProductDto;
-    const product = await this.unitOfService.Product.update(id, body, userId);
+    const storeCode = req.user?.storeCode; // Get from logged-in user
+    if (!id) throw new NotFoundError("Product id is required");
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found. User must be associated with a store.'
+      });
+    }
+    const body = req.body as CreateProductModel;
+    const product = await this.unitOfService.Product.update(id, body, userId, storeCode);
     return res.status(200).json({ success: true, message: "Product updated successfully", data: product });
   };
+
 
   delete = async (
     req: Request,

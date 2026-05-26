@@ -1,15 +1,19 @@
+import { Status } from "@prisma/client";
+
 export interface CreateProductModel {
   name: string;
+  brandNameId?: number | null;
   slug: string;
-  description?: string;
+  description?: string | null;
   sku: string;
   price: number;
-  cost?: number;
-  stock?: number;
-  lowStockThreshold?: number;
+  cost?: number | null;
+  stock?: number | null;
+  lowStockThreshold?: number | null;
   categoryId: number;
-  images?: string[];
-  isActive?: boolean;
+  storeCode: string
+  status?: Status;
+  createdById: string;
 }
 
 export interface UpdateProductModel {

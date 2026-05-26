@@ -23,13 +23,12 @@ export class BrandNameService implements IBrandNameService {
         return brandName;
     }
 
-
-    async create(data: CreateBrandNameDto): Promise<BrandNameDto> {
+    async create(data: CreateBrandNameDto, storeCode: string): Promise<BrandNameDto> {
         return this.unitOfWork.transaction(async (transactionClient) => {
             const storeData = await transactionClient.brandName.create({
                 data: {
                     brandName: data.brandName,
-                    storeId: data.storeId,
+                    storeCode: storeCode,
                     status: data.status,
                     displayOrder: data.displayOrder || null,
                 },
@@ -37,8 +36,6 @@ export class BrandNameService implements IBrandNameService {
             return storeData;
         });
     }
-
-
 
     async update(id: number, data: CreateBrandNameDto): Promise<BrandNameDto> {
         const existing = await this.unitOfWork.BrandName.findById(id);
@@ -51,7 +48,7 @@ export class BrandNameService implements IBrandNameService {
                 where: { id },
                 data: {
                     brandName: data.brandName,
-                    storeId: data.storeId,
+                    storeCode: data.storeCode,
                     status: data.status,
                     displayOrder: data.displayOrder || null,
                 },
@@ -59,7 +56,6 @@ export class BrandNameService implements IBrandNameService {
             return storeData;
         });
     }
-
 
     async delete(id: number): Promise<BrandNameDto> {
         const existing = await this.unitOfWork.BrandName.findById(id);

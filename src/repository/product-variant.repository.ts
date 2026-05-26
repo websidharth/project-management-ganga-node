@@ -1,6 +1,5 @@
 import { Prisma, Status } from "@prisma/client";
-import prisma from "../config/prisma";
-import { CreateProductVariantDto, ProductVariantDto, UpdateProductVariantDto } from "../dtos/product-variant.dto";
+import prisma from "../config/prisma"; 
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { ProductVariantFilterParams } from "../params/product-variant.params";
 import { IProductVariantRepository } from "./interfaces/iproduct-variant.repository";
@@ -52,15 +51,7 @@ export class ProductVariantRepository implements IProductVariantRepository {
   async findById(id: number) {
     return prisma.productVariant.findUnique({ where: { id } });
   }
-
-  async create(data: CreateProductVariantDto) {
-    return prisma.productVariant.create({ data });
-  }
-
-  async update(id: number, data: UpdateProductVariantDto) {
-    return prisma.productVariant.update({ where: { id }, data });
-  }
-
+ 
   async delete(id: number) {
     return prisma.productVariant.update({ where: { id }, data: { status: Status.Trash } });
   }

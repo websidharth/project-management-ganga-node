@@ -13,11 +13,11 @@ export interface ProductResponseDto {
   lowStockThreshold?: number | null;
   categoryId: number;
   images: string[];
-  storeId: number;
+  storeCode: string
   status: Status;
   displayOrder?: number | null;
-  createdById: number;
-  updatedById?: number | null;
+  createdById: string;
+  updatedById?: string | null;
   createdAt: Date;
   updatedAt: Date | null;
 }
@@ -34,7 +34,7 @@ export interface CreateProductDto {
   lowStockThreshold?: number | null;
   categoryId: number;
   images?: string[];
-  storeId: number;
+  storeCode: string
   status?: Status;
   displayOrder?: number | null;
   createdById: number;

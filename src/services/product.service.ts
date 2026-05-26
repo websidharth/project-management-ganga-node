@@ -5,6 +5,8 @@ import { IProductService } from "./interfaces/Iproduct.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
 import { ProductFilterParams } from "../params/product.params";
+import { CreateProductModel } from "../models/product.model";
+import { Status } from "../enum/status.enum";
 
 @injectable()
 export class ProductService implements IProductService {
@@ -28,27 +30,53 @@ export class ProductService implements IProductService {
     return product;
   }
 
-  async getBySku(sku: string): Promise<ProductResponseDto | null> {
-    const product = await this.unitOfWork.Product.findBySku(sku);
-    if (!product) throw new NotFoundError("Product not found");
-    return product;
+  async create(data: CreateProductModel, userId: string, storeCode: string): Promise<ProductResponseDto> {
+    return this.unitOfWork.transaction(async (transactionClient) => {
+      const storeData = await transactionClient.product.create({
+        data: {
+          name: data.name,
+          brandNameId: data.brandNameId || null,
+          slug: data.slug,
+          description: data.description || null,
+          sku: data.sku,
+          price: data.price,
+          cost: data.cost || null,
+          stock: data.stock || 0,
+          lowStockThreshold: data.lowStockThreshold || 5,
+          categoryId: data.categoryId,
+          storeCode: storeCode,
+          status: data.status || Status.Published,
+          createdById: userId
+        },
+      });
+      return storeData;
+    });
   }
 
-  async create(data: CreateProductDto, createdByUserId: string): Promise<ProductResponseDto> {
-    const user = await this.unitOfWork.User.findById(createdByUserId);
-    if (!user) throw new NotFoundError("Authenticated user not found");
-    return this.unitOfWork.Product.create({ ...data, createdById: user.id });
-  }
-
-  async update(id: number, data: CreateProductDto, updatedByUserId: string): Promise<ProductResponseDto> {
+  async update(id: number, data: CreateProductModel, userId: string, storeCode: string): Promise<ProductResponseDto> {
     const existing = await this.unitOfWork.Product.findById(id);
     if (!existing) throw new NotFoundError("Product not found");
-    const user = await this.unitOfWork.User.findById(updatedByUserId);
-    if (!user) throw new NotFoundError("Authenticated user not found");
-    return this.unitOfWork.Product.update(id, {
-      ...data,
-      updatedById: user.id,
-      updatedAt: new Date(),
+    return this.unitOfWork.transaction(async (transactionClient) => {
+      const storeData = await transactionClient.product.update({
+        where: { id: id },
+        data: {
+          name: data.name,
+          brandNameId: data.brandNameId || null,
+          slug: data.slug,
+          description: data.description || null,
+          sku: data.sku,
+          price: data.price,
+          cost: data.cost || null,
+          stock: data.stock || 0,
+          lowStockThreshold: data.lowStockThreshold || 5,
+          categoryId: data.categoryId,
+          storeCode: storeCode,
+          status: data.status || Status.Published,
+          updatedById: userId,
+          updatedAt: new Date(),
+        },
+      });
+      return storeData;
     });
   }
 

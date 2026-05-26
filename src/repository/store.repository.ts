@@ -1,6 +1,6 @@
-import { Prisma, Status } from "@prisma/client";
+import {   Status } from "@prisma/client";
 import prisma from "../config/prisma";
-import { StoreDto, CreateStoreDto, UpdateStoreDto } from "../dtos/store.dto";
+import { StoreDto, CreateStoreDto } from "../dtos/store.dto";
 import { StoreFilterParams } from "../params/store.params";
 import NotFoundError from "../exceptions/not-found-error";
 

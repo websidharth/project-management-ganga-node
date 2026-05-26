@@ -3,7 +3,7 @@ import { PaymentStatus } from "@prisma/client";
 export interface StaffSalaryDto {
   id: number;
   staffId: number;
-  storeId: number;
+  storeCode: string
   month: number;
   year: number;
   baseSalary: number;
@@ -22,7 +22,7 @@ export interface StaffSalaryDto {
 
 export interface CreateStaffSalaryDto {
   staffId: number;
-  storeId: number;
+  storeCode: string
   month: number;
   year: number;
   baseSalary: number;

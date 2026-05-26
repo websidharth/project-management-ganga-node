@@ -24,7 +24,7 @@ export interface UserDto {
   token?: string | null;
   tokenUpdated: boolean;
   refreshToken?: string | null;
-  storeId?: number | null;
+  storeCode?: string | null;
 }
 export interface CreateUserDto {
   userId: string;

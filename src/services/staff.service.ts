@@ -21,8 +21,8 @@ export class StaffService implements IStaffService {
         return this.unitOfWork.Staff.findByUserId(userId);
     }
 
-    async getByStoreId(storeId: number): Promise<StaffDto[]> {
-        return this.unitOfWork.Staff.findByStoreId(storeId);
+    async getByStoreCode(storeCode: string): Promise<StaffDto[]> {
+        return this.unitOfWork.Staff.findByStoreCode(storeCode);
     }
 
     async create(data: CreateStaffDto): Promise<StaffDto> {

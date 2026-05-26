@@ -136,7 +136,7 @@ export class UserService implements IUserService {
       token: token ? user.token : null,
       tokenUpdated: user.tokenUpdated,
       refreshToken: token ? user.refreshToken : null,
-      storeId: user.storeId,
+      storeCode: user.storeCode || null,
     };
   }
 }

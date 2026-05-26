@@ -1,6 +1,6 @@
 import { Prisma, Status } from '@prisma/client';
 import prisma from '../config/prisma';
-import { CreateProductDto, ProductResponseDto } from '../dtos/product.dto';
+import { ProductResponseDto } from '../dtos/product.dto';
 import { ListResponseDto } from '../dtos/list-response.dto';
 import { ProductFilterParams } from '../params/product.params';
 import { IProductRepository } from './interfaces/iproduct.repository';
@@ -38,7 +38,7 @@ export class ProductRepository implements IProductRepository {
 
       if (filters.categoryId !== undefined) where.categoryId = filters.categoryId;
       if (filters.brandNameId !== undefined) where.brandNameId = filters.brandNameId;
-      if (filters.storeId !== undefined) where.storeId = filters.storeId;
+      if (filters.storeCode !== undefined) where.storeCode = filters.storeCode;
 
       if (filters.status !== undefined) {
         where.status = filters.status;
@@ -84,13 +84,6 @@ export class ProductRepository implements IProductRepository {
     return prisma.product.findUnique({ where: { sku }, include: productInclude });
   }
 
-  async create(data: CreateProductDto): Promise<ProductResponseDto> {
-    return prisma.product.create({ data, include: productInclude });
-  }
-
-  async update(id: number, data: CreateProductDto): Promise<ProductResponseDto> {
-    return prisma.product.update({ where: { id }, data, include: productInclude });
-  }
 
   async delete(id: number): Promise<ProductResponseDto> {
     return prisma.product.update({ where: { id }, data: { status: Status.Trash } });

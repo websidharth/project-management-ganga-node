@@ -5,7 +5,7 @@ export interface ProductAttributeDto {
   productId: number;
   attributeId: number;
   value: string;
-  storeId: number;
+  storeCode: string
   status: Status;
   displayOrder?: number | null;
 }
@@ -14,7 +14,7 @@ export interface CreateProductAttributeDto {
   productId: number;
   attributeId: number;
   value: string;
-  storeId: number;
+  storeCode: string
   status?: Status;
   displayOrder?: number | null;
 }

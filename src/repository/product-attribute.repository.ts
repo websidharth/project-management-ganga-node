@@ -1,6 +1,6 @@
 import { Prisma, Status } from "@prisma/client";
 import prisma from "../config/prisma";
-import { CreateProductAttributeDto, ProductAttributeDto, UpdateProductAttributeDto } from "../dtos/product-attribute.dto";
+import {  ProductAttributeDto } from "../dtos/product-attribute.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { ProductAttributeFilterParams } from "../params/product-attribute.params";
 import { IProductAttributeRepository } from "./interfaces/iproduct-attribute.repository";
@@ -53,15 +53,7 @@ export class ProductAttributeRepository implements IProductAttributeRepository {
   async findById(id: number): Promise<ProductAttributeDto | null> {
     return prisma.productAttribute.findUnique({ where: { id } });
   }
-
-  async create(data: CreateProductAttributeDto): Promise<ProductAttributeDto> {
-    return prisma.productAttribute.create({ data });
-  }
-
-  async update(id: number, data: UpdateProductAttributeDto): Promise<ProductAttributeDto> {
-    return prisma.productAttribute.update({ where: { id }, data });
-  }
-
+  
   async delete(id: number): Promise<ProductAttributeDto> {
     return prisma.productAttribute.update({ where: { id }, data: { status: Status.Trash } });
   }

@@ -87,24 +87,44 @@ categoryRouter.get("/:id", authenticateToken, asyncHandler(categoryController.ge
  *         application/json:
  *           schema:
  *             type: object
- *             required: [name, storeId]
+ *             required:
+ *               - name
  *             properties:
  *               name:
  *                 type: string
+ *                 example: "Electronics"
+ *                 description: Category name (required)
  *               description:
  *                 type: string
+ *                 example: "Electronic items and gadgets"
+ *                 description: Category description (optional)
  *               parentId:
  *                 type: integer
- *               storeId:
+ *                 example: 1
+ *                 description: Parent category ID for nested categories (optional)
+ *               status:
+ *                 type: string
+ *                 enum: [Published, Draft, Trash]
+ *                 example: "Draft"
+ *                 description: Category status (optional, defaults to Draft)
+ *               displayOrder:
  *                 type: integer
  *                 example: 1
- *                 description: ID of the store this category belongs to
+ *                 description: Display order for sorting (optional)
+ *           example:
+ *             name: "Electronics"
+ *             description: "Electronic items and gadgets"
+ *             status: "Published"
  *     responses:
  *       201:
  *         description: Category created successfully
+ *       400:
+ *         description: Validation error or store code not found
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *     description: Creates a new category. The storeCode is automatically taken from the authenticated user's token.
  */
-categoryRouter.post("/", validate(createCategorySchema), asyncHandler(categoryController.create));
-
+categoryRouter.post("/", authenticateToken, validate(createCategorySchema), asyncHandler(categoryController.create));
 /**
  * @swagger
  * /categories/{id}:

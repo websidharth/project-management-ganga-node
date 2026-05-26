@@ -1,11 +1,13 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from "../dtos/category.dto";
+import { CategoryDto } from "../dtos/category.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { CategoryFilterParams } from "../params/category.params";
 import { ICategoryService } from "./interfaces/Icategory.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
+import { CategoryModel } from "../models/category.model";
+import { Status } from "../enum/status.enum";
 
 @injectable()
 export class CategoryService implements ICategoryService {
@@ -23,14 +25,39 @@ export class CategoryService implements ICategoryService {
     return category;
   }
 
-  async create(data: CreateCategoryDto): Promise<CategoryDto> {
-    return this.unitOfWork.Category.create(data);
+
+  async create(data: CategoryModel, storeCode: string): Promise<CategoryDto> {
+    return this.unitOfWork.transaction(async (transactionClient) => {
+      const category = await transactionClient.category.create({
+        data: {
+          name: data.name,
+          description: data.description || null,
+          parentId: data.parentId || null,
+          storeCode: storeCode,
+          status: data.status || Status.Draft,
+        },
+      });
+      return category;
+    });
   }
 
-  async update(id: number, data: UpdateCategoryDto): Promise<CategoryDto> {
+  async update(id: number, data: CategoryModel): Promise<CategoryDto> {
     const existing = await this.unitOfWork.Category.findById(id);
     if (!existing) throw new NotFoundError("Category not found");
-    return this.unitOfWork.Category.update(id, { ...data, updatedAt: new Date() });
+    return this.unitOfWork.transaction(async (transactionClient) => {
+      const category = await transactionClient.category.update({
+        where: { id },
+        data: {
+          name: data.name,
+          description: data.description || null,
+          parentId: data.parentId || null,
+          storeCode: data.storeCode,
+          status: data.status || Status.Draft,
+          updatedAt: new Date(),
+        },
+      });
+      return category;
+    });
   }
 
   async delete(id: number): Promise<CategoryDto> {

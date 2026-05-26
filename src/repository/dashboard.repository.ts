@@ -22,7 +22,7 @@ export class DashboardRepository implements IDashboardRepository {
       prisma.attribute.findMany({ orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
       prisma.productVariant.count(),
       prisma.productVariant.findMany({
-        select: { name: true, cost: true, Price: true, storeId: true, images: true, createdAt: true, id: true, productId: true, status: true, stock: true, displayOrder: true, brandName: true, varient: true, size: true, material: true, isDefault: true },
+        select: { name: true, cost: true, Price: true, storeCode: true, images: true, createdAt: true, id: true, productId: true, status: true, stock: true, displayOrder: true, brandName: true, varient: true, size: true, material: true, isDefault: true, },
         orderBy: { id: 'desc' },
         take: RECENT_LIMIT
       }),

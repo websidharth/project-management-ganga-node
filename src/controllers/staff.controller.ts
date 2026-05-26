@@ -16,7 +16,7 @@ export class StaffController {
 
     getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<StaffDto>>>> => {
         const filters: StaffFilterParams = {};
-        
+
         if (req.query.storeId) filters.storeId = parseInt(req.query.storeId as string);
         if (req.query.isActive) filters.isActive = req.query.isActive === "true";
         if (req.query.department) filters.department = req.query.department as string;
@@ -50,11 +50,12 @@ export class StaffController {
         return res.status(200).json({ success: true, message: "Staff fetched successfully", data: staff });
     };
 
-    getByStoreId = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<StaffDto>>>> => {
-        const storeId = parseInt(req.params["storeId"] as string);
-        if (isNaN(storeId)) return res.status(400).json({ success: false, message: "Invalid storeId" });
+    getByStoreCode = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<StaffDto>>>> => {
+        const storeId = parseInt(req.params["storeCode"] as string);
+        const storeCode = req.params["storeCode"] as string;
+        if (!storeCode) return res.status(400).json({ success: false, message: "Invalid storeCode" });
 
-        const staff = await this.unitOfService.Staff.getByStoreId(storeId);
+        const staff = await this.unitOfService.Staff.getByStoreCode(storeCode);
         return res.status(200).json({
             success: true,
             message: "Staff members fetched successfully",
@@ -64,7 +65,7 @@ export class StaffController {
 
     getCount = async (req: Request, res: Response): Promise<Response<CustomResponse<{ count: number }>>> => {
         const filters: StaffFilterParams = {};
-        
+
         if (req.query.storeId) filters.storeId = parseInt(req.query.storeId as string);
         if (req.query.isActive) filters.isActive = req.query.isActive === "true";
         if (req.query.department) filters.department = req.query.department as string;

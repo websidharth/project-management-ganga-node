@@ -104,15 +104,15 @@ staffRouter.get("/count", authenticateToken, asyncHandler(staffController.getCou
  *         schema:
  *           type: string
  *       - in: path
- *         name: storeId
+ *         name: storeCode
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
  *     responses:
  *       200:
  *         description: Staff members fetched successfully
  */
-staffRouter.get("/store/:storeId", authenticateToken, asyncHandler(staffController.getByStoreId));
+staffRouter.get("/store/:storeCode", authenticateToken, asyncHandler(staffController.getByStoreCode));
 
 /**
  * @swagger

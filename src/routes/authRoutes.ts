@@ -102,6 +102,7 @@ accountRouter.post("/logout", authenticateToken, asyncHandler(accountController.
  *               email: { type: string }
  *               password: { type: string }
  *               phone: { type: string }
+ *               isRegisterbyShop: { type: boolean }
  *     responses:
  *       201: { description: Created }
  */

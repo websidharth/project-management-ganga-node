@@ -1,6 +1,6 @@
 export interface CreateStaffModel {
     userId: number;
-    storeId: number;
+    storeCode: string
     position?: string | null;
     department?: string | null;
     hireDate?: Date;
