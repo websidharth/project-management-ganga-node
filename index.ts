@@ -14,29 +14,13 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
-const FRONTEND_URL = process.env.FRONTEND_URL || 'https://project-management-ganga-ui.vercel.app';
-
 app.use(cors()); // <--- Add this line BEFORE your routes
-
-app.use(
-  cors({
-    // ✅ Explicitly allow your frontend origin when credentials are true.
-    origin: FRONTEND_URL,
-    // ✅ Include OPTIONS to handle preflight requests.
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    // ✅ Explicitly allow the Authorization header.
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    // ✅ Enable credentials (cookies, auth headers).
-    credentials: true,
-  })
-);
-
 
 // If you want to be more specific (Optional but recommended for production):
 /*
 app.use(cors({
   origin: "*", // Allow all origins (good for development)
-  // origin: ["https://project-management-ganga-ui.vercel.app","http://192.168.1.67:3000", "http://localhost:3000","http://localhost:5000"], // Allow specific IPs
+  // origin: ["https://project-management-ganga-ui.vercel.app/","http://192.168.1.67:4000", "http://localhost:3000","http://localhost:4000"], // Allow specific IPs
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
