@@ -11,6 +11,7 @@ export interface CreateProductModel {
   stock?: number | null;
   lowStockThreshold?: number | null;
   categoryId: number;
+  images?: string[];
   storeCode: string
   status?: Status;
   createdById: string;

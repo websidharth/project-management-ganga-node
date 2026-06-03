@@ -46,7 +46,8 @@ export class ProductService implements IProductService {
           categoryId: data.categoryId,
           storeCode: storeCode,
           status: data.status || Status.Published,
-          createdById: userId
+          createdById: userId,
+          images: data.images || [],
         },
       });
       return storeData;
