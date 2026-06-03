@@ -46,6 +46,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
       name: decoded.name,
       email: decoded.email,
       role: decoded.role,
+      storeCode: decoded.storeCode || null,
     };
     return next();
   } catch (err: any) {

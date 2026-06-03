@@ -21,7 +21,7 @@ class ClientIdMiddleware {
         success: false,
         message: "Invalid Client Id",
       };
-        console.log("Client ID matched:", clientId);
+      console.log("Client ID matched:", clientId);
       return res.status(401).json(response);
     }
 

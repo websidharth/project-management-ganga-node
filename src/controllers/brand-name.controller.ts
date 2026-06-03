@@ -42,7 +42,7 @@ export class BrandNameController {
     create = async (req: Request, res: Response): Promise<Response<CustomResponse<BrandNameDto>>> => {
         const body = req.body as CreateBrandNameDto;
         const storeCode = req.user?.storeCode; // Get from logged-in user
-
+        console.log('Creating brand name with store code:', storeCode);
         if (!storeCode) {
             return res.status(400).json({
                 success: false,

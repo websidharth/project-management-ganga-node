@@ -6,12 +6,12 @@
             "use": "@vercel/node"
         }
     ],
-  "routes": [
-    { "src": "/swagger.json", "dest": "/dist/index.js" },
-    { "src": "/docs", "dest": "/dist/index.js" },
-    { "src": "/docs/.*", "dest": "/dist/index.js" },
-    { "src": "/(.*)", "dest": "/dist/index.js" }
-  ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "dist/index.js"
+        }
+    ],
     "env": {
         "NODE_ENV": "production"
     }

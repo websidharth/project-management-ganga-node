@@ -94,5 +94,5 @@ export const generateStoreCode = (firstName: string): string => {
   const cleanFirstName = firstName.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 4);
 
   // Combine all parts: firstname + timestamp + random suffix
-  return `${cleanFirstName}-${year}${month}${date}${hours}${randomDigits}-`;
+  return `${cleanFirstName}-${year}${month}${date}${hours}${randomDigits}`;
 };
