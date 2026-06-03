@@ -79,7 +79,7 @@ app.get('/docs', (_req, res) => {
 // Redirect any /docs/* paths back to /docs to avoid relative asset resolution
 // Redirect any /docs/... requests back to /docs using a RegExp route
 app.get(/^\/docs\/.*$/, (_req, res) => {
-  res.redirect('/');
+  res.redirect('/docs');
 });
 
 // Redirect legacy swagger asset requests to the CDN equivalents so older

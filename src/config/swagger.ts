@@ -7,6 +7,11 @@ const port = process.env.PORT || 4000;
 // if provided (useful for custom domains). Fallback to localhost for dev.
 //const publicUrl = 'https://backend-ruddy-tau-76.vercel.app/docs';
 
+const routeFiles = [
+  path.join(__dirname, '..', 'routes', '*.ts'),
+  path.join(__dirname, '..', 'routes', '*.js'),
+];
+
 export const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -36,7 +41,7 @@ export const swaggerOptions = {
 ],
     // Use a relative server URL so Swagger UI uses the current origin.
     // This avoids localhost being embedded at build time when deployed to Vercel.
-    // servers: [{ url: '/' }],
+    servers: [{ url: '/' }],
     components: {
       securitySchemes: {
         bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
@@ -73,10 +78,5 @@ export const swaggerOptions = {
       },
     ],
   },
-  apis: [
-    './src/routes/*.ts',
-    './src/routes/*.js',
-    './dist/routes/*.js',
-    './api/*.ts', // if vercel uses api folder
-  ],
+  apis: routeFiles,
 };
