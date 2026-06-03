@@ -179,7 +179,7 @@ model product {
   stock             Int      @default(0)
   lowStockThreshold Int?     @default(5)
   categoryId        Int
-  images            String[]
+  images            String[]  @default([])
   storeCode         String
   status            Status   @default(Published)
   displayOrder      Int?     @default(0)

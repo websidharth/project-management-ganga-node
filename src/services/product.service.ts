@@ -47,7 +47,7 @@ export class ProductService implements IProductService {
           storeCode: storeCode,
           status: data.status || Status.Published,
           createdById: userId,
-          images: data.images || [],
+          images: data.images ?? [],
         },
       });
       return storeData;
@@ -58,24 +58,30 @@ export class ProductService implements IProductService {
     const existing = await this.unitOfWork.Product.findById(id);
     if (!existing) throw new NotFoundError("Product not found");
     return this.unitOfWork.transaction(async (transactionClient) => {
+      const updateData: any = {
+        name: data.name,
+        brandNameId: data.brandNameId || null,
+        slug: data.slug,
+        description: data.description || null,
+        sku: data.sku,
+        price: data.price,
+        cost: data.cost || null,
+        stock: data.stock || 0,
+        lowStockThreshold: data.lowStockThreshold || 5,
+        categoryId: data.categoryId,
+        storeCode: storeCode,
+        status: data.status || Status.Published,
+        updatedById: userId,
+        updatedAt: new Date(),
+      };
+
+      if (data.images !== undefined) {
+        updateData.images = data.images;
+      }
+
       const storeData = await transactionClient.product.update({
         where: { id: id },
-        data: {
-          name: data.name,
-          brandNameId: data.brandNameId || null,
-          slug: data.slug,
-          description: data.description || null,
-          sku: data.sku,
-          price: data.price,
-          cost: data.cost || null,
-          stock: data.stock || 0,
-          lowStockThreshold: data.lowStockThreshold || 5,
-          categoryId: data.categoryId,
-          storeCode: storeCode,
-          status: data.status || Status.Published,
-          updatedById: userId,
-          updatedAt: new Date(),
-        },
+        data: updateData,
       });
       return storeData;
     });
