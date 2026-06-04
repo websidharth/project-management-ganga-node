@@ -166,8 +166,35 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *             type: object
  *             required: [productId]
  *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Variant display name (optional)
+ *               slug:
+ *                 type: string
+ *                 description: Unique slug (optional)
  *               productId:
  *                 type: integer
+ *                 description: Parent product ID (required)
+ *               brandNameId:
+ *                 type: integer
+ *               attributeId:
+ *                 type: integer
+ *               productAttributeId:
+ *                 type: integer
+ *               cost:
+ *                 type: number
+ *                 description: Cost value (optional)
+ *               Price:
+ *                 type: number
+ *                 description: Selling price (note: field name is `Price` in DB)
+ *               extraPrice:
+ *                 type: number
+ *               lowStockThreshold:
+ *                 type: integer
+ *               stock:
+ *                 type: integer
+ *               extraSku:
+ *                 type: string
  *               size:
  *                 type: string
  *               material:
@@ -176,18 +203,17 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *                 type: string
  *               color:
  *                 type: string
- *               extraSku:
- *                 type: string
- *               extraPrice:
- *                 type: number
- *               stock:
- *                 type: integer
  *               isDefault:
  *                 type: boolean
+ *               status:
+ *                 type: string
+ *                 enum: [Published, Draft, Trash]
+ *               displayOrder:
+ *                 type: integer
  *     responses:
  *       201:
  *         description: Product variant created successfully
- *     description: Creates a new product variant. The storeCode is automatically taken from the authenticated user's token.
+ *     description: Creates a new product variant. The `storeCode` is automatically taken from the authenticated user's token or derived from the parent product.
  */
 productVariantRouter.post("/", authenticateToken, validate(createProductVariantSchema), asyncHandler(productVariantController.create));
 
@@ -218,6 +244,30 @@ productVariantRouter.post("/", authenticateToken, validate(createProductVariantS
  *           schema:
  *             type: object
  *             properties:
+ *               name:
+ *                 type: string
+ *               slug:
+ *                 type: string
+ *               productId:
+ *                 type: integer
+ *               brandNameId:
+ *                 type: integer
+ *               attributeId:
+ *                 type: integer
+ *               productAttributeId:
+ *                 type: integer
+ *               cost:
+ *                 type: number
+ *               Price:
+ *                 type: number
+ *               extraPrice:
+ *                 type: number
+ *               lowStockThreshold:
+ *                 type: integer
+ *               stock:
+ *                 type: integer
+ *               extraSku:
+ *                 type: string
  *               size:
  *                 type: string
  *               material:
@@ -226,14 +276,13 @@ productVariantRouter.post("/", authenticateToken, validate(createProductVariantS
  *                 type: string
  *               color:
  *                 type: string
- *               extraSku:
- *                 type: string
- *               extraPrice:
- *                 type: number
- *               stock:
- *                 type: integer
  *               isDefault:
  *                 type: boolean
+ *               status:
+ *                 type: string
+ *                 enum: [Published, Draft, Trash]
+ *               displayOrder:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Product variant updated successfully

@@ -45,12 +45,15 @@ export class ProductVariantController {
   create = async (req: Request, res: Response): Promise<Response<CustomResponse<ProductVariantDto>>> => {
     const body = req.body as ProductVariantModel;
     const storeCode = req.user?.storeCode; // Get from logged-in user
-    if (!storeCode) {
-      return res.status(400).json({
-        success: false,
-        message: 'Store code not found. User must be associated with a store.',
-      });
-    }
+        
+        if (!storeCode) {
+            return res.status(400).json({
+                success: false,
+                message: 'Store code not found. User must be associated with a store.'
+            });
+        }
+  
+
     const product = await this.unitOfService.ProductVariant.create(body, storeCode);
     return res.status(201).json({ success: true, message: 'Product variant created successfully', data: product });
   };
