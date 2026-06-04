@@ -32,6 +32,57 @@ const productVariantController = container.get<ProductVariantController>(TYPES.P
  *           type: string
  *         required: true
  *         description: Enter Client Id
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Page number for pagination (optional)
+ *       - in: query
+ *         name: recordPerPage
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Number of records per page (optional)
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Search term to filter product variants (optional)
+ *       - in: query
+ *         name: productId
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Filter by product ID (optional)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Published, Draft, Trash]
+ *         required: false
+ *         description: Filter by status (optional)
+ *       - in: query
+ *         name: showAllRecords
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Show all records without pagination (optional)
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: false
+ *         description: Filter by start date (optional)
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: false
+ *         description: Filter by end date (optional)
  *     responses:
  *       200:
  *         description: Product variants fetched successfully
@@ -113,14 +164,10 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *         application/json:
  *           schema:
  *             type: object
- *             required: [productId, storeId]
+ *             required: [productId]
  *             properties:
  *               productId:
  *                 type: integer
- *               storeId:
- *                 type: integer
- *                 example: 1
- *                 description: ID of the store this product variant belongs to
  *               size:
  *                 type: string
  *               material:
@@ -140,6 +187,7 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *     responses:
  *       201:
  *         description: Product variant created successfully
+ *     description: Creates a new product variant. The storeCode is automatically taken from the authenticated user's token.
  */
 productVariantRouter.post("/", authenticateToken, validate(createProductVariantSchema), asyncHandler(productVariantController.create));
 

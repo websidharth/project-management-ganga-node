@@ -5,8 +5,7 @@ export interface ProductVariantModel {
   slug?: string;
   productId: number;
   brandNameId?: number;
-  productAttributeId?: number | null;
-  storeCode: string;
+  productAttributeId?: number | null; 
   attributeId?: number | null;
   cost?: number;
   Price?: number;

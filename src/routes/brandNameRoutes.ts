@@ -32,6 +32,43 @@ const brandNameController = container.get<BrandNameController>(TYPES.BrandNameCo
  *           type: string
  *         required: true
  *         description: Enter Client Id
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Page number for pagination (optional)
+ *       - in: query
+ *         name: recordPerPage
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Number of records per page (optional)
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Search term to filter brand names (optional)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Published, Draft, Trash]
+ *         required: false
+ *         description: Filter by status (optional)
+ *       - in: query
+ *         name: showAllRecords
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Show all records without pagination (optional)
+ *       - in: query
+ *         name: categoryIds
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Comma-separated category IDs to filter brand names (optional)
  *     responses:
  *       200:
  *         description: Brand names fetched successfully

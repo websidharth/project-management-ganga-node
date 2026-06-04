@@ -140,7 +140,7 @@ productAttributeRouter.get("/:id", authenticateToken, asyncHandler(productAttrib
  *         application/json:
  *           schema:
  *             type: object
- *             required: [productId, attributeId, value, storeId]
+ *             required: [productId, attributeId, value]
  *             properties:
  *               productId:
  *                 type: integer
@@ -148,13 +148,10 @@ productAttributeRouter.get("/:id", authenticateToken, asyncHandler(productAttrib
  *                 type: integer
  *               value:
  *                 type: string
- *               storeId:
- *                 type: integer
- *                 example: 1
- *                 description: ID of the store this product attribute belongs to
  *     responses:
  *       201:
  *         description: Product attribute created successfully
+ *     description: Creates a product attribute. The storeCode is automatically taken from the authenticated user's token.
  */
 productAttributeRouter.post("/", authenticateToken, validate(createProductAttributeSchema), asyncHandler(productAttributeController.create));
 

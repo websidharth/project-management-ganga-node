@@ -32,6 +32,51 @@ const attributeController = container.get<AttributeController>(TYPES.AttributeCo
  *           type: string
  *         required: true
  *         description: Enter Client Id
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Page number for pagination (optional)
+ *       - in: query
+ *         name: recordPerPage
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Number of records per page (optional)
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Search term to filter attributes by name (optional)
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Published, Draft, Trash]
+ *         required: false
+ *         description: Filter by status (optional)
+ *       - in: query
+ *         name: showAllRecords
+ *         schema:
+ *           type: boolean
+ *         required: false
+ *         description: Show all records without pagination (optional)
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: false
+ *         description: Filter by start date (optional)
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         required: false
+ *         description: Filter by end date (optional)
  *     responses:
  *       200:
  *         description: Attributes fetched successfully
