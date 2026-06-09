@@ -4,6 +4,10 @@ import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
 import { UserController } from '../controllers/user.controller';
 import asyncHandler from '../middleware/asyncHandler.middleware';
+import { Role } from '../enum/user.enum';
+import authorization from '../middleware/authorization.middleware';
+import { validate } from '../middleware/validate';
+import { updateRoleSchema } from '../schemas/userSchema';
 
 const userRouter = Router();
 const usersController = container.get<UserController>(TYPES.UserController);
@@ -252,5 +256,52 @@ userRouter.delete('/:userId', authenticateToken, asyncHandler(usersController.de
  *         description: Unauthorized
  */
 userRouter.patch('/assign-store', authenticateToken, asyncHandler(usersController.assignStore));
+
+/**
+ * @swagger
+ * /users/role/{userId}:
+ *   put:
+ *     summary: Update User Role
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - role
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [SUPER_ADMIN, ADMIN, USER, STAFF]
+ *     responses:
+ *       200:
+ *         description: User role updated successfully
+ *       400:
+ *         description: Bad request - missing or invalid role
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Not enough permissions
+ *       404:
+ *         description: User not found
+ */
+userRouter.put('/role/:userId', authenticateToken, authorization([Role.SUPER_ADMIN, Role.ADMIN]), validate(updateRoleSchema), asyncHandler(usersController.updateRole));
 
 export default userRouter;

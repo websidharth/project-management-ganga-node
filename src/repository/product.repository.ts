@@ -39,6 +39,8 @@ export class ProductRepository implements IProductRepository {
       if (filters.categoryId !== undefined) where.categoryId = filters.categoryId;
       if (filters.brandNameId !== undefined) where.brandNameId = filters.brandNameId;
       if (filters.storeCode !== undefined) where.storeCode = filters.storeCode;
+      if (filters.storeId !== undefined) where.store = { id: filters.storeId };
+      if (filters.createdById !== undefined) where.createdById = filters.createdById;
 
       if (filters.status !== undefined) {
         where.status = filters.status;

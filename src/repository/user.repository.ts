@@ -1,4 +1,4 @@
-import { Status } from "@prisma/client";
+import { Status, Role } from "@prisma/client";
 import prisma from "../config/prisma";
 import { UpdateUserDto, UserDto } from "../dtos/user.dto";
 import { IUserRepository } from "./interfaces/iuser.repository";
@@ -44,6 +44,13 @@ export class UserRepository implements IUserRepository {
     return prisma.users.update({
       where: { userId },
       data: { status: Status.Trash },
+    });
+  }
+
+  async updateRole(userId: string, role: Role): Promise<UserDto> {
+    return prisma.users.update({
+      where: { userId },
+      data: { role },
     });
   }
 }

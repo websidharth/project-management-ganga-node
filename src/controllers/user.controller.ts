@@ -6,6 +6,7 @@ import CustomResponse from '../dtos/custom-response';
 import { UpdateUserDto, UserDto } from '../dtos/user.dto';
 import CustomError from '../exceptions/custom-error';
 import { ListResponseDto } from '../dtos/list-response.dto';
+import { Role } from '@prisma/client';
 
 export class UserController {
   constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) {
@@ -193,4 +194,30 @@ export class UserController {
     return res.status(200).json(response);
   };
 
+  updateRole = async (req: Request, res: Response): Promise<Response<CustomResponse<UserDto>>> => {
+    const paramUserId = req.params.userId;
+    const userId = Array.isArray(paramUserId) ? paramUserId[0] : paramUserId;
+    const { role } = req.body as { role: Role };
+
+    if (!userId) {
+      const response: CustomResponse<UserDto> = {
+        success: false,
+        message: 'userId is required',
+      };
+      return res.status(400).json(response);
+    }
+
+    const user = await this.unitOfService.User.updateRole(userId, role);
+    if (!user) {
+      throw new CustomError('User not found', 404);
+    }
+
+    const response: CustomResponse<UserDto> = {
+      success: true,
+      message: 'User role updated successfully',
+      data: user,
+    };
+
+    return res.status(200).json(response);
+  };
 }
