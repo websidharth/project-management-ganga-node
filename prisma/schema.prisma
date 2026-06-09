@@ -207,8 +207,7 @@ model brandName {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   product        product[]
-  categories     category[]
-  productVariant productVariant[]
+  categories     category[] 
   store          store?           @relation(fields: [storeCode], references: [code])
 
   @@unique([brandName, storeCode])
@@ -254,35 +253,23 @@ model productVariant {
   id                 Int               @id @default(autoincrement())
   name               String
   slug               String?           @unique
-  productId          Int
-  brandNameId        Int?
+  productId          Int 
   productAttributeId Int?
+  attributeId        Int?
   storeCode          String
   cost               Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
   Price              Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
   stock              Int               @default(0)
-  lowStockThreshold  Int?              @default(5)
+  lowStockThreshold  Int              @default(5)
   images             String[]
   status             Status            @default(Published)
-  displayOrder       Int?              @default(0)
   createdAt          DateTime          @default(now())
-  updatedAt          DateTime?         @updatedAt
-  isDefault          Boolean           @default(false)
-  extraPrice         Float?
-  varient            String?
-  size               String?
-  material           String?
-  voltage            String?
-  color              String?
-  extraSku           String?           @unique
-  product            product           @relation(fields: [productId], references: [id])
-  brandName          brandName?        @relation(fields: [brandNameId], references: [id])
+  updatedAt          DateTime?         @updatedAt  
+  product            product           @relation(fields: [productId], references: [id]) 
   productAttribute   productAttribute? @relation(fields: [productAttributeId], references: [id])
   orderItems         orderItem[]
   attribute          attribute?        @relation(fields: [attributeId], references: [id])
-  attributeId        Int?
   store              store?            @relation(fields: [storeCode], references: [code])
-
   @@index([storeCode])
 }
 
