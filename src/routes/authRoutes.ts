@@ -45,8 +45,8 @@ const accountController = container.get<AccountController>(
  *               email: { type: string }
  *               password: { type: string }
  *             example:
- *               email: sidharth@gmrwebteam.com
- *               password: "Pass123!@#"
+ *               email: ganga@gmail.com
+ *               password: "Ganga123!@#"
  *     responses:
  *       200: { description: Success }
  */

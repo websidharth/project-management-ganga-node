@@ -17,6 +17,7 @@ export class ProductVariantService implements IProductVariantService {
     return this.unitOfWork.ProductVariant.findAll(filters);
   }
 
+   
   async getByProductId(productId: number): Promise<ProductVariantDto[]> {
     return this.unitOfWork.ProductVariant.findByProductId(productId);
   }
