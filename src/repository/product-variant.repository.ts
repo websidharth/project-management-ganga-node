@@ -9,7 +9,7 @@ export class ProductVariantRepository implements IProductVariantRepository {
     filters?: ProductVariantFilterParams,
     page = 1,
     limit = 10,
-    sortBy = 'displayOrder',
+    sortBy = 'id',
     sortOrder: 'asc' | 'desc' = 'asc'
   ) {
     const where: Prisma.productVariantWhereInput = { NOT: { status: Status.Trash } };
