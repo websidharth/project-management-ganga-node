@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { UpdateUserDto, UserDto } from "../../dtos/user.dto";
 
 export interface IUserService {
@@ -7,4 +8,5 @@ export interface IUserService {
   update(userId: string, updatedData: UpdateUserDto): Promise<UserDto | null>;
   updateStatus(userId: string,updatedData: UpdateUserDto): Promise<UserDto | null>;
   delete(userId: string): Promise<UserDto | null>;
+  updateRole(userId: string, role: Role): Promise<UserDto | null>;
 }

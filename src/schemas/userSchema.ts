@@ -33,3 +33,12 @@ export const updateSchema = z.object({
     isRegisterbyShop: z.boolean().optional(),
   }),
 });
+
+// Rule for Role Update
+export const updateRoleSchema = z.object({
+  body: z.object({
+    role: z.enum(["SUPER_ADMIN", "ADMIN", "USER", "STAFF"], {
+      error: "Role must be one of: SUPER_ADMIN, ADMIN, USER, STAFF",
+    }),
+  }),
+});

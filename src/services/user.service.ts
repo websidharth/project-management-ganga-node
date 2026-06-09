@@ -16,7 +16,7 @@ import {
   nowISO,
 } from "../utils/authHelpers.service";
 import bcrypt from "bcryptjs";
-import { users } from "@prisma/client";
+import { users, Role as PrismaRole } from "@prisma/client";
 import { generateOtp } from "../utils/otp.util";
 import type { IDateTimeService } from "./interfaces/idatetime.service";
 
@@ -108,6 +108,14 @@ export class UserService implements IUserService {
 
   async delete(userId: string): Promise<UserDto | null> {
     const user = await this.unitOfWork.User.delete(userId);
+    return user;
+  }
+
+  async updateRole(userId: string, role: PrismaRole): Promise<UserDto | null> {
+    const user = await this.unitOfWork.User.updateRole(userId, role);
+    if (!user) {
+      return null;
+    }
     return user;
   }
 
