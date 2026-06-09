@@ -1,12 +1,12 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../config/ioc.types';
-import { CreateProductVariantDto, ProductVariantDto, UpdateProductVariantDto } from '../dtos/product-variant.dto';
+import {  ProductVariantDto } from '../dtos/product-variant.dto';
 import { ListResponseDto } from '../dtos/list-response.dto';
 import { ProductVariantFilterParams } from '../params/product-variant.params';
 import { IProductVariantService } from './interfaces/Iproduct-variant.service';
 import type IUnitOfWork from '../repository/interfaces/iunitofwork.repository';
 import NotFoundError from '../exceptions/not-found-error';
-import { ProductVariantModel, UpdateProductVariantModel } from '../models/product-variant.model';
+import { ProductVariantModel } from '../models/product-variant.model';
 import { Status } from '../enum/status.enum';
 
 @injectable()
@@ -34,8 +34,7 @@ export class ProductVariantService implements IProductVariantService {
           storeCode: storeCode,
           name: data.name,
           slug: data.slug || null,
-          productId: data.productId,
-          brandNameId: data.brandNameId || null,
+          productId: data.productId, 
           attributeId: data.attributeId || null,
           productAttributeId: data.productAttributeId || null,
           cost: data.cost || 0,
@@ -43,7 +42,6 @@ export class ProductVariantService implements IProductVariantService {
           stock: data.stock || 0,
           lowStockThreshold: data.lowStockThreshold || 0,
           status: data.status ?? Status.Draft,
-          displayOrder: data.displayOrder ?? null,
         },
       });
 
@@ -52,7 +50,7 @@ export class ProductVariantService implements IProductVariantService {
   }
 
 
-  async update(id: number, data: UpdateProductVariantModel): Promise<ProductVariantDto> {
+  async update(id: number, data: ProductVariantModel): Promise<ProductVariantDto> {
            const existing = await this.unitOfWork.ProductVariant.findById(id);
       if (!existing) throw new NotFoundError('Product variant not found');
       return this.unitOfWork.transaction(async (transactionClient) => {
@@ -61,16 +59,14 @@ export class ProductVariantService implements IProductVariantService {
           data: { 
           name: data.name,
           slug: data.slug || null,
-          productId: data.productId,
-          brandNameId: data.brandNameId || null,
+          productId: data.productId, 
           attributeId: data.attributeId || null,
           productAttributeId: data.productAttributeId || null,
           cost: data.cost || 0,
           Price: data.Price || 0,
           stock: data.stock || 0,
           lowStockThreshold: data.lowStockThreshold || 0,
-          status: data.status ?? Status.Draft,
-          displayOrder: data.displayOrder ?? null,
+          status: data.status ?? Status.Draft, 
           },
         });
   

@@ -7,7 +7,7 @@ import { ProductVariantDto } from '../dtos/product-variant.dto';
 import { ListResponseDto } from '../dtos/list-response.dto';
 import { ProductVariantFilterParams } from '../params/product-variant.params';
 import { Status } from '@prisma/client';
-import { ProductVariantModel, UpdateProductVariantModel } from '../models/product-variant.model';
+import { ProductVariantModel } from '../models/product-variant.model';
 
 export class ProductVariantController {
   constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) {}
@@ -61,7 +61,7 @@ export class ProductVariantController {
   update = async (req: Request, res: Response): Promise<Response<CustomResponse<ProductVariantDto>>> => {
     const id = parseInt(req.params['id'] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: 'Invalid id' });
-    const body = req.body as UpdateProductVariantModel;
+    const body = req.body as ProductVariantModel;
     const variant = await this.unitOfService.ProductVariant.update(id, body);
     return res.status(200).json({ success: true, message: 'Product variant updated successfully', data: variant });
   };

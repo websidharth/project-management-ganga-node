@@ -164,52 +164,39 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *         application/json:
  *           schema:
  *             type: object
- *             required: [productId]
+ *             required: [name, productId]
  *             properties:
  *               name:
  *                 type: string
- *                 description: Variant display name (optional)
+ *                 description: Variant display name
  *               slug:
  *                 type: string
- *                 description: Unique slug (optional)
+ *                 description: Unique slug
  *               productId:
  *                 type: integer
- *                 description: Parent product ID (required)
- *               brandNameId:
- *                 type: integer
+ *                 description: Parent product ID
  *               attributeId:
  *                 type: integer
+ *                 description: Optional attribute reference
  *               productAttributeId:
  *                 type: integer
+ *                 description: Optional product attribute reference
  *               cost:
- *                 type: number
+ *                 type: integer
  *                 description: Cost value (optional)
  *               Price:
- *                 type: number
- *                 description: "Selling price (note: field name is `Price` in DB)"
- *               extraPrice:
- *                 type: number
- *               lowStockThreshold:
  *                 type: integer
+ *                 description: Selling price (DB field is `Price`)
  *               stock:
  *                 type: integer
- *               extraSku:
- *                 type: string
- *               size:
- *                 type: string
- *               material:
- *                 type: string
- *               voltage:
- *                 type: string
- *               color:
- *                 type: string
- *               isDefault:
- *                 type: boolean
+ *                 description: Stock quantity (optional)
+ *               lowStockThreshold:
+ *                 type: integer
+ *                 description: Low stock warning threshold (optional)
  *               status:
  *                 type: string
  *                 enum: [Published, Draft, Trash]
- *               displayOrder:
- *                 type: integer
+ *                 description: Variant status
  *     responses:
  *       201:
  *         description: Product variant created successfully
