@@ -186,7 +186,7 @@ productVariantRouter.get("/:id", authenticateToken, asyncHandler(productVariantC
  *                 description: Cost value (optional)
  *               Price:
  *                 type: number
- *                 description: Selling price (note: field name is `Price` in DB)
+ *                 description: "Selling price (note: field name is `Price` in DB)"
  *               extraPrice:
  *                 type: number
  *               lowStockThreshold:
