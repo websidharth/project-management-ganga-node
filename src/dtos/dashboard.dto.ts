@@ -1,7 +1,5 @@
 import { ProductResponseDto } from './product.dto';
-import { AttributeDto } from './attribute.dto';
-import { ProductVariantDto } from './product-variant.dto';
-import { ProductAttributeDto } from './product-attribute.dto';
+import { AttributeDto } from './attribute.dto'; 
 
 export interface DashboardSectionDto<T> {
   total: number;
@@ -10,7 +8,5 @@ export interface DashboardSectionDto<T> {
 
 export interface DashboardSummaryDto {
   products: DashboardSectionDto<ProductResponseDto>;
-  attributes: DashboardSectionDto<AttributeDto>;
-  productVariants: DashboardSectionDto<ProductVariantDto>;
-  productAttributes: DashboardSectionDto<ProductAttributeDto>;
+  attributes: DashboardSectionDto<AttributeDto>; 
 }

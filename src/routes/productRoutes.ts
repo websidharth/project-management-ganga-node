@@ -288,6 +288,11 @@ productRouter.post('/', authenticateToken, validate(createProductSchema), asyncH
 *                   type: string
 *                 example: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
 *                 description: Array of image URLs (optional)
+ *               parentId:
+ *                 type: integer
+ *                 minimum: 1
+ *                 example: null
+ *                 description: Parent product ID for grouped products (optional)
 *               status:
 *                 type: string
 *                 enum: [Published, Draft, Trash]
@@ -304,6 +309,7 @@ productRouter.post('/', authenticateToken, validate(createProductSchema), asyncH
 *             lowStockThreshold: 10
 *             categoryId: 5
 *             brandNameId: 3
+ *             parentId: null
 *             status: "Published"
 *     responses:
 *       201:
