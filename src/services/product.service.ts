@@ -36,9 +36,9 @@ export class ProductService implements IProductService {
         data: {
           name: data.name,
           brandNameId: data.brandNameId || null,
+          attributeId: data.attributeId || null,
           slug: data.slug,
-          description: data.description || null,
-          sku: data.sku,
+          description: data.description || null, 
           price: data.price,
           cost: data.cost || null,
           stock: data.stock || 0,
@@ -61,9 +61,9 @@ export class ProductService implements IProductService {
       const updateData: any = {
         name: data.name,
         brandNameId: data.brandNameId || null,
+        attributeId: data.attributeId || null,
         slug: data.slug,
-        description: data.description || null,
-        sku: data.sku,
+        description: data.description || null, 
         price: data.price,
         cost: data.cost || null,
         stock: data.stock || 0,

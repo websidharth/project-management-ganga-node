@@ -5,9 +5,7 @@ import IUnitOfService from "./interfaces/iunitof.service";
 import { IUserService } from "./interfaces/Iuser.service";
 import { ICategoryService } from "./interfaces/Icategory.service";
 import { IProductService } from "./interfaces/Iproduct.service";
-import { IProductVariantService } from "./interfaces/Iproduct-variant.service";
 import { IAttributeService } from "./interfaces/Iattribute.service";
-import { IProductAttributeService } from "./interfaces/Iproduct-attribute.service";
 import { IStaffAttendanceService } from "./interfaces/Istaff-attendance.service";
 import { IOrderService } from "./interfaces/Iorder.service";
 import { IOrderItemService } from "./interfaces/Iorder-item.service";
@@ -23,9 +21,7 @@ export default class UnitOfService implements IUnitOfService {
   public Account: IAccountService;
   public Category: ICategoryService;
   public Product: IProductService;
-  public ProductVariant: IProductVariantService;
   public Attribute: IAttributeService;
-  public ProductAttribute: IProductAttributeService;
   public StaffAttendance: IStaffAttendanceService;
   public Order: IOrderService;
   public OrderItem: IOrderItemService;
@@ -41,9 +37,7 @@ export default class UnitOfService implements IUnitOfService {
     account = container.get<IAccountService>(TYPES.IAccountService),
     category = container.get<ICategoryService>(TYPES.ICategoryService),
     product = container.get<IProductService>(TYPES.IProductService),
-    productVariant = container.get<IProductVariantService>(TYPES.IProductVariantService),
     attribute = container.get<IAttributeService>(TYPES.IAttributeService),
-    productAttribute = container.get<IProductAttributeService>(TYPES.IProductAttributeService),
     staffAttendance = container.get<IStaffAttendanceService>(TYPES.IStaffAttendanceService),
     order = container.get<IOrderService>(TYPES.IOrderService),
     orderItem = container.get<IOrderItemService>(TYPES.IOrderItemService),
@@ -58,9 +52,7 @@ export default class UnitOfService implements IUnitOfService {
     this.Account = account;
     this.Category = category;
     this.Product = product;
-    this.ProductVariant = productVariant;
     this.Attribute = attribute;
-    this.ProductAttribute = productAttribute;
     this.StaffAttendance = staffAttendance;
     this.Order = order;
     this.OrderItem = orderItem;
