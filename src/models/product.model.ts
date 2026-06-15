@@ -1,4 +1,4 @@
-import { Status } from "@prisma/client"; 
+import { Status } from "@prisma/client";
 
 export interface CreateProductModel {
   name: string;
@@ -6,7 +6,7 @@ export interface CreateProductModel {
   parentId?: number | null;
   attributeId?: number | null;
   slug: string;
-  description?: string | null; 
+  description?: string | null;
   price: number;
   cost?: number | null;
   stock?: number | null;
@@ -23,7 +23,7 @@ export interface UpdateProductModel {
   slug?: string;
   description?: string;
   parentId?: number | null;
-  attributeId?: number | null; 
+  attributeId?: number | null;
   price?: number;
   cost?: number;
   stock?: number;

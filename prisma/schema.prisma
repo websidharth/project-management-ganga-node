@@ -89,7 +89,7 @@ model users {
   profile                  userProfile?
   productsCreated          product[]         @relation("CreatedBy")
   productsUpdated          product[]         @relation("UpdatedBy")
-  orders                   order[] // customer orders placed by this user  
+  orders                   order[] // customer orders placed by this user
   staffAttendances         staffAttendance[] @relation("staff_member")
   recordedAttendances      staffAttendance[] @relation("staff_attendance_recorder")
   staffSalaries            staffSalary[]     @relation("salary_staff")
@@ -135,8 +135,6 @@ model store {
   brandNames        brandName[]
   attributes        attribute[]
   Product           product[]
-  productAttributes productAttribute[]
-  productVariants   productVariant[]
   orders            order[]
   orderItems        orderItem[]
   payments          payment[]
@@ -170,15 +168,17 @@ model category {
 model product {
   id                Int      @id @default(autoincrement())
   name              String
+   parentId   Int?
+  categoryId        Int
   brandNameId       Int?
+attributeId Int?
+attribute   attribute? @relation(fields: [attributeId], references: [id])
   slug              String   @unique
   description       String?
-  sku               String   @unique
   price             Float    @default(0)
   cost              Float?
   stock             Int      @default(0)
   lowStockThreshold Int?     @default(5)
-  categoryId        Int
   images            String[]  @default([])
   storeCode         String
   status            Status   @default(Published)
@@ -188,14 +188,17 @@ model product {
   createdById       String
   updatedById       String?
 
+
+
+  parent     product?  @relation("ProductHierarchy", fields: [parentId], references: [id])
+  children   product[] @relation("ProductHierarchy")
+
   brandName  brandName?         @relation(fields: [brandNameId], references: [id])
   store      store?             @relation(fields: [storeCode], references: [code])
   createdBy  users              @relation("CreatedBy", fields: [createdById], references: [userId])
   updatedBy  users?             @relation("UpdatedBy", fields: [updatedById], references: [userId])
   orderItems orderItem[]
   category   category           @relation(fields: [categoryId], references: [id])
-  variants   productVariant[]
-  attributes productAttribute[]
 }
 
 model brandName {
@@ -207,7 +210,7 @@ model brandName {
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   product        product[]
-  categories     category[] 
+  categories     category[]
   store          store?           @relation(fields: [storeCode], references: [code])
 
   @@unique([brandName, storeCode])
@@ -222,54 +225,12 @@ model attribute {
   storeCode         String
   status            Status             @default(Published)
   displayOrder      Int?               @default(0)
-  productAttributes productAttribute[]
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-  productVariants   productVariant[]
   store             store?             @relation(fields: [storeCode], references: [code])
-
+  products    product[]
   @@unique([name, storeCode])
   @@index([id])
-  @@index([storeCode])
-}
-
-model productAttribute {
-  id              Int              @id @default(autoincrement())
-  productId       Int
-  attributeId     Int
-  value           String
-  storeCode       String
-  status          Status           @default(Published)
-  displayOrder    Int?             @default(0)
-  productVariants productVariant[]
-  store           store?           @relation(fields: [storeCode], references: [code])
-  attribute       attribute        @relation(fields: [attributeId], references: [id])
-  product         product          @relation(fields: [productId], references: [id])
-
-  @@index([storeCode])
-}
-
-model productVariant {
-  id                 Int               @id @default(autoincrement())
-  name               String
-  slug               String?           @unique
-  productId          Int 
-  productAttributeId Int?
-  attributeId        Int?
-  storeCode          String
-  cost               Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
-  Price              Int               @default(0) // keeping as string to accommodate various formats (e.g., "10.99", "10 USD")
-  stock              Int               @default(0)
-  lowStockThreshold  Int              @default(5)
-  images             String[]
-  status             Status            @default(Published)
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime?         @updatedAt  
-  product            product           @relation(fields: [productId], references: [id]) 
-  productAttribute   productAttribute? @relation(fields: [productAttributeId], references: [id])
-  orderItems         orderItem[]
-  attribute          attribute?        @relation(fields: [attributeId], references: [id])
-  store              store?            @relation(fields: [storeCode], references: [code])
   @@index([storeCode])
 }
 
@@ -356,7 +317,7 @@ model orderItem {
 
   order   order           @relation(fields: [orderId], references: [id])
   product product         @relation(fields: [productId], references: [id])
-  variant productVariant? @relation(fields: [variantId], references: [id])
+
   store   store           @relation(fields: [storeCode], references: [code])
 
   @@index([orderId])
