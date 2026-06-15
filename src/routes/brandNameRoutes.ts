@@ -125,9 +125,9 @@ brandNameRouter.get("/:id", authenticateToken, asyncHandler(brandNameController.
 *           schema:
 *             type: object
 *             required:
-*               - brandName
+*               - name
 *             properties:
-*               brandName:
+*               name:
 *                 type: string
 *                 minLength: 1
 *                 example: "Nike"
@@ -142,7 +142,7 @@ brandNameRouter.get("/:id", authenticateToken, asyncHandler(brandNameController.
 *                 example: 1
 *                 description: Display order for sorting (optional)
 *           example:
-*             brandName: "Nike"
+*             name: "Nike"
 *             status: "Published"
 *             displayOrder: 1
 *     responses:

@@ -27,7 +27,7 @@ export class BrandNameService implements IBrandNameService {
         return this.unitOfWork.transaction(async (transactionClient) => {
             const storeData = await transactionClient.brandName.create({
                 data: {
-                    brandName: data.brandName,
+                    name: data.name,
                     storeCode: storeCode,
                     status: data.status,
                     displayOrder: data.displayOrder || null,
@@ -47,7 +47,7 @@ export class BrandNameService implements IBrandNameService {
             const storeData = await transactionClient.brandName.update({
                 where: { id },
                 data: {
-                    brandName: data.brandName,
+                    name: data.name,
                     storeCode: data.storeCode,
                     status: data.status,
                     displayOrder: data.displayOrder || null,

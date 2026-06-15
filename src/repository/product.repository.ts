@@ -6,13 +6,10 @@ import { ProductFilterParams } from '../params/product.params';
 import { IProductRepository } from './interfaces/iproduct.repository';
 
 const productInclude = {
-  brandName: true,
-  category: true, 
-  attributes: {
-    include: { attribute: true },
-    where: { status: { not: Status.Trash } },
-  },
-} as any;
+  brandName: { select: { id: true, name: true } },   // ✅ No 'where'
+  category: { select: { id: true, name: true } },   // ✅
+  attribute: { select: { id: true, name: true } },  // ✅
+} satisfies Prisma.productInclude;
 
 export class ProductRepository implements IProductRepository {
   async findAll(
@@ -31,7 +28,7 @@ export class ProductRepository implements IProductRepository {
       if (filters.search) {
         where.OR = [
           { name: { contains: filters.search, mode: 'insensitive' } },
-        
+
         ];
       }
 
@@ -81,7 +78,7 @@ export class ProductRepository implements IProductRepository {
     return prisma.product.findUnique({ where: { slug }, include: productInclude });
   }
 
- 
+
 
   async delete(id: number): Promise<ProductResponseDto> {
     return prisma.product.update({ where: { id }, data: { status: Status.Trash } });

@@ -1,5 +1,4 @@
 import { Status } from "@prisma/client";
-import { AttributeDto } from './attribute.dto';
 
 export interface ProductResponseDto {
   id: number;
@@ -7,13 +6,13 @@ export interface ProductResponseDto {
   brandNameId?: number | null;
   parentId?: number | null;
   attributeId?: number | null;
+  categoryId: number;
   slug: string;
-  description?: string | null; 
+  description?: string | null;
   price: number;
   cost?: number | null;
   stock: number;
   lowStockThreshold?: number | null;
-  categoryId: number;
   images: string[];
   storeCode: string
   status: Status;
@@ -30,7 +29,7 @@ export interface CreateProductDto {
   parentId?: number | null;
   attributeId?: number | null;
   slug: string;
-  description?: string | null; 
+  description?: string | null;
   price: number;
   cost?: number | null;
   stock?: number;
@@ -42,6 +41,6 @@ export interface CreateProductDto {
   displayOrder?: number | null;
   createdById: string;
   updatedAt?: Date;
-  updatedById?: number | null;
+  updatedById?: string | null;
 }
 

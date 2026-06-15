@@ -5,6 +5,6 @@ import { ProductFilterParams } from '../../params/product.params';
 export interface IProductRepository {
   findAll(filters?: ProductFilterParams, page?: number, limit?: number, sortBy?: string, sortOrder?: 'asc' | 'desc'): Promise<ListResponseDto<ProductResponseDto>>;
   findById(id: number): Promise<ProductResponseDto | null>;
-  findBySlug(slug: string): Promise<ProductResponseDto | null>; 
+  findBySlug(slug: string): Promise<ProductResponseDto | null>;
   delete(id: number): Promise<ProductResponseDto>;
 }

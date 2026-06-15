@@ -12,7 +12,7 @@ type BrandNameWithCategories = Prisma.brandNameGetPayload<{
 function toDto(b: BrandNameWithCategories): BrandNameDto {
     return {
         id: b.id,
-        brandName: b.brandName,
+        name: b.name,
         storeCode: b.storeCode,
         status: b.status,
         displayOrder: b.displayOrder,
@@ -34,7 +34,7 @@ export class BrandNameRepository implements IBrandNameRepository {
             limit = filters.recordPerPage ?? limit;
 
             if (filters.search) {
-                where.OR = [{ brandName: { contains: filters.search, mode: 'insensitive' } }];
+                where.OR = [{ name: { contains: filters.search, mode: 'insensitive' } }];
             }
 
             if (filters.categoryIds && filters.categoryIds.length > 0) {

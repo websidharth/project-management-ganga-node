@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
-import { CreateProductDto, ProductResponseDto } from "../dtos/product.dto";
+import { ProductResponseDto } from "../dtos/product.dto";
 import { IProductService } from "./interfaces/Iproduct.service";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import NotFoundError from "../exceptions/not-found-error";
@@ -37,16 +37,17 @@ export class ProductService implements IProductService {
           name: data.name,
           brandNameId: data.brandNameId || null,
           attributeId: data.attributeId || null,
+          parentId: data.parentId || null,
+          categoryId: data.categoryId,
+          createdById: userId,
           slug: data.slug,
-          description: data.description || null, 
+          description: data.description || null,
           price: data.price,
           cost: data.cost || null,
           stock: data.stock || 0,
           lowStockThreshold: data.lowStockThreshold || 5,
-          categoryId: data.categoryId,
           storeCode: storeCode,
-          status: data.status || Status.Published,
-          createdById: userId,
+          status: data.status || Status.Draft,
           images: data.images ?? [],
         },
       });
@@ -63,7 +64,7 @@ export class ProductService implements IProductService {
         brandNameId: data.brandNameId || null,
         attributeId: data.attributeId || null,
         slug: data.slug,
-        description: data.description || null, 
+        description: data.description || null,
         price: data.price,
         cost: data.cost || null,
         stock: data.stock || 0,

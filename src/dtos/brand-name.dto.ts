@@ -2,14 +2,14 @@ import { Status } from "@prisma/client";
 
 export interface BrandNameDto {
     id: number;
-    brandName: string;
+    name: string;
     storeCode: string
     status: Status;
     displayOrder?: number | null;
 }
 
 export interface CreateBrandNameDto {
-    brandName: string;
+    name: string;
     storeCode: string
     status: Status;
     displayOrder?: number | null;
