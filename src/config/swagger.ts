@@ -1,4 +1,3 @@
-import path from 'path';
 
 const port = process.env.PORT || 4000;
 
@@ -15,25 +14,23 @@ export const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for TCI Platform',
     },
-   tags: [
-  { name: 'Account', description: 'Authentication endpoints' },
-  { name: 'User', description: 'User endpoints' },
-  { name: 'HealthCheck', description: 'Health check endpoints' },
-  { name: 'Category', description: 'Category endpoints' },
-  { name: 'Product', description: 'Product endpoints' },
-  { name: 'ProductVariant', description: 'Product variant endpoints' },
-  { name: 'Attribute', description: 'Attribute endpoints' },
-  { name: 'ProductAttribute', description: 'Product attribute endpoints' },
-  { name: 'Dashboard', description: 'Dashboard endpoints' },
-  { name: 'BrandName', description: 'Brand name endpoints' },
-  { name: 'Staff', description: 'Staff endpoints' },
-  { name: 'StaffAttendance', description: 'Staff attendance endpoints' },
-  { name: 'Order', description: 'Order endpoints' },
-  { name: 'OrderItem', description: 'Order item endpoints' },
-  { name: 'Payment', description: 'Payment endpoints' },
-  { name: 'StaffSalary', description: 'Staff salary endpoints' },
-  
-],
+    tags: [
+      { name: 'Account', description: 'Authentication endpoints' },
+      { name: 'User', description: 'User endpoints' },
+      { name: 'HealthCheck', description: 'Health check endpoints' },
+      { name: 'Category', description: 'Category endpoints' },
+      { name: 'Product', description: 'Product endpoints' },
+      { name: 'Attribute', description: 'Attribute endpoints' },
+      { name: 'Dashboard', description: 'Dashboard endpoints' },
+      { name: 'BrandName', description: 'Brand name endpoints' },
+      { name: 'Staff', description: 'Staff endpoints' },
+      { name: 'StaffAttendance', description: 'Staff attendance endpoints' },
+      { name: 'Order', description: 'Order endpoints' },
+      { name: 'OrderItem', description: 'Order item endpoints' },
+      { name: 'Payment', description: 'Payment endpoints' },
+      { name: 'StaffSalary', description: 'Staff salary endpoints' },
+
+    ],
     // Use a relative server URL so Swagger UI uses the current origin.
     // This avoids localhost being embedded at build time when deployed to Vercel.
     // servers: [{ url: '/' }],
@@ -64,7 +61,7 @@ export const swaggerOptions = {
             password: { type: 'string' },
           },
         },
-       
+
       },
     },
     security: [
