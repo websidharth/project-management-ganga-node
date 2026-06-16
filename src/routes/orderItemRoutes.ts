@@ -92,7 +92,7 @@ orderItemRouter.get("/:id", authenticateToken, asyncHandler(orderItemController.
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderId, productId,orderNumber,  quantity, unitPrice, totalPrice]
+ *             required: [orderId, productId, orderNumber,  quantity, unitPrice, totalPrice]
  *             properties:
  *               orderId:
  *                 type: integer
