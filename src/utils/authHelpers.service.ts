@@ -66,14 +66,14 @@ export const generate4DigitOtp = (): string => {
 /**
  * Generates a unique store code from firstName and current timestamp with random suffix.
  * Format: firstname + YYYY + MM + DD + HHMM + SS + RRR (RRR = 3 random digits)
- * 
+ *
  * @param firstName - The first name to use in the store code
  * @returns Store code string (e.g., "saket20260526143745678")
- * 
+ *
  * @example
  * generateStoreCode("Saket") // returns "saket20260526143745678"
  * generateStoreCode("John Doe") // returns "johndoe20260526143745678" (spaces removed)
- * 
+ *
  * @note Includes seconds and cryptographically secure random digits to prevent collisions
  * when multiple users with the same first name register simultaneously.
  */
@@ -96,3 +96,16 @@ export const generateStoreCode = (firstName: string): string => {
   // Combine all parts: firstname + timestamp + random suffix
   return `${cleanFirstName}-${year}${month}${date}${hours}${randomDigits}`;
 };
+
+
+export const generateOrderNumber = () => {
+  const date = new Date();
+
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+
+  const random = Math.floor(1000 + Math.random() * 9000);
+
+  return `ORD-${yyyy}${mm}${dd}-${random}`;
+}

@@ -1,15 +1,17 @@
+import { OrderStatus } from "@prisma/client";
+
 export interface CreateOrderModel {
-  orderNumber: string;
-  customerId: number;
-  orderDate?: string;
+  customerId: string;
   totalAmount?: number;
   discount?: number;
   tax?: number;
   shippingCost?: number;
   grandTotal?: number;
-  status?: string;
-  notes?: string;
+  status?: OrderStatus;
+  notes?: string | null;
 }
+
+
 
 export interface UpdateOrderModel {
   totalAmount?: number;
@@ -17,6 +19,6 @@ export interface UpdateOrderModel {
   tax?: number;
   shippingCost?: number;
   grandTotal?: number;
-  status?: string;
+  status?: OrderStatus;
   notes?: string;
 }

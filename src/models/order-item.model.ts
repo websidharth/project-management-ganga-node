@@ -1,7 +1,7 @@
 export interface CreateOrderItemModel {
   orderId: number;
+  orderNumber: string;
   productId: number;
-  variantId?: number;
   quantity: number;
   unitPrice: number;
   totalPrice: number;

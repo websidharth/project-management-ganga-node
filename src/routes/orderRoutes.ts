@@ -113,16 +113,14 @@ orderRouter.get("/:id", authenticateToken, asyncHandler(orderController.getById)
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderNumber, customerId, storeId]
+ *             required: [orderNumber, customerId]
  *             properties:
  *               orderNumber:
  *                 type: string
  *               customerId:
- *                 type: integer
- *               storeId:
- *                 type: integer
+ *                 type: string
  *                 example: 1
- *                 description: ID of the store this order belongs to
+ *                 description: ID of the customer who placed this order
  *               totalAmount:
  *                 type: number
  *               discount:
@@ -171,6 +169,8 @@ orderRouter.post("/", authenticateToken, validate(createOrderSchema), asyncHandl
  *           schema:
  *             type: object
  *             properties:
+ *               customerId:
+ *                 type: string
  *               totalAmount:
  *                 type: number
  *               discount:

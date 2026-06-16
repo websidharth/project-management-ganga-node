@@ -1,8 +1,8 @@
 export interface OrderItemDto {
   id: number;
   orderId: number;
+  orderNumber: string;
   productId: number;
-  variantId?: number | null;
   storeCode: string
   quantity: number;
   unitPrice: number;
@@ -12,8 +12,8 @@ export interface OrderItemDto {
 
 export interface CreateOrderItemDto {
   orderId: number;
+  orderNumber: string;
   productId: number;
-  variantId?: number | null;
   storeCode: string
   quantity: number;
   unitPrice: number;
