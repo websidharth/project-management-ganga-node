@@ -9,6 +9,12 @@ export interface CreateOrderModel {
   grandTotal?: number;
   status?: OrderStatus;
   notes?: string | null;
+  items?: {
+    productId: number;
+    quantity: number;
+    unitPrice: number;
+    totalPrice: number;
+  }[];
 }
 
 

@@ -113,13 +113,11 @@ orderRouter.get("/:id", authenticateToken, asyncHandler(orderController.getById)
  *         application/json:
  *           schema:
  *             type: object
- *             required: [orderNumber, customerId]
+ *             required: [customerId]
  *             properties:
- *               orderNumber:
- *                 type: string
  *               customerId:
  *                 type: string
- *                 example: 1
+ *                 example: "uuid-or-id"
  *                 description: ID of the customer who placed this order
  *               totalAmount:
  *                 type: number
@@ -136,6 +134,21 @@ orderRouter.get("/:id", authenticateToken, asyncHandler(orderController.getById)
  *                 enum: [PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED, RETURNED]
  *               notes:
  *                 type: string
+ *               items:
+ *                 type: array
+ *                 description: List of items in the order
+ *                 items:
+ *                   type: object
+ *                   required: [productId, quantity]
+ *                   properties:
+ *                     productId:
+ *                       type: integer
+ *                     quantity:
+ *                       type: integer
+ *                     unitPrice:
+ *                       type: number
+ *                     totalPrice:
+ *                       type: number
  *     responses:
  *       201:
  *         description: Order created successfully

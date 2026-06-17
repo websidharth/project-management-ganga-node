@@ -23,7 +23,7 @@ export class OrderItemService implements IOrderItemService {
 
   async create(data: CreateOrderItemModel, storeCode: string): Promise<OrderItemDto> {
     return this.unitOfWork.transaction(async (transactionClient) => {
-      const category = await transactionClient.orderItem.create({
+      const orderItem = await transactionClient.orderItem.create({
         data: {
           storeCode: storeCode,
           orderId: data.orderId,
@@ -34,7 +34,7 @@ export class OrderItemService implements IOrderItemService {
           totalPrice: data.totalPrice
         },
       });
-      return category;
+      return orderItem;
     });
   }
 

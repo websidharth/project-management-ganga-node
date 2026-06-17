@@ -13,7 +13,7 @@ export class OrderItemController {
   ) { }
 
   getByOrderId = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<OrderItemDto>>>> => {
-    const orderId = parseInt(req.params["id"] as string);
+    const orderId = parseInt(req.params["orderId"] as string);
     if (isNaN(orderId)) return res.status(400).json({ success: false, message: "Invalid orderId" });
     const items = await this.unitOfService.OrderItem.getByOrderId(orderId);
     return res.status(200).json({ success: true, message: "Order items fetched successfully", data: { totalRecord: items.length, data: items } });
