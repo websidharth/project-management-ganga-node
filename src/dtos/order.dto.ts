@@ -14,7 +14,7 @@ export interface OrderDto {
   status: OrderStatus;
   notes?: string | null;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date | null;
 }
 
 
