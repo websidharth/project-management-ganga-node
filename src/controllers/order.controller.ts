@@ -32,6 +32,7 @@ export class OrderController {
 
   create = async (req: Request, res: Response): Promise<Response<CustomResponse<OrderDto>>> => {
     const body = req.body as CreateOrderModel;
+
     const storeCode = req.user?.storeCode;
     if (!storeCode) {
       return res.status(400).json({

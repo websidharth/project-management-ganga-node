@@ -32,6 +32,7 @@ export class OrderService implements IOrderService {
       let calculatedTotalAmount = 0;
       const orderItemsToCreate = [];
       console.log("Creating order with data:", data);
+      console.log("storeCode:", storeCode);
       // Verify and deduct stock if items are provided
       if (data.items && data.items.length > 0) {
         for (const item of data.items) {
