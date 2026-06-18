@@ -1,12 +1,14 @@
+import { Role } from '@prisma/client';
+import { Request, Response } from 'express';
 import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
-import IUnitOfService from '../services/interfaces/iunitof.service';
-import { Request, Response } from 'express';
 import CustomResponse from '../dtos/custom-response';
+import { ListResponseDto } from '../dtos/list-response.dto';
 import { UpdateUserDto, UserDto } from '../dtos/user.dto';
 import CustomError from '../exceptions/custom-error';
-import { ListResponseDto } from '../dtos/list-response.dto';
-import { Role } from '@prisma/client';
+import { CreateUserModel } from '../models/user.model';
+import IUnitOfService from '../services/interfaces/iunitof.service';
+import { generateStoreCode } from '../utils/authHelpers.service';
 
 export class UserController {
   constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) {
@@ -219,5 +221,28 @@ export class UserController {
     };
 
     return res.status(200).json(response);
+  };
+
+  createUser = async (req: Request, res: Response): Promise<Response<CustomResponse<UserDto>>> => {
+    const data = req.body as CreateUserModel & { role?: Role };
+    const storeCode = req.user?.storeCode || generateStoreCode(data.firstName || 'Store');
+
+    const user = await this.unitOfService.User.getByEmail(data.email);
+    if (user) {
+      throw new CustomError('User already exists', 409);
+    }
+
+    const newUser = await this.unitOfService.User.create(data, storeCode);
+
+    if (!newUser) {
+      throw new CustomError('User creation failed', 400);
+    }
+
+    const response: CustomResponse<UserDto> = {
+      success: true,
+      message: 'User created successfully by admin',
+      data: newUser,
+    };
+    return res.status(201).json(response);
   };
 }

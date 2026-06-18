@@ -1,24 +1,21 @@
+import { Role as PrismaRole, users } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import { inject, injectable } from "inversify";
-import type { IUserService } from "./interfaces/Iuser.service";
 import { TYPES } from "../config/ioc.types";
 import {
-  CreateUserDto,
-  UpdateOtpDto,
   UpdateUserDto,
-  UserDto,
+  UserDto
 } from "../dtos/user.dto";
-import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import { Role } from "../enum/user.enum";
 import { CreateUserModel } from "../models/user.model";
+import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import {
   createUserName,
-  generateUserGUID,
-  nowISO,
+  generateUserGUID
 } from "../utils/authHelpers.service";
-import bcrypt from "bcryptjs";
-import { users, Role as PrismaRole } from "@prisma/client";
 import { generateOtp } from "../utils/otp.util";
 import type { IDateTimeService } from "./interfaces/idatetime.service";
+import type { IUserService } from "./interfaces/Iuser.service";
 
 @injectable()
 export class UserService implements IUserService {
@@ -28,26 +25,27 @@ export class UserService implements IUserService {
     private dateTime: IDateTimeService
   ) { }
 
-  async create(data: CreateUserModel, role: Role) {
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-
+  async create(data: CreateUserModel, storeCode: string) {
+    const hashedPassword = await bcrypt.hash(`${data.password}`, 10);
     const { otp } = generateOtp();
 
     return this.unitOfWork.transaction(async (transactionClient) => {
+
       const user = await transactionClient.users.create({
         data: {
           userId: generateUserGUID().toString(),
           name: `${data.firstName} ${data.lastName}`,
           userName: createUserName(`${data.firstName}`, `${data.lastName}`),
-          phone: data.phone || "",
+          phone: data.phone || null,
           email: data.email,
           password: hashedPassword,
           emailVerificationToken: otp,
-          emailVerificationExpires: new Date(),
+          emailVerificationExpires: this.dateTime.now(),
           isActive: false,
           isEmailVerified: false,
           isPhoneVerified: false,
-          tokenUpdated: false,
+          role: (data.role || Role.USER) as PrismaRole,
+          storeCode: storeCode,
         },
       });
 

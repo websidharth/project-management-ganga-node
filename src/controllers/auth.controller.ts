@@ -1,20 +1,19 @@
+import bcrypt from 'bcryptjs';
+import { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
+import config from '../config';
 import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
-import { LoginModel } from '../models/login.model';
-import IUnitOfService from '../services/interfaces/iunitof.service';
-import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import CustomResponse from '../dtos/custom-response';
+import { refreshTokenResponseDto } from '../dtos/loginResponse.dto';
 import { UserDto } from '../dtos/user.dto';
-import { CreateUserModel } from '../models/user.model';
-import CustomError from '../exceptions/custom-error';
 import { Role } from '../enum/user.enum';
-import { LoginResponseDto, refreshTokenResponseDto } from '../dtos/loginResponse.dto';
-import config from '../config';
-import { nowISO } from '../utils/authHelpers.service';
-import { isExpired } from '../utils/timeExpiry.util';
+import CustomError from '../exceptions/custom-error';
 import { ResetPasswordModel, verifyEmailModel } from '../models/forgot-password.model';
+import { LoginModel } from '../models/login.model';
+import { CreateUserModel } from '../models/user.model';
+import IUnitOfService from '../services/interfaces/iunitof.service';
+import { isExpired } from '../utils/timeExpiry.util';
 
 export class AccountController {
   constructor(private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)) {
@@ -114,7 +113,7 @@ export class AccountController {
       throw new CustomError('User already exists', 409);
     }
 
-    const newUser = await this.unitOfService.Account.create(data as unknown as CreateUserModel, Role.User);
+    const newUser = await this.unitOfService.Account.create(data, Role.ADMIN);
 
     if (!newUser) {
       throw new CustomError('User creation failed', 400);

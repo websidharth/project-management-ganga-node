@@ -3,6 +3,7 @@ export interface CreateUserModel {
   lastName: string;
   email: string;
   phone?: string;
-  password: string; 
+  password: string;
   isRegisterbyShop?: boolean;
+  role?: string;
 }

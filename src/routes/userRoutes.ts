@@ -7,7 +7,7 @@ import asyncHandler from '../middleware/asyncHandler.middleware';
 import { Role } from '../enum/user.enum';
 import authorization from '../middleware/authorization.middleware';
 import { validate } from '../middleware/validate';
-import { updateRoleSchema } from '../schemas/userSchema';
+import { updateRoleSchema, createUserByAdminSchema } from '../schemas/userSchema';
 
 const userRouter = Router();
 const usersController = container.get<UserController>(TYPES.UserController);
@@ -303,5 +303,52 @@ userRouter.patch('/assign-store', authenticateToken, asyncHandler(usersControlle
  *         description: User not found
  */
 userRouter.put('/role/:userId', authenticateToken, authorization([Role.SUPER_ADMIN, Role.ADMIN]), validate(updateRoleSchema), asyncHandler(usersController.updateRole));
+
+/**
+ * @swagger
+ * /users/create-user:
+ *   post:
+ *     summary: Create User by Admin
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - firstName
+ *               - lastName
+ *               - email
+ *               - password
+ *             properties:
+ *               firstName: { type: string }
+ *               lastName: { type: string }
+ *               email: { type: string }
+ *               password: { type: string }
+ *               phone: { type: string }
+ *               role: { type: string, enum: [SUPER_ADMIN, ADMIN, USER, STAFF] }
+ *     responses:
+ *       201:
+ *         description: User created successfully by admin
+ *       400:
+ *         description: Bad request
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Not enough permissions
+ *       409:
+ *         description: User already exists
+ */
+userRouter.post('/create-user', authenticateToken, authorization([Role.SUPER_ADMIN, Role.ADMIN]), validate(createUserByAdminSchema), asyncHandler(usersController.createUser));
 
 export default userRouter;
