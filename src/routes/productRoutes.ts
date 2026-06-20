@@ -310,6 +310,120 @@ productRouter.post('/', authenticateToken, validate(createProductSchema), asyncH
 /**
  * @swagger
  * /products/{id}:
+ *   put:
+ *     summary: Update an existing product
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Client identifier
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Product ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 minLength: 1
+ *                 example: "iPhone 15 Pro Max"
+ *               slug:
+ *                 type: string
+ *                 minLength: 1
+ *                 example: "iphone-15-pro-max"
+ *               description:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "Updated description"
+ *               price:
+ *                 type: number
+ *                 minimum: 0
+ *                 example: 1099.99
+ *               cost:
+ *                 type: number
+ *                 minimum: 0
+ *                 nullable: true
+ *                 example: 800.00
+ *               stock:
+ *                 type: integer
+ *                 minimum: 0
+ *                 nullable: true
+ *                 example: 60
+ *               lowStockThreshold:
+ *                 type: integer
+ *                 minimum: 0
+ *                 nullable: true
+ *                 example: 15
+ *               categoryId:
+ *                 type: integer
+ *                 minimum: 1
+ *                 example: 5
+ *               brandNameId:
+ *                 type: integer
+ *                 minimum: 1
+ *                 nullable: true
+ *                 example: 3
+ *               parentId:
+ *                 type: integer
+ *                 minimum: 1
+ *                 nullable: true
+ *                 example: null
+ *               images:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["https://example.com/image_updated.jpg"]
+ *               status:
+ *                 type: string
+ *                 enum: [Published, Draft, Trash]
+ *                 example: "Published"
+ *               displayOrder:
+ *                 type: integer
+ *                 nullable: true
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: Product updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   $ref: '#/components/schemas/Product'
+ *       400:
+ *         description: Validation error or missing fields
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden – not enough permissions
+ *       404:
+ *         description: Product not found
+ *       409:
+ *         description: Conflict – slug already exists
+ */
+productRouter.put('/:id', authenticateToken, validate(updateProductSchema), asyncHandler(productController.update));
+
+
+/**
+ * @swagger
+ * /products/{id}:
  *   delete:
  *     summary: Delete a product (soft delete — sets status to Trash)
  *     tags: [Product]
