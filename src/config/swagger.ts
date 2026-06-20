@@ -61,6 +61,44 @@ export const swaggerOptions = {
             password: { type: 'string' },
           },
         },
+        Staff: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer', example: 1 },
+            userId: { type: 'integer', example: 5 },
+            storeId: { type: 'integer', example: 2 },
+            storeCode: { type: 'string', example: 'STORE-123' },
+            position: { type: 'string', example: 'Manager' },
+            department: { type: 'string', example: 'Sales' },
+            hireDate: { type: 'string', format: 'date-time', example: '2026-06-20T23:59:00Z' },
+            salary: { type: 'number', example: 5500 },
+            isActive: { type: 'boolean', example: true }
+          }
+        },
+        CreateStaffRequest: {
+          type: 'object',
+          required: ['userId', 'storeId'],
+          properties: {
+            userId: { type: 'integer', example: 5 },
+            storeId: { type: 'integer', example: 2 },
+            position: { type: 'string', example: 'Manager' },
+            department: { type: 'string', example: 'Sales' },
+            hireDate: { type: 'string', format: 'date-time', example: '2026-06-20T23:59:00Z' },
+            salary: { type: 'number', example: 5500 },
+            isActive: { type: 'boolean', example: true }
+          }
+        },
+        UpdateStaffRequest: {
+          type: 'object',
+          properties: {
+            storeId: { type: 'integer', example: 2 },
+            position: { type: 'string', example: 'Manager' },
+            department: { type: 'string', example: 'Sales' },
+            hireDate: { type: 'string', format: 'date-time', example: '2026-06-20T23:59:00Z' },
+            salary: { type: 'number', example: 5500 },
+            isActive: { type: 'boolean', example: true }
+          }
+        },
 
       },
     },

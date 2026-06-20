@@ -91,9 +91,9 @@ staffRouter.get("/count", authenticateToken, asyncHandler(staffController.getCou
 
 /**
  * @swagger
- * /staff/store/{storeId}:
+ * /staff/store/{storeCode}:
  *   get:
- *     summary: Get staff by store ID
+ *     summary: Get staff by store code
  *     tags: [Staff]
  *     security:
  *       - bearerAuth: []
