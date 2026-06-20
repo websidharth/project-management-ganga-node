@@ -21,6 +21,7 @@ export class CategoryController {
         parentId: req.query['parentId'] ? parseInt(req.query['parentId'] as string) : undefined,
         status: req.query['status'] ? req.query['status'] as Status : undefined,
         showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
+        storeCode: req.user?.storeCode || undefined,
       }).filter(([, v]) => v !== undefined)
     );
     const categories = await this.unitOfService.Category.getAll(filters);

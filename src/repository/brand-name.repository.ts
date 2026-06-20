@@ -46,6 +46,10 @@ export class BrandNameRepository implements IBrandNameRepository {
             } else {
                 where.NOT = { status: Status.Trash };
             }
+
+            if (filters.storeCode !== undefined) {
+                where.storeCode = filters.storeCode;
+            }
         }
 
         const showAll = filters?.showAllRecords === true;

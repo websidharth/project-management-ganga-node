@@ -29,6 +29,10 @@ export class AttributeRepository implements IAttributeRepository {
         where.NOT = { status: Status.Trash };
       }
 
+      if (filters.storeCode !== undefined) {
+        where.storeCode = filters.storeCode;
+      }
+
       if (filters.startDate !== undefined || filters.endDate !== undefined) {
         where.createdAt = {
           ...(filters.startDate !== undefined && { gte: filters.startDate }),

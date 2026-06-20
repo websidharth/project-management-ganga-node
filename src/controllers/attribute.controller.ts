@@ -24,6 +24,7 @@ export class AttributeController {
         showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
         startDate: req.query['startDate'] ? new Date(req.query['startDate'] as string) : undefined,
         endDate: req.query['endDate'] ? new Date(req.query['endDate'] as string) : undefined,
+        storeCode: req.user?.storeCode || undefined,
       }).filter(([, v]) => v !== undefined)
     );
     const result = await this.unitOfService.Attribute.getAll(filters);

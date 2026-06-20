@@ -18,7 +18,7 @@ export class OrderController {
     const filters: OrderFilterParams = Object.fromEntries(
       Object.entries({
         customerId: req.query['customerId'] as string | undefined,
-        storeCode: req.query['storeCode'] as string | undefined,
+        storeCode: req.user?.storeCode || undefined,
         storeId: req.query['storeId'] ? parseInt(req.query['storeId'] as string, 10) : undefined,
         status: req.query['status'] as OrderStatus | undefined,
       }).filter(([, v]) => v !== undefined)

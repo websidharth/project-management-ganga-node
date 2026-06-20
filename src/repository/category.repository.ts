@@ -30,6 +30,10 @@ export class CategoryRepository implements ICategoryRepository {
       } else {
         where.NOT = { status: Status.Trash };
       }
+
+      if (filters.storeCode !== undefined) {
+        where.storeCode = filters.storeCode;
+      }
     }
 
     const showAll = filters?.showAllRecords === true;

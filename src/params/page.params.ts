@@ -5,4 +5,5 @@ export interface PageFilterParams {
   page?: number;
   recordPerPage?: number;
   showAllRecords?: boolean;
+  storeCode?: string;
 }

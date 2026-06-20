@@ -5,11 +5,28 @@ import { IDashboardRepository } from './interfaces/idashboard.repository';
 const RECENT_LIMIT = 5;
 
 export class DashboardRepository implements IDashboardRepository {
-  async getSummary(): Promise<DashboardSummaryDto> {
+  async getSummary(storeCode?: string): Promise<DashboardSummaryDto> {
     const now = new Date();
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
     const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
+
+    const productWhere = storeCode ? { storeCode } : {};
+    const attributeWhere = storeCode ? { storeCode } : {};
+    
+    const todayOrderWhere: any = {
+      orderDate: { gte: todayStart, lte: todayEnd },
+      status: { not: 'CANCELLED' },
+    };
+    const monthOrderWhere: any = {
+      orderDate: { gte: monthStart, lte: todayEnd },
+      status: { not: 'CANCELLED' },
+    };
+
+    if (storeCode) {
+      todayOrderWhere.storeCode = storeCode;
+      monthOrderWhere.storeCode = storeCode;
+    }
 
     const [
       productTotal,
@@ -19,23 +36,17 @@ export class DashboardRepository implements IDashboardRepository {
       todaySaleResult,
       monthSaleResult,
     ] = await Promise.all([
-      prisma.product.count(),
-      prisma.product.findMany({ orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
-      prisma.attribute.count(),
-      prisma.attribute.findMany({ orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
+      prisma.product.count({ where: productWhere }),
+      prisma.product.findMany({ where: productWhere, orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
+      prisma.attribute.count({ where: attributeWhere }),
+      prisma.attribute.findMany({ where: attributeWhere, orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
       prisma.order.aggregate({
         _sum: { grandTotal: true },
-        where: {
-          orderDate: { gte: todayStart, lte: todayEnd },
-          status: { not: 'CANCELLED' },
-        },
+        where: todayOrderWhere,
       }),
       prisma.order.aggregate({
         _sum: { grandTotal: true },
-        where: {
-          orderDate: { gte: monthStart, lte: todayEnd },
-          status: { not: 'CANCELLED' },
-        },
+        where: monthOrderWhere,
       }),
     ]);
 

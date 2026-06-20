@@ -8,8 +8,15 @@ export class DashboardController {
     private unitOfService = container.get<IUnitOfService>(TYPES.IUnitOfService)
   ) {}
 
-  getSummary = async (_req: Request, res: Response): Promise<Response> => {
-    const data = await this.unitOfService.Dashboard.getSummary();
+  getSummary = async (req: Request, res: Response): Promise<Response> => {
+    const storeCode = req.user?.storeCode;
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found. User must be associated with a store.'
+      });
+    }
+    const data = await this.unitOfService.Dashboard.getSummary(storeCode);
     return res.status(200).json({
       success: true,
       message: 'Dashboard summary fetched successfully',

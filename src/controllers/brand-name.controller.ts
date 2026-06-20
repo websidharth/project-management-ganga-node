@@ -26,6 +26,7 @@ export class BrandNameController {
         status: req.query['status'] ? req.query['status'] as Status : undefined,
         showAllRecords: req.query['showAllRecords'] !== undefined ? req.query['showAllRecords'] === 'true' : undefined,
         categoryIds: categoryIds && categoryIds.length > 0 ? categoryIds : undefined,
+        storeCode: req.user?.storeCode || undefined,
       }).filter(([, v]) => v !== undefined)
     );
     const data = await this.unitOfService.BrandName.getAll(filters);

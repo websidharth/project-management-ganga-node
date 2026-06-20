@@ -10,7 +10,7 @@ export class DashboardService implements IDashboardService {
     @inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork
   ) {}
 
-  async getSummary(): Promise<DashboardSummaryDto> {
-    return this.unitOfWork.Dashboard.getSummary();
+  async getSummary(storeCode?: string): Promise<DashboardSummaryDto> {
+    return this.unitOfWork.Dashboard.getSummary(storeCode);
   }
 }
