@@ -18,7 +18,28 @@ export class UserController {
   getAllUsers = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<UserDto>>>> => {
     let response: CustomResponse<ListResponseDto<UserDto>>;
 
-    const user = await this.unitOfService.User.getAll();
+    let storeCode = req.query.storeCode as string | undefined;
+
+    if (req.user?.role === Role.ADMIN) {
+      storeCode = req.user.storeCode || undefined;
+    } else {
+      const storeIdStr = req.query.storeId as string | undefined;
+      if (storeIdStr) {
+        const storeId = parseInt(storeIdStr, 10);
+        if (!isNaN(storeId)) {
+          try {
+            const store = await this.unitOfService.Store.getById(storeId);
+            if (store) {
+              storeCode = store.code;
+            }
+          } catch (err) {
+            // ignore if store not found
+          }
+        }
+      }
+    }
+
+    const user = await this.unitOfService.User.getAll(storeCode);
     if (!user) {
       response = { success: false, message: 'User not found' };
       return res.status(404).json(response);

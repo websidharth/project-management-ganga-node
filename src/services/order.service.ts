@@ -7,13 +7,14 @@ import { CreateOrderModel } from "../models/order.model";
 import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
 import { generateOrderNumber } from "../utils/authHelpers.service";
 import { IOrderService } from "./interfaces/Iorder.service";
+import { OrderFilterParams } from "../params/order.params";
 
 @injectable()
 export class OrderService implements IOrderService {
   constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) { }
 
-  async getAll(): Promise<OrderDto[]> {
-    return this.unitOfWork.Order.findAll();
+  async getAll(filters?: OrderFilterParams): Promise<OrderDto[]> {
+    return this.unitOfWork.Order.findAll(filters);
   }
 
   async getByCustomerId(customerId: string): Promise<OrderDto[]> {

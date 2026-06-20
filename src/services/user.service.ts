@@ -53,8 +53,8 @@ export class UserService implements IUserService {
     });
   }
 
-  async getAll(): Promise<UserDto[] | null> {
-    const userList = await this.unitOfWork.User.findAll();
+  async getAll(storeCode?: string): Promise<UserDto[] | null> {
+    const userList = await this.unitOfWork.User.findAll(storeCode);
     if (!userList || userList.length === 0) {
       throw new Error("No user found");
     }

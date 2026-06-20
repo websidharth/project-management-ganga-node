@@ -6,7 +6,7 @@ import { AttributeFilterParams } from "../../params/attribute.params";
 export interface IAttributeService {
   getAll(filters?: AttributeFilterParams): Promise<ListResponseDto<AttributeDto>>;
   getById(id: number): Promise<AttributeDto | null>;
-  create(data: AttributeModel, storeCode:string): Promise<AttributeDto>;
+  create(data: AttributeModel, storeCode: string): Promise<AttributeDto>;
   update(id: number, data: AttributeModel): Promise<AttributeDto>;
   delete(id: number): Promise<AttributeDto>;
 }

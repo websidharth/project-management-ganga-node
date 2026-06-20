@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
 import CustomResponse from "../dtos/custom-response";
@@ -46,7 +46,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
       name: decoded.name,
       email: decoded.email,
       role: decoded.role,
-      storeCode: decoded.storeCode || null,
+      storeCode: decoded.storeCode,
     };
     return next();
   } catch (err: any) {

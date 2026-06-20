@@ -1,13 +1,13 @@
+import { Status } from "@prisma/client";
 import { Request, Response } from "express";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
-import IUnitOfService from "../services/interfaces/iunitof.service";
-import CustomResponse from "../dtos/custom-response";
 import { AttributeDto } from "../dtos/attribute.dto";
+import CustomResponse from "../dtos/custom-response";
 import { ListResponseDto } from "../dtos/list-response.dto";
-import { AttributeFilterParams } from "../params/attribute.params";
-import { Status } from "@prisma/client";
 import { AttributeModel } from "../models/attribute.model";
+import { AttributeFilterParams } from "../params/attribute.params";
+import IUnitOfService from "../services/interfaces/iunitof.service";
 
 export class AttributeController {
   constructor(
@@ -32,27 +32,27 @@ export class AttributeController {
 
   getById = async (req: Request, res: Response): Promise<Response<CustomResponse<AttributeDto>>> => {
     const id = parseInt(req.params["id"] as string);
-    if (id) return res.status(400).json({ success: false, message: "Invalid id" });
+    if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
     const attribute = await this.unitOfService.Attribute.getById(id);
     return res.status(200).json({ success: true, message: "Attribute fetched successfully", data: attribute });
   };
 
 
-    create = async (req: Request, res: Response): Promise<Response<CustomResponse<AttributeDto>>> => {
-      const body = req.body as AttributeModel;
-      const storeCode = req.user?.storeCode; // Get from logged-in user
-      if (!storeCode) {
-        return res.status(400).json({
-          success: false,
-          message: 'Store code not found. User must be associated with a store.'
-        });
-      }
-      const category = await this.unitOfService.Attribute.create(body, storeCode);
-      return res.status(201).json({ success: true, message: 'Category created successfully', data: category });
-    };
-  
+  create = async (req: Request, res: Response): Promise<Response<CustomResponse<AttributeDto>>> => {
+    const body = req.body as AttributeModel;
+    const storeCode = req.user?.storeCode; // Get from logged-in user
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found. User must be associated with a store.'
+      });
+    }
+    const category = await this.unitOfService.Attribute.create(body, storeCode);
+    return res.status(201).json({ success: true, message: 'Category created successfully', data: category });
+  };
 
- 
+
+
   update = async (req: Request, res: Response): Promise<Response<CustomResponse<AttributeDto>>> => {
     const id = parseInt(req.params["id"] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
@@ -65,6 +65,6 @@ export class AttributeController {
     const id = parseInt(req.params["id"] as string);
     if (isNaN(id)) return res.status(400).json({ success: false, message: "Invalid id" });
     const attribute = await this.unitOfService.Attribute.delete(id);
-    return res.status(200).json({ success: true, message: "Attribute deleted successfully", data: attribute });
+    return res.status(204).json({ success: true, message: "Attribute deleted successfully", data: attribute });
   };
 }

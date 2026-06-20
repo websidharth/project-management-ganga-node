@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { OrderStatus } from "@prisma/client";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import CustomResponse from "../dtos/custom-response";
@@ -6,6 +7,7 @@ import { ListResponseDto } from "../dtos/list-response.dto";
 import { OrderDto, UpdateOrderDto } from "../dtos/order.dto";
 import { CreateOrderModel } from "../models/order.model";
 import IUnitOfService from "../services/interfaces/iunitof.service";
+import { OrderFilterParams } from "../params/order.params";
 
 export class OrderController {
   constructor(
@@ -13,7 +15,16 @@ export class OrderController {
   ) { }
 
   getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<OrderDto>>>> => {
-    const orders = await this.unitOfService.Order.getAll();
+    const filters: OrderFilterParams = Object.fromEntries(
+      Object.entries({
+        customerId: req.query['customerId'] as string | undefined,
+        storeCode: req.query['storeCode'] as string | undefined,
+        storeId: req.query['storeId'] ? parseInt(req.query['storeId'] as string, 10) : undefined,
+        status: req.query['status'] as OrderStatus | undefined,
+      }).filter(([, v]) => v !== undefined)
+    );
+
+    const orders = await this.unitOfService.Order.getAll(filters);
     return res.status(200).json({ success: true, message: "Orders fetched successfully", data: { totalRecord: orders.length, data: orders } });
   };
 

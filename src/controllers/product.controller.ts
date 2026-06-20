@@ -1,14 +1,15 @@
+import { Status } from "@prisma/client";
 import { Request, Response } from "express";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
-import IUnitOfService from "../services/interfaces/iunitof.service";
 import CustomResponse from "../dtos/custom-response";
-import { ProductResponseDto } from "../dtos/product.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
-import { ProductFilterParams } from "../params/product.params";
-import { Status } from "@prisma/client";
-import { CreateProductModel } from "../models/product.model";
+import { ProductResponseDto } from "../dtos/product.dto";
+import { Role } from "../enum/user.enum";
 import NotFoundError from "../exceptions/not-found-error";
+import { CreateProductModel } from "../models/product.model";
+import { ProductFilterParams } from "../params/product.params";
+import IUnitOfService from "../services/interfaces/iunitof.service";
 
 export class ProductController {
   constructor(
@@ -19,7 +20,7 @@ export class ProductController {
     req: Request,
     res: Response
   ): Promise<Response<ListResponseDto<ProductResponseDto>>> => {
-    const isAdmin = req.user?.role === 'SUPER_ADMIN' || req.user?.role === 'ADMIN';
+    const isAdmin = req.user?.role === Role.SUPER_ADMIN || req.user?.role === Role.ADMIN || req.user?.role === Role.USER;
     const createdById = isAdmin ? undefined : req.user?.userId;
     const storeCode = req.user?.storeCode || undefined;
 

@@ -1,8 +1,9 @@
 import { OrderDto, UpdateOrderDto } from "../../dtos/order.dto";
 import { CreateOrderModel } from "../../models/order.model";
+import { OrderFilterParams } from "../../params/order.params";
 
 export interface IOrderService {
-  getAll(): Promise<OrderDto[]>;
+  getAll(filters?: OrderFilterParams): Promise<OrderDto[]>;
   getByCustomerId(customerId: string): Promise<OrderDto[]>;
   getById(id: number): Promise<OrderDto | null>;
   create(data: CreateOrderModel, storeCode: string): Promise<OrderDto>;
