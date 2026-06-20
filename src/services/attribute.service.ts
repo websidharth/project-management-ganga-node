@@ -2,16 +2,16 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../config/ioc.types';
 import { AttributeDto } from '../dtos/attribute.dto';
 import { ListResponseDto } from '../dtos/list-response.dto';
-import { IAttributeService } from './interfaces/Iattribute.service';
-import type IUnitOfWork from '../repository/interfaces/iunitofwork.repository';
-import NotFoundError from '../exceptions/not-found-error';
-import { AttributeFilterParams } from '../params/attribute.params';
-import { AttributeModel } from '../models/attribute.model';
 import { Status } from '../enum/status.enum';
+import NotFoundError from '../exceptions/not-found-error';
+import { AttributeModel } from '../models/attribute.model';
+import { AttributeFilterParams } from '../params/attribute.params';
+import type IUnitOfWork from '../repository/interfaces/iunitofwork.repository';
+import { IAttributeService } from './interfaces/Iattribute.service';
 
 @injectable()
 export class AttributeService implements IAttributeService {
-  constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) {}
+  constructor(@inject(TYPES.IUnitOfWork) private unitOfWork: IUnitOfWork) { }
 
   async getAll(filters?: AttributeFilterParams): Promise<ListResponseDto<AttributeDto>> {
     return this.unitOfWork.Attribute.findAll(filters, filters?.page, filters?.recordPerPage);
@@ -49,6 +49,7 @@ export class AttributeService implements IAttributeService {
           unit: data.unit || null,
           status: data.status || Status.Draft,
           displayOrder: data.displayOrder || null,
+          updatedAt: new Date(),
         },
       });
       return category;

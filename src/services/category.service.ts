@@ -2,12 +2,12 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
 import { CategoryDto } from "../dtos/category.dto";
 import { ListResponseDto } from "../dtos/list-response.dto";
-import { CategoryFilterParams } from "../params/category.params";
-import { ICategoryService } from "./interfaces/Icategory.service";
-import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
+import { Status } from "../enum/status.enum";
 import NotFoundError from "../exceptions/not-found-error";
 import { CategoryModel } from "../models/category.model";
-import { Status } from "../enum/status.enum";
+import { CategoryFilterParams } from "../params/category.params";
+import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
+import { ICategoryService } from "./interfaces/Icategory.service";
 
 @injectable()
 export class CategoryService implements ICategoryService {

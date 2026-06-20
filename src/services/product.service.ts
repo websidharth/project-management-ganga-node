@@ -1,12 +1,12 @@
 import { inject, injectable } from "inversify";
 import { TYPES } from "../config/ioc.types";
 import { ProductResponseDto } from "../dtos/product.dto";
-import { IProductService } from "./interfaces/Iproduct.service";
-import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
-import NotFoundError from "../exceptions/not-found-error";
-import { ProductFilterParams } from "../params/product.params";
-import { CreateProductModel } from "../models/product.model";
 import { Status } from "../enum/status.enum";
+import NotFoundError from "../exceptions/not-found-error";
+import { CreateProductModel } from "../models/product.model";
+import { ProductFilterParams } from "../params/product.params";
+import type IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
+import { IProductService } from "./interfaces/Iproduct.service";
 
 @injectable()
 export class ProductService implements IProductService {
@@ -70,7 +70,6 @@ export class ProductService implements IProductService {
         stock: data.stock || 0,
         lowStockThreshold: data.lowStockThreshold || 5,
         categoryId: data.categoryId,
-        storeCode: storeCode,
         status: data.status || Status.Published,
         updatedById: userId,
         updatedAt: new Date(),

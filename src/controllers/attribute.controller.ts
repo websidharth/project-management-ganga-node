@@ -40,6 +40,7 @@ export class AttributeController {
 
   create = async (req: Request, res: Response): Promise<Response<CustomResponse<AttributeDto>>> => {
     const body = req.body as AttributeModel;
+
     const storeCode = req.user?.storeCode; // Get from logged-in user
     if (!storeCode) {
       return res.status(400).json({
@@ -48,6 +49,7 @@ export class AttributeController {
       });
     }
     const category = await this.unitOfService.Attribute.create(body, storeCode);
+    console.log("vv", body);
     return res.status(201).json({ success: true, message: 'Category created successfully', data: category });
   };
 

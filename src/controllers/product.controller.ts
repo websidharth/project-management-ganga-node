@@ -159,6 +159,6 @@ export class ProductController {
     }
 
     const product = await this.unitOfService.Product.delete(id);
-    return res.status(200).json({ success: true, message: "Product deleted successfully", data: product });
+    return res.status(204).json({ success: true, message: "Product deleted successfully", data: product });
   };
 }
