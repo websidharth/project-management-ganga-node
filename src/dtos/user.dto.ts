@@ -25,6 +25,13 @@ export interface UserDto {
   tokenUpdated: boolean;
   refreshToken?: string | null;
   storeCode?: string | null;
+  dateOfBirth?: Date | null;
+  address?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  pincode?: string | null;
+  bio?: string | null;
 }
 export interface CreateUserDto {
   userId: string;
@@ -46,6 +53,13 @@ export interface UpdateUserDto {
   profileImageUrl?: string | null;
   status?: Status;
   storeId?: number | null;
+  dateOfBirth?: Date | null;
+  address?: string | null;
+  city?: string | null;
+  state?: string | null;
+  country?: string | null;
+  pincode?: string | null;
+  bio?: string | null;
 }
 
 export interface UpdateOtpDto {

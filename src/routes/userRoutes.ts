@@ -7,7 +7,7 @@ import asyncHandler from '../middleware/asyncHandler.middleware';
 import { Role } from '../enum/user.enum';
 import authorization from '../middleware/authorization.middleware';
 import { validate } from '../middleware/validate';
-import { updateRoleSchema, createUserByAdminSchema } from '../schemas/userSchema';
+import { updateRoleSchema, createUserByAdminSchema, updateProfileSchema } from '../schemas/userSchema';
 
 const userRouter = Router();
 const usersController = container.get<UserController>(TYPES.UserController);
@@ -137,6 +137,47 @@ userRouter.get('/:userId', authenticateToken, asyncHandler(usersController.getUs
  *         description: User not found
  */
 userRouter.put('/status/:userId', authenticateToken, asyncHandler(usersController.updateStatusById));
+
+/**
+ * @swagger
+ * /users/profile:
+ *   put:
+ *     summary: Update User Profile
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Enter Client Id
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               userName:
+ *                 type: string
+ *               phone:
+ *                 type: string
+ *               profileImageUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ */
+
+userRouter.put('/profile', authenticateToken, validate(updateProfileSchema), asyncHandler(usersController.updateProfile));
 
 /**
  * @swagger

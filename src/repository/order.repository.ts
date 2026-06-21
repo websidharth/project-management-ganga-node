@@ -24,7 +24,13 @@ export class OrderRepository implements IOrderRepository {
     return prisma.order.findMany({
       where,
       include: {
-        items: true,
+        customer: true,
+        store: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   }
@@ -33,7 +39,13 @@ export class OrderRepository implements IOrderRepository {
     return prisma.order.findMany({
       where: { customerId },
       include: {
-        items: true,
+        customer: true,
+        store: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   }
@@ -42,7 +54,13 @@ export class OrderRepository implements IOrderRepository {
     return prisma.order.findUnique({
       where: { id },
       include: {
-        items: true,
+        customer: true,
+        store: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   }

@@ -112,7 +112,7 @@ export class UserController {
 
   updateUserById = async (req: Request, res: Response): Promise<Response<CustomResponse<UserDto>>> => {
 
-    const userId = req.user?.userId;
+    const userId = req.params.userId as string;
     if (!userId) {
       const response: CustomResponse<UserDto> = {
         success: false,
@@ -137,7 +137,7 @@ export class UserController {
 
   updateStatusById = async (req: Request, res: Response): Promise<Response<CustomResponse<UserDto>>> => {
 
-    const userId = req.user?.userId;
+    const userId = req.params.userId as string;
     if (!userId) {
       const response: CustomResponse<UserDto> = {
         success: false,
@@ -161,7 +161,7 @@ export class UserController {
   };
 
   deleteUserById = async (req: Request, res: Response): Promise<Response<CustomResponse<UserDto>>> => {
-    const userId = req.user?.userId;
+    const userId = req.params.userId as string;
     if (!userId) {
       const response: CustomResponse<UserDto> = {
         success: false,
@@ -177,6 +177,31 @@ export class UserController {
     const response: CustomResponse<UserDto> = {
       success: true,
       message: 'User deleted successfully',
+      data: user,
+    };
+
+    return res.status(200).json(response);
+  };
+
+  updateProfile = async (req: Request, res: Response): Promise<Response<CustomResponse<UserDto>>> => {
+    const userId = req.user?.userId;
+    if (!userId) {
+      const response: CustomResponse<UserDto> = {
+        success: false,
+        message: 'userId is required',
+      };
+      return res.status(400).json(response);
+    }
+    const updatedData = req.body as UpdateUserDto;
+    const user = await this.unitOfService.User.update(userId, updatedData);
+
+    if (!user) {
+      throw new CustomError('User not found', 404);
+    }
+
+    const response: CustomResponse<UserDto> = {
+      success: true,
+      message: 'Profile updated successfully',
       data: user,
     };
 
