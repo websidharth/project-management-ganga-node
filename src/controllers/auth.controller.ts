@@ -133,12 +133,6 @@ export class AccountController {
   };
 
   refreshToken = async (req: Request, res: Response): Promise<Response<CustomResponse<refreshTokenResponseDto>>> => {
-    const userId = req.user?.userId;
-
-    if (!userId) {
-      throw new CustomError('userId is required', 400);
-    }
-
     const { token: oldToken } = req.body as { token: string };
 
     if (!oldToken) {
@@ -150,6 +144,12 @@ export class AccountController {
       audience: config.jwt.audience || undefined,
       issuer: config.jwt.issuer || undefined,
     });
+
+    const userId = (decoded as any).userId;
+
+    if (!userId) {
+      throw new CustomError('Invalid refresh token', 400);
+    }
 
     const user = await this.unitOfService.User.getUserById(userId);
     if (!user) {
@@ -164,11 +164,13 @@ export class AccountController {
 
     const token = jwt.sign(
       {
+        id: (decoded as any).id,
         userId: (decoded as any).userId,
         name: (decoded as any).name,
         email: (decoded as any).email,
         role: (decoded as any).role?.toString(),
         profileImageUrl: (decoded as any).profileImageUrl,
+        storeCode: (decoded as any).storeCode || null,
         tokenUpdated: 'Yes',
       },
       config.jwt.secret,
