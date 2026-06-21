@@ -102,6 +102,34 @@ productRouter.get('/', authenticateToken, asyncHandler(productController.getAll)
 
 /**
  * @swagger
+ * /products/reports/low-stock:
+ *   get:
+ *     summary: Get low stock products
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: recordPerPage
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Low stock products fetched successfully
+ */
+productRouter.get('/reports/low-stock', authenticateToken, asyncHandler(productController.getLowStock));
+
+/**
+ * @swagger
  * /products/slug/{slug}:
  *   get:
  *     summary: Get product by slug
