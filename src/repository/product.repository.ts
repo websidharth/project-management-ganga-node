@@ -79,6 +79,36 @@ export class ProductRepository implements IProductRepository {
   }
 
 
+  async getLowStockProducts(storeCode: string, page = 1, limit = 10): Promise<ListResponseDto<ProductResponseDto>> {
+    const skip = (page - 1) * limit;
+
+    const idsResult = await prisma.$queryRaw<{ id: number }[]>`
+      SELECT "id" FROM "product" 
+      WHERE "stock" <= "lowStockThreshold" 
+        AND "storeCode" = ${storeCode} 
+        AND "status" != 'Trash'
+      ORDER BY "stock" ASC
+      LIMIT ${limit} OFFSET ${skip}
+    `;
+    
+    const countResult = await prisma.$queryRaw<{ count: bigint }[]>`
+      SELECT COUNT(*) as count FROM "product" 
+      WHERE "stock" <= "lowStockThreshold" 
+        AND "storeCode" = ${storeCode} 
+        AND "status" != 'Trash'
+    `;
+
+    const total = Number(countResult[0]?.count || 0);
+    const ids = idsResult.map(r => r.id);
+
+    const data = await prisma.product.findMany({
+      where: { id: { in: ids } },
+      include: productInclude,
+      orderBy: { stock: 'asc' }
+    });
+
+    return { totalRecord: total, data };
+  }
 
   async delete(id: number): Promise<ProductResponseDto> {
     return prisma.product.update({ where: { id }, data: { status: Status.Trash } });

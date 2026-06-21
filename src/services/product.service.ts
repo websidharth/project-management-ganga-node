@@ -30,6 +30,10 @@ export class ProductService implements IProductService {
     return product;
   }
 
+  async getLowStockProducts(storeCode: string, page = 1, limit = 10) {
+    return this.unitOfWork.Product.getLowStockProducts(storeCode, page, limit);
+  }
+
   async create(data: CreateProductModel, userId: string, storeCode: string): Promise<ProductResponseDto> {
     return this.unitOfWork.transaction(async (transactionClient) => {
       const storeData = await transactionClient.product.create({

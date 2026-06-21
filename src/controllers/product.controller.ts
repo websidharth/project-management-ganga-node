@@ -46,6 +46,26 @@ export class ProductController {
       data: { totalRecord: result.totalRecord, data: result.data },
     });
   };
+  getLowStock = async (
+    req: Request,
+    res: Response
+  ): Promise<Response<ListResponseDto<ProductResponseDto>>> => {
+    const storeCode = req.user?.storeCode;
+    if (!storeCode) {
+      return res.status(400).json({ success: false, message: 'Store code not found. User must be associated with a store.' });
+    }
+
+    const page = req.query['page'] ? parseInt(req.query['page'] as string) : 1;
+    const limit = req.query['recordPerPage'] ? parseInt(req.query['recordPerPage'] as string) : 10;
+
+    const result = await this.unitOfService.Product.getLowStockProducts(storeCode, page, limit);
+    return res.status(200).json({
+      success: true,
+      message: "Low stock products fetched successfully",
+      data: { totalRecord: result.totalRecord, data: result.data },
+    });
+  };
+
 
 
   getById = async (

@@ -7,6 +7,7 @@ export interface IProductService {
   getAll(filters?: ProductFilterParams): Promise<ListResponseDto<ProductResponseDto>>;
   getById(id: number): Promise<ProductResponseDto | null>;
   getBySlug(slug: string): Promise<ProductResponseDto | null>;
+  getLowStockProducts(storeCode: string, page?: number, limit?: number): Promise<ListResponseDto<ProductResponseDto>>;
   create(data: CreateProductModel, userId: string, storeCode: string): Promise<ProductResponseDto>;
   update(id: number, data: CreateProductModel, userId: string, storeCode: string): Promise<ProductResponseDto>;
   delete(id: number): Promise<ProductResponseDto>;
