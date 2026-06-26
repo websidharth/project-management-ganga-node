@@ -23,6 +23,9 @@ export class OrderRepository implements IOrderRepository {
     }
     return prisma.order.findMany({
       where,
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         customer: true,
         store: true,
@@ -38,6 +41,9 @@ export class OrderRepository implements IOrderRepository {
   async findByCustomerId(customerId: string): Promise<OrderDto[]> {
     return prisma.order.findMany({
       where: { customerId },
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         customer: true,
         store: true,
