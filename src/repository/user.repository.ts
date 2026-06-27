@@ -4,12 +4,20 @@ import { UpdateUserDto, UserDto } from "../dtos/user.dto";
 import { IUserRepository } from "./interfaces/iuser.repository";
 
 export class UserRepository implements IUserRepository {
-  async findAll(storeCode?: string): Promise<UserDto[]> {
+  async findAll(storeCode?: string, storeId?: number): Promise<UserDto[]> {
     const where: any = { NOT: { status: Status.Trash } };
     if (storeCode) {
       where.storeCode = storeCode;
     }
-    return prisma.users.findMany({ where });
+    if (storeId !== undefined) {
+      where.store = { id: storeId };
+    }
+    return prisma.users.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
   }
 
   async findById(userId: string): Promise<UserDto | null> {

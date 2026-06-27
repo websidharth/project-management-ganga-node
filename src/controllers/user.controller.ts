@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client';
+import prisma from '../config/prisma';
 import { Request, Response } from 'express';
 import { container } from '../config/ioc.config';
 import { TYPES } from '../config/ioc.types';
@@ -19,27 +20,40 @@ export class UserController {
     let response: CustomResponse<ListResponseDto<UserDto>>;
 
     let storeCode = req.query.storeCode as string | undefined;
+    let storeId: number | undefined;
 
-    if (req.user?.role === Role.ADMIN) {
-      storeCode = req.user.storeCode || undefined;
+    if (req.user?.role === Role.SUPER_ADMIN) {
+      storeCode = undefined;
+      storeId = undefined;
+    } else if (req.user?.role === Role.ADMIN) {
+      if (req.user.storeCode) {
+        try {
+          const store = await prisma.store.findUnique({
+            where: { code: req.user.storeCode }
+          });
+          if (store) {
+            storeId = store.id;
+          }
+        } catch (err) {
+          // ignore
+        }
+      }
+      if (storeId === undefined) {
+        storeCode = req.user.storeCode || undefined;
+      } else {
+        storeCode = undefined;
+      }
     } else {
       const storeIdStr = req.query.storeId as string | undefined;
       if (storeIdStr) {
-        const storeId = parseInt(storeIdStr, 10);
-        if (!isNaN(storeId)) {
-          try {
-            const store = await this.unitOfService.Store.getById(storeId);
-            if (store) {
-              storeCode = store.code;
-            }
-          } catch (err) {
-            // ignore if store not found
-          }
+        const parsedStoreId = parseInt(storeIdStr, 10);
+        if (!isNaN(parsedStoreId)) {
+          storeId = parsedStoreId;
         }
       }
     }
 
-    const user = await this.unitOfService.User.getAll(storeCode);
+    const user = await this.unitOfService.User.getAll(storeCode, storeId);
     if (!user) {
       response = { success: false, message: 'User not found' };
       return res.status(404).json(response);
