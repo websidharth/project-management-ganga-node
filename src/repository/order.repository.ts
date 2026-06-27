@@ -23,8 +23,17 @@ export class OrderRepository implements IOrderRepository {
     }
     return prisma.order.findMany({
       where,
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
-        items: true,
+        customer: true,
+        store: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   }
@@ -32,8 +41,17 @@ export class OrderRepository implements IOrderRepository {
   async findByCustomerId(customerId: string): Promise<OrderDto[]> {
     return prisma.order.findMany({
       where: { customerId },
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
-        items: true,
+        customer: true,
+        store: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   }
@@ -42,7 +60,13 @@ export class OrderRepository implements IOrderRepository {
     return prisma.order.findUnique({
       where: { id },
       include: {
-        items: true,
+        customer: true,
+        store: true,
+        items: {
+          include: {
+            product: true,
+          },
+        },
       },
     });
   }

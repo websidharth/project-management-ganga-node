@@ -35,6 +35,7 @@ export class DashboardRepository implements IDashboardRepository {
       attributeRecent,
       todaySaleResult,
       monthSaleResult,
+      categoriesWithProductCount,
     ] = await Promise.all([
       prisma.product.count({ where: productWhere }),
       prisma.product.findMany({ where: productWhere, orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
@@ -48,13 +49,34 @@ export class DashboardRepository implements IDashboardRepository {
         _sum: { grandTotal: true },
         where: monthOrderWhere,
       }),
+      prisma.category.findMany({
+        where: storeCode ? { storeCode } : {},
+        select: {
+          name: true,
+          products: {
+            where: storeCode ? { storeCode } : {},
+            select: { id: true }
+          }
+        }
+      })
     ]);
+
+    const categoryDistribution = categoriesWithProductCount.map(c => {
+      const count = c.products.length;
+      const percentage = productTotal > 0 ? Math.round((count / productTotal) * 100) : 0;
+      return {
+        name: c.name,
+        count,
+        percentage
+      };
+    }).sort((a, b) => b.count - a.count);
 
     return {
       products: { total: productTotal, recent: productRecent },
       attributes: { total: attributeTotal, recent: attributeRecent }, 
       todaySale: todaySaleResult._sum.grandTotal || 0,
       totalMonthSale: monthSaleResult._sum.grandTotal || 0,
+      categoryDistribution,
     };
   }
 }

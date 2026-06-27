@@ -53,8 +53,8 @@ export class UserService implements IUserService {
     });
   }
 
-  async getAll(storeCode?: string): Promise<UserDto[] | null> {
-    const userList = await this.unitOfWork.User.findAll(storeCode);
+  async getAll(storeCode?: string, storeId?: number): Promise<UserDto[] | null> {
+    const userList = await this.unitOfWork.User.findAll(storeCode, storeId);
     if (!userList || userList.length === 0) {
       throw new Error("No user found");
     }
@@ -143,6 +143,13 @@ export class UserService implements IUserService {
       tokenUpdated: user.tokenUpdated,
       refreshToken: token ? user.refreshToken : null,
       storeCode: user.storeCode || null,
+      dateOfBirth: user.dateOfBirth || null,
+      address: user.address || null,
+      city: user.city || null,
+      state: user.state || null,
+      country: user.country || null,
+      pincode: user.pincode || null,
+      bio: user.bio || null,
     };
   }
 }

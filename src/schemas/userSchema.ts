@@ -59,3 +59,20 @@ export const updateRoleSchema = z.object({
     }),
   }),
 });
+
+// Rule for Profile Update
+export const updateProfileSchema = z.object({
+  body: z.object({
+    name: z.string().min(3, "Name must be at least 3 characters").optional(),
+    phone: z.string().min(10, "Phone number must be at least 10 digits").or(z.literal("")).optional(),
+    userName: z.string().optional(),
+    profileImageUrl: z.string().url("Invalid URL").or(z.literal("")).optional(),
+    dateOfBirth: z.string().or(z.date()).optional(),
+    address: z.string().optional(),
+    city: z.string().optional(),
+    state: z.string().optional(),
+    country: z.string().optional(),
+    pincode: z.string().optional(),
+    bio: z.string().optional(),
+  }),
+});
