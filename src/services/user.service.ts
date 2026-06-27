@@ -49,6 +49,15 @@ export class UserService implements IUserService {
         },
       });
 
+      if (user.role === PrismaRole.STAFF) {
+        await transactionClient.staff.create({
+          data: {
+            userId: user.id,
+            storeCode: storeCode,
+          }
+        });
+      }
+
       return this.convertToDto(user);
     });
   }

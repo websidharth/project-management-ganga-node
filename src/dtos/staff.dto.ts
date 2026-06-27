@@ -26,8 +26,6 @@ export interface StaffDto {
 }
 
 export interface CreateStaffDto {
-    userId: number;
-    storeCode: string
     position?: string | null;
     department?: string | null;
     hireDate?: Date;
