@@ -20,10 +20,12 @@ export class ProductController {
     req: Request,
     res: Response
   ): Promise<Response<ListResponseDto<ProductResponseDto>>> => {
-    const isAdmin = req.user?.role === Role.SUPER_ADMIN || req.user?.role === Role.ADMIN || req.user?.role === Role.USER;
+    const isAdmin = req.user?.role === Role.SUPER_ADMIN || req.user?.role === Role.ADMIN || req.user?.role === Role.USER || req.user?.role === Role.STAFF;
     const createdById = isAdmin ? undefined : req.user?.userId;
-    const storeCode = req.user?.storeCode || undefined;
-
+    const storeCode = req.user?.storeCode;
+    if (!storeCode) {
+      return res.status(400).json({ success: false, message: 'Store code not found. User must be associated with a store.' });
+    }
     const filters: ProductFilterParams = Object.fromEntries(
       Object.entries({
         page: req.query['page'] ? parseInt(req.query['page'] as string) : undefined,
@@ -78,7 +80,7 @@ export class ProductController {
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
-    const isAdmin = req.user?.role === 'SUPER_ADMIN' || req.user?.role === 'ADMIN';
+    const isAdmin = req.user?.role === 'SUPER_ADMIN' || req.user?.role === 'ADMIN' || req.user?.role === 'STAFF';
     if (!isAdmin && product.createdById !== req.user?.userId) {
       return res.status(403).json({ success: false, message: "Not enough permissions to access this product" });
     }
@@ -98,7 +100,7 @@ export class ProductController {
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
     }
-    const isAdmin = req.user?.role === 'SUPER_ADMIN' || req.user?.role === 'ADMIN';
+    const isAdmin = req.user?.role === 'SUPER_ADMIN' || req.user?.role === 'ADMIN' || req.user?.role === 'STAFF';
     if (!isAdmin && product.createdById !== req.user?.userId) {
       return res.status(403).json({ success: false, message: "Not enough permissions to access this product" });
     }

@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
 import { OrderStatus } from "@prisma/client";
+import { Request, Response } from "express";
 import { container } from "../config/ioc.config";
 import { TYPES } from "../config/ioc.types";
 import CustomResponse from "../dtos/custom-response";
 import { ListResponseDto } from "../dtos/list-response.dto";
 import { OrderDto, UpdateOrderDto } from "../dtos/order.dto";
 import { CreateOrderModel } from "../models/order.model";
-import IUnitOfService from "../services/interfaces/iunitof.service";
 import { OrderFilterParams } from "../params/order.params";
+import IUnitOfService from "../services/interfaces/iunitof.service";
 
 export class OrderController {
   constructor(
@@ -45,13 +45,18 @@ export class OrderController {
     const body = req.body as CreateOrderModel;
 
     const storeCode = req.user?.storeCode;
+
     if (!storeCode) {
       return res.status(400).json({
         success: false,
         message: 'Store code not found. User must be associated with a store.'
       });
     }
-    const order = await this.unitOfService.Order.create(body, storeCode);
+
+    const createdById = body.createdById || req.user?.userId;
+    const createdByName = body.createdByName || req.user?.name;
+
+    const order = await this.unitOfService.Order.create(body, storeCode, createdById as string, createdByName as string);
     return res.status(201).json({ success: true, message: "Order created successfully", data: order });
   };
 
