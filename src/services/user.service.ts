@@ -62,8 +62,8 @@ export class UserService implements IUserService {
     });
   }
 
-  async getAll(storeCode?: string, storeId?: number): Promise<UserDto[] | null> {
-    const userList = await this.unitOfWork.User.findAll(storeCode, storeId);
+  async getAll(storeCode?: string, storeId?: number, role?: PrismaRole | string): Promise<UserDto[] | null> {
+    const userList = await this.unitOfWork.User.findAll(storeCode, storeId, role);
     if (!userList || userList.length === 0) {
       throw new Error("No user found");
     }

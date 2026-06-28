@@ -4,13 +4,16 @@ import { UpdateUserDto, UserDto } from "../dtos/user.dto";
 import { IUserRepository } from "./interfaces/iuser.repository";
 
 export class UserRepository implements IUserRepository {
-  async findAll(storeCode?: string, storeId?: number): Promise<UserDto[]> {
+  async findAll(storeCode?: string, storeId?: number, role?: Role | string): Promise<UserDto[]> {
     const where: any = { NOT: { status: Status.Trash } };
     if (storeCode) {
       where.storeCode = storeCode;
     }
     if (storeId !== undefined) {
       where.store = { id: storeId };
+    }
+    if (role) {
+      where.role = role;
     }
     return prisma.users.findMany({
       where,
