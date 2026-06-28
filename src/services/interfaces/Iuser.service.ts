@@ -4,7 +4,7 @@ import { CreateUserModel } from "../../models/user.model";
 
 export interface IUserService {
   create(data: CreateUserModel, storeCode: string): Promise<UserDto>;
-  getAll(storeCode?: string, storeId?: number): Promise<UserDto[] | null>;
+  getAll(storeCode?: string, storeId?: number, role?: Role | string): Promise<UserDto[] | null>;
   getUserById(userId: string): Promise<UserDto | null>;
   getByEmail(email: string, includePassword?: boolean): Promise<UserDto | null>;
   update(userId: string, updatedData: UpdateUserDto): Promise<UserDto | null>;

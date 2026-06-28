@@ -32,6 +32,12 @@ const usersController = container.get<UserController>(TYPES.UserController);
  *           type: string
  *         required: true
  *         description: Enter Client Id
+ *       - in: query
+ *         name: role
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: Filter users by role (e.g., USER, STAFF, ADMIN)
  *     responses:
  *       200:
  *         description: List of all users

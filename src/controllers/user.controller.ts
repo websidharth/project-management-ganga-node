@@ -21,6 +21,7 @@ export class UserController {
 
     let storeCode = req.query.storeCode as string | undefined;
     let storeId: number | undefined;
+    const role = req.query.role as string | undefined;
 
     if (req.user?.role === Role.SUPER_ADMIN) {
       storeCode = undefined;
@@ -53,7 +54,7 @@ export class UserController {
       }
     }
 
-    const user = await this.unitOfService.User.getAll(storeCode, storeId);
+    const user = await this.unitOfService.User.getAll(storeCode, storeId, role);
     if (!user) {
       response = { success: false, message: 'User not found' };
       return res.status(404).json(response);

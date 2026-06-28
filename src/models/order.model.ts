@@ -9,6 +9,8 @@ export interface CreateOrderModel {
   grandTotal?: number;
   status?: OrderStatus;
   notes?: string | null;
+  createdById?: string | null;
+  createdByName?: string | null;
   items?: {
     productId: number;
     quantity: number;

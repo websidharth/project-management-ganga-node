@@ -17,14 +17,15 @@ export class StaffController {
   getAll = async (req: Request, res: Response): Promise<Response<CustomResponse<ListResponseDto<StaffDto>>>> => {
 
 
-
+    const storeCode = req.user?.storeCode || undefined;
     const filters: StaffFilterParams = {};
 
     if (req.query.storeId) filters.storeId = parseInt(req.query.storeId as string);
     if (req.query.isActive) filters.isActive = req.query.isActive === "true";
     if (req.query.department) filters.department = req.query.department as string;
     if (req.query.position) filters.position = req.query.position as string;
-    if (req.query.storeCode) filters.position = req.query.position as string;
+    if (req.query.storeCode) filters.storeCode = req.query.storeCode as string;
+    if (storeCode) filters.storeCode = storeCode;
 
     const staff = await this.unitOfService.Staff.getAll(filters);
     return res.status(200).json({
@@ -68,12 +69,15 @@ export class StaffController {
   };
 
   getCount = async (req: Request, res: Response): Promise<Response<CustomResponse<{ count: number }>>> => {
+    const storeCode = req.user?.storeCode || undefined;
     const filters: StaffFilterParams = {};
 
     if (req.query.storeId) filters.storeId = parseInt(req.query.storeId as string);
     if (req.query.isActive) filters.isActive = req.query.isActive === "true";
     if (req.query.department) filters.department = req.query.department as string;
     if (req.query.position) filters.position = req.query.position as string;
+    if (req.query.storeCode) filters.storeCode = req.query.storeCode as string;
+    if (storeCode) filters.storeCode = storeCode;
 
     const count = await this.unitOfService.Staff.count(filters);
     return res.status(200).json({

@@ -9,6 +9,7 @@ export class StaffRepository implements IStaffRepository {
     async findAll(filters?: StaffFilterParams): Promise<StaffDto[]> {
         const where: any = {};
 
+        if (filters?.storeId) where.store = { id: filters.storeId };
         if (filters?.storeCode) where.storeCode = filters.storeCode;
         if (filters?.isActive !== undefined) where.isActive = filters.isActive;
         if (filters?.department) where.department = filters.department;
@@ -187,7 +188,8 @@ export class StaffRepository implements IStaffRepository {
     async count(filters?: StaffFilterParams): Promise<number> {
         const where: any = {};
 
-        if (filters?.storeId) where.storeId = filters.storeId;
+        if (filters?.storeId) where.store = { id: filters.storeId };
+        if (filters?.storeCode) where.storeCode = filters.storeCode;
         if (filters?.isActive !== undefined) where.isActive = filters.isActive;
         if (filters?.department) where.department = filters.department;
         if (filters?.position) where.position = filters.position;
