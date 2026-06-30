@@ -1,19 +1,19 @@
 
 import type { users } from "@prisma/client";
-import { TYPES } from "../config/ioc.types";
-import IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
-import { IDateTimeService } from "./interfaces/idatetime.service";
-import { IAccountService } from "./interfaces/Iaccount.service";
+import bcrypt from "bcryptjs";
 import { inject, injectable } from "inversify";
+import { TYPES } from "../config/ioc.types";
 import { UserDto } from "../dtos/user.dto";
+import { Status } from "../enum/status.enum";
 import { Role } from "../enum/user.enum";
-import { CreateUserModel } from "../models/user.model";
-import { createUserName, generateStoreCode, generateUserGUID } from "../utils/authHelpers.service";
-import { generateOtp } from "../utils/otp.util";
 import { ResetPasswordModel } from "../models/forgot-password.model";
 import { LoginModel } from "../models/login.model";
-import bcrypt from "bcryptjs";
-import { Status } from "../enum/status.enum";
+import { CreateUserModel } from "../models/user.model";
+import IUnitOfWork from "../repository/interfaces/iunitofwork.repository";
+import { createUserName, generateStoreCode, generateUserGUID } from "../utils/authHelpers.service";
+import { generateOtp } from "../utils/otp.util";
+import { IAccountService } from "./interfaces/Iaccount.service";
+import { IDateTimeService } from "./interfaces/idatetime.service";
 
 @injectable()
 export class AccountService implements IAccountService {
@@ -59,7 +59,7 @@ export class AccountService implements IAccountService {
       // Create store entry first
       await transactionClient.store.create({
         data: {
-          name: `${data.firstName} ${data.lastName}'s Store`,
+          name: `${data.firstName} ${data.lastName}'s Store - ${storeCode}`,
           code: storeCode,
           status: Status.Published,
         },
@@ -80,6 +80,7 @@ export class AccountService implements IAccountService {
           isEmailVerified: false,
           isPhoneVerified: false,
           storeCode: storeCode,
+          role: Role.ADMIN,
         },
       });
 
