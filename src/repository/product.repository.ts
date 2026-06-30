@@ -110,6 +110,44 @@ export class ProductRepository implements IProductRepository {
     return { totalRecord: total, data };
   }
 
+  async addStock(id: number, quantity: number, userIdStr: string, storeCode: string, reason?: string): Promise<ProductResponseDto> {
+    const user = await prisma.users.findUnique({ where: { userId: userIdStr } });
+    if (!user) throw new Error("User not found");
+
+    return prisma.$transaction(async (tx) => {
+      const product = await tx.product.update({
+        where: { id },
+        data: { stock: { increment: quantity } },
+        include: productInclude
+      });
+      await tx.stockHistory.create({
+        data: {
+          productId: id,
+          storeCode,
+          userId: user.id,
+          quantity,
+          reason: reason || null
+        }
+      });
+      return product;
+    });
+  }
+
+  async getStockHistory(productId: number, storeCode: string, page = 1, limit = 10): Promise<any> {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      prisma.stockHistory.findMany({
+        where: { productId, storeCode },
+        include: { user: { select: { id: true, name: true, userId: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.stockHistory.count({ where: { productId, storeCode } }),
+    ]);
+    return { totalRecord: total, data };
+  }
+
   async delete(id: number): Promise<ProductResponseDto> {
     return prisma.product.update({ where: { id }, data: { status: Status.Trash } });
   }

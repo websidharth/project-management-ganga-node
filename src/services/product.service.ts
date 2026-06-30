@@ -91,6 +91,20 @@ export class ProductService implements IProductService {
     });
   }
 
+  async addStock(id: number, quantity: number, userId: string, storeCode: string, reason?: string): Promise<ProductResponseDto> {
+    const existing = await this.unitOfWork.Product.findById(id);
+    if (!existing) throw new NotFoundError("Product not found");
+    if (existing.storeCode !== storeCode) throw new Error("Product does not belong to your store");
+    return this.unitOfWork.Product.addStock(id, quantity, userId, storeCode, reason);
+  }
+
+  async getStockHistory(productId: number, storeCode: string, page = 1, limit = 10) {
+    const existing = await this.unitOfWork.Product.findById(productId);
+    if (!existing) throw new NotFoundError("Product not found");
+    if (existing.storeCode !== storeCode) throw new Error("Product does not belong to your store");
+    return this.unitOfWork.Product.getStockHistory(productId, storeCode, page, limit);
+  }
+
   async delete(id: number): Promise<ProductResponseDto> {
     const existing = await this.unitOfWork.Product.findById(id);
     if (!existing) throw new NotFoundError("Product not found");

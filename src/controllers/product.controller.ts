@@ -160,6 +160,62 @@ export class ProductController {
     return res.status(200).json({ success: true, message: "Product updated successfully", data: product });
   };
 
+  addStock = async (
+    req: Request,
+    res: Response
+  ): Promise<Response<CustomResponse<ProductResponseDto>>> => {
+    const id = parseInt(req.params["id"] as string);
+    const userId = req.user?.userId as string;
+    const storeCode = req.user?.storeCode;
+    const { quantity, reason } = req.body;
+
+    if (!id || isNaN(id)) return res.status(400).json({ success: false, message: "Invalid product id" });
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found. User must be associated with a store.'
+      });
+    }
+
+    try {
+      const product = await this.unitOfService.Product.addStock(id, quantity, userId, storeCode, reason);
+      return res.status(200).json({ success: true, message: "Stock added successfully", data: product });
+    } catch (error: any) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message });
+      }
+      return res.status(403).json({ success: false, message: error.message });
+    }
+  };
+
+  getStockHistory = async (
+    req: Request,
+    res: Response
+  ): Promise<Response<ListResponseDto<any>>> => {
+    const id = parseInt(req.params["id"] as string);
+    const storeCode = req.user?.storeCode;
+    const page = req.query['page'] ? parseInt(req.query['page'] as string) : 1;
+    const limit = req.query['recordPerPage'] ? parseInt(req.query['recordPerPage'] as string) : 10;
+
+    if (!id || isNaN(id)) return res.status(400).json({ success: false, message: "Invalid product id", data: { totalRecord: 0, data: [] } } as any);
+    if (!storeCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'Store code not found.',
+        data: { totalRecord: 0, data: [] }
+      } as any);
+    }
+
+    try {
+      const result = await this.unitOfService.Product.getStockHistory(id, storeCode, page, limit);
+      return res.status(200).json({ success: true, message: "Stock history fetched successfully", data: result } as any);
+    } catch (error: any) {
+      if (error instanceof NotFoundError) {
+        return res.status(404).json({ success: false, message: error.message, data: { totalRecord: 0, data: [] } } as any);
+      }
+      return res.status(403).json({ success: false, message: error.message, data: { totalRecord: 0, data: [] } } as any);
+    }
+  };
 
   delete = async (
     req: Request,

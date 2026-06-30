@@ -84,6 +84,11 @@ import { IDashboardRepository } from '../repository/interfaces/idashboard.reposi
 import { IBrandNameRepository } from '../repository/interfaces/ibrand-name.repository';
 import { IStaffRepository } from '../repository/interfaces/istaff.repository';
 import { IStoreRepository } from '../repository/interfaces/istore.repository';
+import { PurchaseController } from '../controllers/purchase.controller';
+import { IPurchaseService } from '../services/interfaces/ipurchase.service';
+import { PurchaseService } from '../services/purchase.service';
+import { IPurchaseRepository } from '../repository/interfaces/ipurchase.repository';
+import { PurchaseRepository } from '../repository/purchase.repository';
 
 export const container = new Container();
 
@@ -102,6 +107,7 @@ container.bind<DashboardController>(TYPES.DashboardController).to(DashboardContr
 container.bind<BrandNameController>(TYPES.BrandNameController).to(BrandNameController);
 container.bind<StaffController>(TYPES.StaffController).to(StaffController);
 container.bind<StoreController>(TYPES.StoreController).to(StoreController);
+container.bind<PurchaseController>(TYPES.PurchaseController).to(PurchaseController);
 
 container.bind<IAccountService>(TYPES.IAccountService).to(AccountService);
 container.bind<IUserService>(TYPES.IUserService).to(UserService);
@@ -117,6 +123,7 @@ container.bind<IDashboardService>(TYPES.IDashboardService).to(DashboardService);
 container.bind<IBrandNameService>(TYPES.IBrandNameService).to(BrandNameService);
 container.bind<IStaffService>(TYPES.IStaffService).to(StaffService);
 container.bind<IStoreService>(TYPES.IStoreService).to(StoreService);
+container.bind<IPurchaseService>(TYPES.IPurchaseService).to(PurchaseService);
 
 container.bind<IAccountRepository>(TYPES.IAccountRepository).to(AccountRepository);
 container.bind<IUserRepository>(TYPES.IUserRepository).to(UserRepository);
@@ -132,6 +139,7 @@ container.bind<IDashboardRepository>(TYPES.IDashboardRepository).to(DashboardRep
 container.bind<IBrandNameRepository>(TYPES.IBrandNameRepository).to(BrandNameRepository);
 container.bind<IStaffRepository>(TYPES.IStaffRepository).to(StaffRepository);
 container.bind<IStoreRepository>(TYPES.IStoreRepository).to(StoreRepository);
+container.bind<IPurchaseRepository>(TYPES.IPurchaseRepository).to(PurchaseRepository);
 
 container.bind<IUnitOfService>(TYPES.IUnitOfService).to(UnitOfService);
 container.bind<IUnitOfWork>(TYPES.IUnitOfWork).to(UnitOfWork);

@@ -13,7 +13,7 @@ export class DashboardRepository implements IDashboardRepository {
 
     const productWhere = storeCode ? { storeCode } : {};
     const attributeWhere = storeCode ? { storeCode } : {};
-    
+
     const todayOrderWhere: any = {
       orderDate: { gte: todayStart, lte: todayEnd },
       status: { not: 'CANCELLED' },
@@ -35,7 +35,8 @@ export class DashboardRepository implements IDashboardRepository {
       attributeRecent,
       todaySaleResult,
       monthSaleResult,
-      categoriesWithProductCount,
+      topProductsByOrder,
+      totalQuantityResult
     ] = await Promise.all([
       prisma.product.count({ where: productWhere }),
       prisma.product.findMany({ where: productWhere, orderBy: { createdAt: 'desc' }, take: RECENT_LIMIT }),
@@ -49,34 +50,46 @@ export class DashboardRepository implements IDashboardRepository {
         _sum: { grandTotal: true },
         where: monthOrderWhere,
       }),
-      prisma.category.findMany({
+      prisma.orderItem.groupBy({
+        by: ['productId'],
+        _sum: { quantity: true },
         where: storeCode ? { storeCode } : {},
-        select: {
-          name: true,
-          products: {
-            where: storeCode ? { storeCode } : {},
-            select: { id: true }
-          }
-        }
+        orderBy: { _sum: { quantity: 'desc' } },
+        take: 6,
+      }),
+      prisma.orderItem.aggregate({
+        _sum: { quantity: true },
+        where: storeCode ? { storeCode } : {},
       })
     ]);
 
-    const categoryDistribution = categoriesWithProductCount.map(c => {
-      const count = c.products.length;
-      const percentage = productTotal > 0 ? Math.round((count / productTotal) * 100) : 0;
+    const totalQuantity = totalQuantityResult._sum.quantity || 0;
+    const productIds = topProductsByOrder.map(p => p.productId);
+
+    const products = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, name: true, stock: true }
+    });
+
+    const productDistribution = topProductsByOrder.map(p => {
+      const product = products.find(prod => prod.id === p.productId);
+      const count = p._sum.quantity || 0;
+      const stock = product?.stock || 0;
+      const percentage = totalQuantity > 0 ? Math.round((count / totalQuantity) * 100) : 0;
       return {
-        name: c.name,
+        name: product?.name || 'Unknown Product',
         count,
+        stock,
         percentage
       };
-    }).sort((a, b) => b.count - a.count);
+    });
 
     return {
-      products: { total: productTotal, recent: productRecent },
-      attributes: { total: attributeTotal, recent: attributeRecent }, 
+      products: productRecent,
+      attributes: attributeRecent,
       todaySale: todaySaleResult._sum.grandTotal || 0,
       totalMonthSale: monthSaleResult._sum.grandTotal || 0,
-      categoryDistribution,
+      productDistribution,
     };
   }
 }

@@ -1,9 +1,10 @@
+import { AttributeDto } from './attribute.dto';
 import { ProductResponseDto } from './product.dto';
-import { AttributeDto } from './attribute.dto'; 
 
-export interface CategoryDistributionDto {
+export interface DistributionDto {
   name: string;
   count: number;
+  stock: number;
   percentage: number;
 }
 
@@ -13,9 +14,9 @@ export interface DashboardSectionDto<T> {
 }
 
 export interface DashboardSummaryDto {
-  products: DashboardSectionDto<ProductResponseDto>;
-  attributes: DashboardSectionDto<AttributeDto>; 
+  products: ProductResponseDto[];
+  attributes: AttributeDto[];
   todaySale: number;
   totalMonthSale: number;
-  categoryDistribution: CategoryDistributionDto[];
+  productDistribution: DistributionDto[];
 }

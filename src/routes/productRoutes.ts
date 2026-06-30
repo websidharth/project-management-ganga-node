@@ -5,7 +5,7 @@ import { ProductController } from '../controllers/product.controller';
 import asyncHandler from '../middleware/asyncHandler.middleware';
 import { authenticateToken } from '../middleware/authentication.middleware';
 import { validate } from '../middleware/validate';
-import { createProductSchema, updateProductSchema } from '../schemas/productSchema';
+import { createProductSchema, updateProductSchema, addStockSchema } from '../schemas/productSchema';
 
 const productRouter = Router();
 const productController = container.get<ProductController>(TYPES.ProductController);
@@ -448,6 +448,92 @@ productRouter.post('/', authenticateToken, validate(createProductSchema), asyncH
  */
 productRouter.put('/:id', authenticateToken, validate(updateProductSchema), asyncHandler(productController.update));
 
+
+/**
+ * @swagger
+ * /products/{id}/stock:
+ *   patch:
+ *     summary: Add stock to a product
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Client identifier
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Product ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - quantity
+ *             properties:
+ *               quantity:
+ *                 type: integer
+ *                 minimum: 1
+ *                 example: 10
+ *                 description: Quantity to add to the existing stock
+ *               reason:
+ *                 type: string
+ *                 example: "Restock from supplier"
+ *                 description: Reason for adding stock
+ *     responses:
+ *       200:
+ *         description: Stock added successfully
+ *       400:
+ *         description: Validation error or missing fields
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden – not enough permissions
+ *       404:
+ *         description: Product not found
+ */
+productRouter.patch('/:id/stock', authenticateToken, validate(addStockSchema), asyncHandler(productController.addStock));
+
+/**
+ * @swagger
+ * /products/{id}/stock-history:
+ *   get:
+ *     summary: Get stock history for a product
+ *     tags: [Product]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: clientId
+ *         schema:
+ *           type: string
+ *         required: true
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *       - in: query
+ *         name: recordPerPage
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Stock history fetched successfully
+ */
+productRouter.get('/:id/stock-history', authenticateToken, asyncHandler(productController.getStockHistory));
 
 /**
  * @swagger

@@ -7,5 +7,7 @@ export interface IProductRepository {
   findById(id: number): Promise<ProductResponseDto | null>;
   findBySlug(slug: string): Promise<ProductResponseDto | null>;
   getLowStockProducts(storeCode: string, page?: number, limit?: number): Promise<ListResponseDto<ProductResponseDto>>;
+  addStock(id: number, quantity: number, userId: string, storeCode: string, reason?: string): Promise<ProductResponseDto>;
+  getStockHistory(productId: number, storeCode: string, page?: number, limit?: number): Promise<any>;
   delete(id: number): Promise<ProductResponseDto>;
 }

@@ -15,6 +15,7 @@ export const TYPES = {
   IBrandNameService: Symbol.for("BrandNameService"),
   IStaffService: Symbol.for("StaffService"),
   IStoreService: Symbol.for("StoreService"),
+  IPurchaseService: Symbol.for("PurchaseService"),
 
   //Controllers
   HealthController: Symbol.for("HealthController"),
@@ -32,6 +33,7 @@ export const TYPES = {
   BrandNameController: Symbol.for("BrandNameController"),
   StaffController: Symbol.for("StaffController"),
   StoreController: Symbol.for("StoreController"),
+  PurchaseController: Symbol.for("PurchaseController"),
 
   //Repositories
   IUnitOfWork: Symbol.for("UnitOfWork"),
@@ -49,4 +51,5 @@ export const TYPES = {
   IBrandNameRepository: Symbol.for("BrandNameRepository"),
   IStaffRepository: Symbol.for("StaffRepository"),
   IStoreRepository: Symbol.for("StoreRepository"),
+  IPurchaseRepository: Symbol.for("PurchaseRepository"),
 };

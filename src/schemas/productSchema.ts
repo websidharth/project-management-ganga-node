@@ -37,3 +37,10 @@ export const updateProductSchema = z.object({
     status: z.nativeEnum(Status).optional(),
   }),
 });
+
+export const addStockSchema = z.object({
+  body: z.object({
+    quantity: z.number().int().positive("Quantity must be a positive integer"),
+    reason: z.string().optional(),
+  }),
+});
